@@ -1,0 +1,8 @@
+{
+  "register": "회원가입",
+  "name": "이름",
+  "email": "이메일",
+  "password": "비밀번호",
+  "confirmPassword": "비밀번호확인",
+  "backToLogin": "로그인 화면으로 돌아가기"
+}

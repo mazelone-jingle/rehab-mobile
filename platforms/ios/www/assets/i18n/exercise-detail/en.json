@@ -1,0 +1,13 @@
+{
+  "exersice_detail": "Exercise Detail Information",
+  "target_hr_remain_ratio": "Maintenance Rate of Target Heart Rate",
+  "hr_records": "Heart Rate History",
+  "see_detail": "Show Details",
+  "exercise_summary": "Exercise Summary",
+  "exercise_type": "Exercise Type",
+  "step": "Step",
+  "minutes": "Minutes",
+  "hr_detail": {
+    "title": "Exercise Detail Information"
+  }
+}

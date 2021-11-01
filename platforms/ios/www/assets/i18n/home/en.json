@@ -1,0 +1,16 @@
+{
+  "exercise_setting": "Exercise Settings",
+  "exercise_records": "View Exercise History",
+  "real_time_exercise": "Exercise with Medical Staff",
+  "reservation": "Schedule Exercise",
+  "noti_and_lang_setting": "Notification and Language Settings",
+  "personal_info_setting": "Personal Information Settings",
+  "app_manual": "App Manual",
+  "connect": "Connect with device",
+  "see_records": "Do not connect with device and check data",
+  "select_one": "Select RPE",
+  "finish_setting": "Done",
+  "bluetooth": "Bluetooth",
+  "confirm": "Confirm",
+  "cancel": "Cancel"
+}

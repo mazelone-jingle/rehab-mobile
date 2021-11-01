@@ -1,0 +1,13 @@
+{
+  "exersice_info_setting": "운동 및 심박수 정보 설정",
+  "target_hr": "목표 심박수",
+  "lowest_hr": "최소",
+  "hightest_hr": "최대",
+  "exercise_type": "운동 유형",
+  "step": "단계",
+  "minute": "분",
+  "exercise_start": "운동 시작",
+  "exercising": "운동 중...",
+  "confirm": "확인",
+  "cancel": "취소"
+}

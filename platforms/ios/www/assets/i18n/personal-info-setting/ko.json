@@ -1,0 +1,11 @@
+{
+  "personal_info_setting": "개인정보 설정",
+  "name":"이름",
+  "gender":"성별",
+  "male":"남",
+  "female":"여",
+  "birthday":"생년월일",
+  "email":"이메일",
+  "contact":"연락처",
+  "save": "저장하기"
+}

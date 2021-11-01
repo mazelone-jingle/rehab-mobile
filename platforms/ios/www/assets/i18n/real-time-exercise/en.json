@@ -1,0 +1,31 @@
+{
+  "real_time_exercise": "Exercise with Medical Staff",
+  "exercise_start": "Start Exercise",
+  "step": "Step",
+  "chat": {
+    "title": "Chat",
+    "disconnect": "Disconnect",
+    "participants_list": "Participants List",
+    "channel_create": "Create Channel",
+    "channel_list": "Channel List",
+    "get_out_of_chatting_room": "Exit Chat",
+    "add_partner": "Add Partner",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "audio": "Voice Message",
+    "location": "Location",
+    "document": "Document"
+  },
+  "minute": "Minutes",
+  "rpe": {
+    "popup_text": "Exercise has finished. Please enter RPE value.",
+    "explain": "Explanation",
+    "confirm": "Confirm",
+    "select_one": "Select one of the following."
+  },
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "select_one": "Select RPE",
+  "finish_setting": "Done"
+}

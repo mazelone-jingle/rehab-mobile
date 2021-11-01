@@ -1,0 +1,11 @@
+{
+  "personal_info_setting": "Personal Information Settings",
+  "name":"Name",
+  "gender":"Gender",
+  "male":"Male",
+  "female":"Female",
+  "birthday":"Date of Birth",
+  "email":"Email",
+  "contact":"Contact",
+  "save": "Save"
+}
