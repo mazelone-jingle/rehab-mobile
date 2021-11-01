@@ -46,7 +46,7 @@ export class StorageService {
     await this.storage.remove(this.userName);
   }
 
-  private async getDataOfUser(): Promise<any> {
+  async getDataOfUser(): Promise<any> {
     return await new Promise(async (resolve, reject) =>
     await this.storage.get(this.userName).then((data) => resolve(data)).catch((err) => reject(false)));
   }

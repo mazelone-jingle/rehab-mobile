@@ -1,20 +1,12 @@
 import { Chart } from 'chart.js';
 import * as chartAnnotation from 'chartjs-plugin-annotation';
-
 import { BehaviorSubject, Subscription, throwError } from 'rxjs';
 import { DevicesModalComponent } from 'src/components/modals/devices-modal/devices-modal.component';
 import { RpeComponent } from 'src/components/modals/rpe/rpe.component';
 import { PRESCRIPTION } from 'src/constants/common';
 import {
-  RESPONSE_TYPE_END,
-  RESPONSE_TYPE_ERR,
-  RESPONSE_TYPE_HDA,
-  RESPONSE_TYPE_NDA,
-  RESPONSE_TYPE_SSE,
-  RESPONSE_TYPE_STE,
-  RESPONSE_TYPE_STH,
-  RESPONSE_TYPE_STS,
-  RESPONSE_TYPE_THR,
+    RESPONSE_TYPE_END, RESPONSE_TYPE_ERR, RESPONSE_TYPE_HDA, RESPONSE_TYPE_NDA, RESPONSE_TYPE_SSE,
+    RESPONSE_TYPE_STE, RESPONSE_TYPE_STH, RESPONSE_TYPE_STS, RESPONSE_TYPE_THR
 } from 'src/constants/watch-ble-command';
 import { IEmergencyMessage } from 'src/models/i-emergency-message';
 import { IExcerciseStepMessage } from 'src/models/i-excercise-step-message';
@@ -36,6 +28,7 @@ import { WatchCommandService } from 'src/services/watch-command.service';
 import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+
 import { environment as ENV } from '../../environments/environment';
 
 @Component({
@@ -147,7 +140,7 @@ export class RealTimeExercisePage implements OnInit {
               await this.alertSvc.presentAlert(
                 msg,
                 false,
-                async () => await this.router.navigate(['/home'])
+                async () => await this.router.navigate(['/menu'])
               );
             }
           }
@@ -158,7 +151,10 @@ export class RealTimeExercisePage implements OnInit {
 
   async ngOnInit() {
     const isConnected = await this.ble.isConnected();
-
+    if (ENV.useDummyData) {
+      await this.getLastPrescription();
+      return;
+    }
     if (!isConnected) {
       await this.scanBLE();
     } else {
@@ -220,7 +216,7 @@ export class RealTimeExercisePage implements OnInit {
             return;
           }
           //step
-          const round = +data.substring(
+          const step = +data.substring(
             data.indexOf('#') + 1,
             data.indexOf('_')
           );
@@ -235,19 +231,31 @@ export class RealTimeExercisePage implements OnInit {
             data.indexOf('@')
           );
           const baseSeconds = this.realTimeExerciseSvc.getBaseSeconds(
-            round,
+            step,
             this.prescription
           );
           if (second === 1) {
             //단계가 올라감
             const prescriptionSteps = this.prescription.steps.find(
-              (v) => v.sequence === round
+              (v) => v.sequence === step
             );
-            // this.chatSvc.sendExcerciseStep(prescriptionSteps);
+            const exerciseStepMsg: IExcerciseStepMessage = {
+              channelId: this.channelId,
+              currentStep: prescriptionSteps,
+              currentStepCount: step,
+              exerciseType: this.prescription.exerciseTypes[0],
+              messageStatus: 'send',
+              messageType: 'ExerciseStep',
+              sendDateTime: new Date(),
+              totalMinute: this.totalExerciseTime,
+              totalStepCount: this.prescription.steps.length,
+              userEmail: this.authSvc.username,
+            };
+            this.chatSvc.sendExerciseStep(exerciseStepMsg);
           }
           this.heartRate = rate;
           this.zone.run(() => {
-            this.step = round;
+            this.step = step;
             this.seconds = second + baseSeconds;
           });
           if (this.available) {
@@ -255,7 +263,7 @@ export class RealTimeExercisePage implements OnInit {
               label: second + baseSeconds,
               data: rate,
             } as IChartItem);
-            this.sendHeartRate(rate, round, second + baseSeconds);
+            this.sendHeartRate(rate, step, second + baseSeconds);
             this.rateArray.push(rate);
           }
         },
@@ -600,11 +608,13 @@ export class RealTimeExercisePage implements OnInit {
         await this.loadingSvc.dismiss();
         this.realtimeConnect = false;
         this.ble.realtimeDataSubject.next();
-        if (this.isExercising$.value) {
-          await this.presentConnectInterruptAlert(deviceId);
-        } else {
-          await this.presentConnectFailedAlert(deviceId);
-        }
+        // if (this.isExercising$.value) {
+             /** 연결 끊어질 때 처음부터 시작하려면 */
+        //   await this.presentConnectInterruptAlert(deviceId);
+        // } else {
+        /** 연결 끊어질 때 그냥 다시 연결해서 남어지는 것을 계속 진행하려면 */
+        await this.presentConnectFailedAlert(deviceId);
+        // }
         throwError(e);
       },
       complete: () => {},
@@ -724,6 +734,7 @@ export class RealTimeExercisePage implements OnInit {
   }
 
   sendEmergency(rpeValue: number) {
+    this.addRpe(rpeValue);
     const msg: IEmergencyMessage = {
       channelId: this.channelId,
       messageStatus: 'send',
@@ -752,10 +763,37 @@ export class RealTimeExercisePage implements OnInit {
           datasets: [
             {
               label: '# of Heart beat',
-              data: this.data,
-              fill: false,
-              borderColor: 'rgba(255, 99, 132, 1)',
+              data: [],
+              spanGaps: false,
+              lineTension: 0.2,
+              backgroundColor: 'rgba(255, 0, 127, 0)',
+              borderColor: 'rgba(255, 0, 127, 1)',
+              pointBackgroundColor: 'rgba(255, 0, 127, 1)',
+              pointRadius: 0,
+              borderWidth: 2,
+              datalabels: {
+                display: false,
+              },
+            },
+            {
+              label: 'Hardness',
+              data: [],
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              borderColor: 'rgba(0, 0, 0, 1)',
+              pointBackgroundColor: 'rgba(0, 0, 0, 1)',
+              pointRadius: 6,
               borderWidth: 1,
+              pointStyle: 'rect',
+              showLine: false,
+              datalabels: {
+                display: true,
+                align: 'top',
+                anchor: 'end',
+                color: 'black',
+                font: {
+                  weight: 'bold',
+                },
+              },
             },
           ],
         },
@@ -768,11 +806,11 @@ export class RealTimeExercisePage implements OnInit {
           },
           scales: {
             yAxes: [
-              {
-                ticks: {
-                  beginAtZero: false,
-                },
-              },
+              // {
+              //   ticks: {
+              //     beginAtZero: false,
+              //   },
+              // },
             ],
           },
           annotation: {
@@ -798,12 +836,34 @@ export class RealTimeExercisePage implements OnInit {
     }, 300);
   }
 
-  get labels(): Array<string> {
-    return this.dataset.map((ds) => ds.label.toString());
+  addRpe(rpe) {
+    const heartRatesData = this.heartRateData;
+    if (!!heartRatesData && heartRatesData.length > 0) {
+      const latestHr = heartRatesData[heartRatesData.length - 1];
+      const latestLable = this.labels[this.labels.length - 1];
+      const point = {
+        x: latestLable,
+        y: latestHr,
+        z: rpe,
+      };
+
+      this.loggerSvc.log('rpe', point);
+      this.rpeData.push(point);
+
+      this.chart.update();
+    }
   }
 
-  get data(): Array<number> {
-    return this.dataset.map((ds) => ds.data);
+  get rpeData() {
+    return this.chart.data.datasets[1].data;
+  }
+
+  get heartRateData() {
+    return this.chart.data.datasets[0].data;
+  }
+
+  get labels(): number[] {
+    return this.chart?.data?.labels || [];
   }
 
   async setExerciseInfoData() {
@@ -890,16 +950,12 @@ export class RealTimeExercisePage implements OnInit {
   }
 
   addData(item: IChartItem) {
-    this.chart.data.labels.push(item.label);
-    this.chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(item.data);
-    });
+    this.labels.push(item.label);
+    this.heartRateData.push(item.data);
 
-    if (this.chart.data.labels.length > 100) {
-      this.chart.data.labels.splice(0, 1);
-      this.chart.data.datasets.forEach((dataset) => {
-        dataset.data.splice(0, 1);
-      });
+    if (this.labels.length > 100) {
+      this.labels.splice(0, 1);
+      this.heartRateData.splice(0, 1);
     }
 
     this.chart.update();
@@ -917,7 +973,7 @@ export class RealTimeExercisePage implements OnInit {
       await this.alertSvc.presentAlert(
         `You have not gotten the latest prescription`
       );
-      this.router.navigate(['/home']);
+      this.router.navigate(['/menu']);
     } else {
       this.totalExerciseTime = this.prescription.steps
         .map((step) => step.minute)

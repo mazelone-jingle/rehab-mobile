@@ -214,7 +214,7 @@ export class BleService {
             }
             return reject(this.ab2str(err));
           });
-      }, 100);
+      });
     });
   }
 

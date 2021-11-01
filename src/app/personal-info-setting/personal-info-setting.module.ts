@@ -1,3 +1,4 @@
+import { SharedPipesModule } from 'src/pipes/shared-pipes.module';
 import { FormModule } from 'src/modules/form.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -14,9 +15,7 @@ import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/personal-info-setting/', '.json');
-}
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/personal-info-setting/', '.json');
 
 @NgModule({
   imports: [
@@ -32,7 +31,8 @@ export function createTranslateLoader(http: HttpClient) {
           deps: [HttpClient]
       },
       isolate: true
-    })
+    }),
+    SharedPipesModule
   ],
   declarations: [PersonalInfoSettingPage]
 })

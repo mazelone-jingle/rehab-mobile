@@ -60,6 +60,7 @@ export class HomePage implements OnInit {
   }
 
   async ngOnInit() {
+    console.log(await this.storageSvc.getDataOfUser());
     if (!await this.ble.isConnected()) {
       await this.presentIsConnectModal();
     }
@@ -357,7 +358,7 @@ export class HomePage implements OnInit {
         const availableReservation = this.checkReservationIsAvailableNow(reservation);
         //by-pass
         if (availableReservation.length > 0) {
-          this.router.navigate(['real-time-exercise'], {
+          this.router.navigate(['/menu/real-time-exercise'], {
             state: { reservId: availableReservation[0].id, channelId: availableReservation[0].channelId },
           });
         } else {

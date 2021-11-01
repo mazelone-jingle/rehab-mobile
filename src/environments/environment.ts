@@ -4,16 +4,16 @@
 
 export const environment = {
   production: false,
-  apiDomain: 'http://rehab-web.site/',
-  rehabHubUrl: 'http://rehab-web.site/rehap',
-  // apiDomain: 'https://localhost:44332/',
-  // rehabHubUrl: 'https://localhost:44332/rehap',
+  // apiDomain: 'http://rehab-web.site/',
+  // rehabHubUrl: 'http://rehab-web.site/rehap',
+  apiDomain: 'https://localhost:44332/',
+  rehabHubUrl: 'https://localhost:44332/rehap',
   bleScanSec: 5,
   bleDeviceService: 'FFF0',
   wearable2mobile: 'FFF1',
   mobile2wearable: 'FFF2',
   connectExpiredTime: 5 * 60, // 초,
-  useDummyData: false
+  useDummyData: true
 };
 
 /*

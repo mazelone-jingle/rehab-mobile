@@ -4,6 +4,10 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>{{'personal_info_setting' | translate}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="saveData()" [disabled]="infoForm.invalid">{{'save' | translate}}</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -17,7 +21,7 @@
       <small style="color: red;" *ngIf="name.errors.required">이름을 입력해주세요</small>
     </div>
     <ion-item class="form-group">
-      <ion-label for="gender" position="fixed">{{'gendar' | translate}}</ion-label>
+      <ion-label for="gender" position="fixed">{{'gender' | translate}}</ion-label>
       <ion-radio-group formControlName="gender">
         <ion-item>
           <ion-label>{{'male' | translate}}</ion-label>
@@ -32,14 +36,14 @@
     </ion-item>
     <ion-item class="form-group">
       <ion-label for="birthday" position="fixed">{{'birthday' | translate}}</ion-label>
-      <ion-datetime formControlName="birthday"></ion-datetime>
+      <ion-datetime formControlName="birthday" pickerFormat="YYYY/MM/DD" displayFormat="YYYY년 MM월 DD일" (ionChange)="changeDate($event)"></ion-datetime>
     </ion-item>
     <div *ngIf="birthday.invalid && birthday.touched">
       <small style="color: red;" *ngIf="birthday.errors.required">생년월일을 입력해주세요</small>
     </div>
     <ion-item class="form-group">
       <ion-label for="email" position="fixed">{{'email' | translate}}</ion-label>
-      <ion-input type="email" formControlName="email" class="form-control" id="email"></ion-input>
+      <ion-input type="email" formControlName="email" class="form-control" id="email" [disabled]="true"></ion-input>
     </ion-item>
     <div *ngIf="email.invalid && email.touched">
       <small style="color: red;" *ngIf="email.errors.required">이메일을 입력해주세요</small>
@@ -55,6 +59,3 @@
   </form>
 </ion-content>
 
-<ion-footer>
-  <ion-button expand="block" color="primary" (click)="saveData()" [disabled]="infoForm.invalid">{{'save' | translate}}</ion-button>
-</ion-footer>

@@ -15,7 +15,7 @@
 </ion-header>
 
 <ion-content class="content">
-  <div class="chart-content" style="height: 40%">
+  <div class="chart-content" style="height: 50%">
     <h3 class="title">{{'step' | translate}}{{step}} - {{prescription?.steps[step-1]?.type}}</h3>
     <ul *ngIf="!!prescription" class="steps">
       <li
@@ -35,9 +35,9 @@
     </div>
 
     <!-- <ion-button (click)="sendEmergency()"> 힘들어요 </ion-button> -->
-    <div id="canvas" style="display: block; height: 200px"></div>
+    <div id="canvas" style="display: block; height: calc(100% - 58px);"></div>
   </div>
-  <ion-content class="chat-content" style="height: 60%">
+  <ion-content class="chat-content" style="height: 50%">
     <app-chat [reservId]="reservId" [channelId]="channelId" [rpeMsg]="rpeMsg" (sendCurrentRpeEvent)="sendEmergency($event)"></app-chat>
   </ion-content>
 </ion-content>

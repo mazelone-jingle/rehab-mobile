@@ -131,5 +131,10 @@ export class PersonalInfoSettingPage implements OnInit {
     });
   }
 
+  changeDate($event) {
+    const date = $event.target.value;
+    this.birthday.patchValue(date);
+  }
+
 }
 

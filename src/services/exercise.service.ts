@@ -86,7 +86,10 @@ export class ExerciseService extends HttpService {
       (hr) => +hr >= hrMinMax.min && +hr <= hrMinMax.max
     );
 
-    return Math.round((rangeHr.length / flatHr.length) * 100);
+    const res = Math.round((rangeHr.length / flatHr.length) * 100);
+    this.logger.log('thr retention: ', res);
+
+    return res? res : 0;
   }
 
   async sendExerciseData(

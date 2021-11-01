@@ -1,0 +1,17 @@
+.js-inline-picker {
+  .picker-picked {
+    color: #df7127 !important;
+  }
+}
+
+.setting-item {
+  --inner-padding-bottom: 0.5rem;
+  --inner-padding-top: 0.5rem;
+  .title {
+    font-weight: bold;
+  }
+  .content {
+    text-align: right;
+    padding-right: 10px;
+  }
+}
