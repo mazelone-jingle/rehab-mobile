@@ -1,0 +1,31 @@
+@import '../../theme/theme.scss';
+
+.chart-content {
+  padding-top: 10px;
+}
+.title {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.steps {
+  margin: 10px 0;;
+  display: flex;
+  justify-content: space-around;
+  .step {
+    list-style:none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    text-align: center;
+    &.past {
+      background-color: #d86619;
+      color: #fff;
+    }
+  }
+}
+
+.info {
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+}

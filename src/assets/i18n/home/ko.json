@@ -1,0 +1,16 @@
+{
+  "exercise_setting": "운동 정보 설정",
+  "exercise_records": "운동 기록 보기",
+  "real_time_exercise": "의료진과 운동하기",
+  "reservation": "운동 예약하기",
+  "noti_and_lang_setting": "알람 및 언어 설정",
+  "personal_info_setting": "개인정보 설정",
+  "app_manual": "App 안내서 보기",
+  "connect": "기기와 연결하겠습니다.",
+  "see_records": "기기와 연결하지 않고 데이터를 확인합니다.",
+  "select_one": "선택해주세요",
+  "finish_setting": "설정 완료",
+  "bluetooth": "블루투스",
+  "confirm": "확인",
+  "cancel": "취소"
+}

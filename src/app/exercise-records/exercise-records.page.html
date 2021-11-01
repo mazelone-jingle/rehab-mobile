@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'exercise_records'| translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-segment [(ngModel)]="segmentStatus" (ionChange)="segmentChanged($event)">
+  <ion-segment-button value="summary">
+    <ion-label>{{'summary'| translate}}</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="calendar">
+    <ion-label>{{'calendar'| translate}}</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+<ion-content>
+  <div [hidden]="segmentStatus !== 'summary'">
+    <ion-item class="" button (click)="showPeriodDetail()" detail="false">
+      <ion-label class="record-title">
+        <h3>{{period}}</h3>
+      </ion-label>
+      <ion-icon slot="end" name="chevron-forward"></ion-icon>
+    </ion-item>
+    <ion-item class="record">
+      <div>
+        <ion-label class="record-title">
+          <i class="icon icon-heartbeat"></i>
+          <h3>{{'target_hr_remain_ratio'| translate}}</h3>
+        </ion-label>
+        <div id="pieChart" class="pie-chart">
+          <div class="text" *ngIf="pieChartData">
+            <p class="title">{{'BPM_average'| translate}}</p>
+            <p class="value">{{pieChartData.thrRetention}} %</p>
+          </div>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item class="record" *ngIf="pieChartData">
+      <div>
+        <ion-label class="record-title">
+          <i class="icon icon-schedule"></i>
+          <h3>{{'total_exercise_times'| translate}}</h3>
+        </ion-label>
+        <p class="record-data">{{pieChartData.exerciseTimes}}{{'times'| translate}}</p>
+      </div>
+    </ion-item>
+    <ion-item class="record" *ngIf="pieChartData">
+      <div>
+        <ion-label class="record-title">
+          <i class="icon icon-clock"></i>
+          <h3>{{'total_exercise_time'| translate}}</h3>
+        </ion-label>
+        <p class="record-data">{{pieChartData.exerciseTotalTime}}{{'minute'| translate}}</p>
+      </div>
+    </ion-item>
+  </div>
+
+  <div *ngIf="segmentStatus === 'calendar'">
+    <ion-title class="calendar-title">{{viewTitle}}</ion-title>
+    <div class="ion-padding">
+      <calendar
+        [eventSource]="eventSource"
+        [currentDate]="calendar.currentDate"
+        [dateFormatter]="calendar.dateFormatter"
+        [monthviewEventDetailTemplate]="template"
+        (onCurrentDateChanged)="onCurrentDateChanged($event)"
+        (onEventSelected)="onEventSelected($event)"
+        (onTitleChanged)="onViewTitleChanged($event)"
+        (onTimeSelected)="onTimeSelected($event)"
+        [step]="calendar.step">
+      </calendar>
+      <ng-template #template let-showEventDetail="showEventDetail" let-selectedDate="selectedDate"
+        let-noEventsLabel="noEventsLabel">
+        <ion-card>
+          <ion-card-header class="records-header" color="light">
+            <ion-card-title>{{'records_list'| translate}}</ion-card-title>
+            <ion-card-subtitle class="subtitle">{{selectedTime | date: 'YYYY-MM-dd'}}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list>
+              <ng-container *ngIf="eventDetail?.length > 0; else noDetails">
+                <ion-item *ngFor="let dailyData of eventDetail">
+                  <div
+                    style="display: flex; justify-content: space-between; padding: 5px 0; width: 100%; font-size: 14px;"
+                    (click)="navToDetail(dailyData)">
+                    <p>{{dailyData.start}} ~ {{dailyData.end}}</p>
+                    <p>[{{dailyData.time}}]</p>
+                    <p *ngIf="dailyData.rpeStatus">RPE: {{dailyData.rpeStatus}}</p>
+                    <p style="color: red;"> {{dailyData.thrRetention}}%</p>
+                  </div>
+                </ion-item>
+              </ng-container>
+              <ng-template #noDetails>
+                <ion-item>
+                  <ion-label>{{'no_records'| translate}}</ion-label>
+                </ion-item>
+              </ng-template>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

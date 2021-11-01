@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'exersice_detail' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header color="medium">
+      <ion-card-title>{{'target_hr_remain_ratio' | translate}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="hr-content">
+      <app-progress-bar [ratio]="exerciseRecords.thrRetention"></app-progress-bar>
+      <ion-label class="hr-value">{{exerciseRecords.thrRetention}}%</ion-label>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header color="medium">
+      <ion-card-title>{{'hr_records' | translate}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div *ngIf="chart" id="record" style="display: block; height: 200px; "></div>
+      <ion-buttons>
+        <ion-button color="primary" fill="outline" size="small" shape="round" style="margin-left: auto; z-index: 10;" (click)="showHrDetail()">{{'see_detail' | translate}}</ion-button>
+      </ion-buttons>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="prescription">
+    <ion-card-header color="medium">
+      <ion-card-title>{{'exercise_summary' | translate}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="setting-item">
+        <h3 class="title">{{'exercise_type' | translate}}</h3>
+        <ul class="content">
+          <li>{{prescription.exerciseTypeValue}}</li>
+        </ul>
+      </div>
+      <div class="setting-item" *ngFor="let step of prescription.steps; index as i;">
+        <h3 class="title">{{'step' | translate}} {{i+1}}</h3>
+        <ul class="content">
+          <li>{{step.type}}</li>
+          <li>{{step.minute}} {{'minutes' | translate}}</li>
+        </ul>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

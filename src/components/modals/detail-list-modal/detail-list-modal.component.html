@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="arrow-back" style="width: 24px; height: 48px;"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen class="ion-padding" *ngIf="isChooseMulti; else elseTemplate">
+  <ion-item button *ngFor="let data of dataList; index as i" (click)="checkItem(data)">
+    <!-- <ion-icon slot="end" name="checkmark" *ngIf="checkIsChecked(data.text)"></ion-icon> -->
+    <ion-label>{{data.text}}</ion-label>
+    <ion-checkbox slot="end" [checked]="checkIsChecked(data.text)"></ion-checkbox>
+  </ion-item>
+</ion-content>
+<ng-template #elseTemplate>
+  <ion-content fullscreen class="ion-padding">
+    <ion-item button *ngFor="let data of dataList" (click)="dismissModal(data)">
+      <ion-icon slot="end" name="checkmark" *ngIf="currValue === data.text"></ion-icon>
+      <ion-label>{{data.text}}</ion-label>
+    </ion-item>
+  </ion-content>
+</ng-template>
+

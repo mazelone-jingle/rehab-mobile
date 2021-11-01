@@ -1,0 +1,18 @@
+<div class="chat-bubble" [ngClass]="message.messageStatus">
+  <ng-container [ngSwitch]="message.rpeValue">
+    <ng-container *ngSwitchCase="8">
+      <h6>편해요.</h6>
+    </ng-container>
+    <ng-container *ngSwitchCase="12">
+      <h6>보통이에요.</h6>
+    </ng-container>
+    <ng-container *ngSwitchCase="15">
+      <h6>힘들어요.</h6>
+    </ng-container>
+    <ng-container *ngSwitchCase="19">
+      <h6>매우 힘들어요.</h6>
+    </ng-container>
+  </ng-container>
+  <h6>현재 심박수: {{message.rate}} bpm</h6>
+  <p>{{ message.sendDateTime | date:'HH:mm' }}</p>
+</div>

@@ -1,0 +1,9 @@
+{
+  "notification_setting": "Notification Settings",
+  "notification_time": "Notification Time Settings",
+  "notification_weekdays": "Repeat",
+  "every": "Every",
+  "notification_sound": "Notification-Sound",
+  "notification_vibration": "Notification-Vibration",
+  "notification_music": "Select a Music"
+}

@@ -1,0 +1,10 @@
+@import "./modals/connect-modal";
+@import "./modals/devices-modal";
+@import "./modals/rpe-modal";
+
+.modal-wrapper, .inner-scroll {
+  background: transparent !important;
+  ion-header {
+    background-color: #fff;
+  }
+}

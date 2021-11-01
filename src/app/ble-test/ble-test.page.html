@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>ble-test</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-button expand="full" (click)="scan()">SCAN</ion-button><br />
+    </ion-item>
+
+    <ion-item *ngFor="let device of devices" (click)="connect(device.id)">
+      {{device | json}}
+    </ion-item>
+
+    <ion-item>
+      <ion-button [disabled]="!connectedDeviceId" expand="full" (click)="disconnect()">DISCONNECT</ion-button><br />
+    </ion-item>
+
+    <ion-radio-group [(ngModel)]="selectedCommand">
+      <ion-list-header>
+        <ion-label>Commands</ion-label>
+      </ion-list-header>
+      <ion-item *ngFor="let command of commands">
+        <ion-label>{{command | uppercase}}</ion-label>
+        <ion-radio slot="start" color="success" [value]="command"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <ion-item>
+      <ion-button expand="full" color="danger" [disabled]="!connectedDeviceId" (click)="writeCommand()">WRITE
+      </ion-button><br />
+    </ion-item>
+
+    <ion-item>
+      <ion-button (click)="test()">TEST</ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>

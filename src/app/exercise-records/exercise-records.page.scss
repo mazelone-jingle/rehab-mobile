@@ -1,0 +1,78 @@
+@import '../../theme/theme.scss';
+
+.record {
+  >div {
+    width: 100%;
+    padding: 10px 0;
+  }
+  &-title {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+  }
+  i {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  &-data {
+    color: #aaa;
+    font-size: 24px;
+    text-align: right;
+  }
+}
+
+.pie-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+  .text{
+    position: absolute;
+    text-align: center;
+    .title {
+      color: #aaa;
+      font-size: 1.5rem;
+    }
+    .value {
+      color: #df7127;
+      font-size: 3rem;
+      font-weight: bold;
+    }
+  }
+}
+
+.records-header {
+  display: flex;
+  justify-content: space-between;
+  align-content: baseline;
+  .subtitle {
+    font-weight: bold;
+    font-size: 16px;
+  }
+}
+
+.calendar-title {
+  margin: 10px 0;
+}
+
+::ng-deep app-exercise-records {
+  calendar {
+    .monthview-primary-with-event {
+      background-color: #fff !important;
+      color: var(--color) !important;
+      z-index: 1;
+      position: relative;
+      &::before {
+        content: '\2665';
+        color: red;
+        display: inline-block;
+        position: absolute;
+        z-index: -1;
+        left: 50%;
+        transform: scale(3) translateX(-20%);
+      }
+    }
+  }
+}
+

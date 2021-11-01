@@ -1,0 +1,11 @@
+<ion-content #modalContent>
+  <div class="wrap">
+    <p>디바이스에 저장된 데이터들을 받아오는 중 입니다. 잠시만 기다려주세요.....</p>
+  </div>
+</ion-content>
+
+<ion-footer #modalFooter>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="dismissModal()" [disabled]="isGettingData | async">{{'finish_setting' | translate}}</ion-button>
+  </ion-toolbar>
+</ion-footer>

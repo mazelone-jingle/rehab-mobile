@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'exercise_schedule_notification' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ng-container *ngFor="let notification of notificationList">
+      <ion-item>
+        <ion-label [routerLink]="['/notification-detail', notification.id]">
+          {{notification.time | amPm}}
+        </ion-label>
+        <ion-toggle class="notification-toggle" slot="end" mode="ios"
+        [checked]="notification.status"
+        (ionChange)="toggleNotification($event, notification.id)"></ion-toggle>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+  <button (click)="getNotifications()">get</button>
+  <button (click)="clearAllNotification()">clear all</button>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="full" (click)="addNotification()">
+    추가
+  </ion-button>
+</ion-footer>

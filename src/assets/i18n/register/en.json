@@ -1,0 +1,8 @@
+{
+  "register": "Register",
+  "name": "Name",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "backToLogin": "Go Back to Login"
+}

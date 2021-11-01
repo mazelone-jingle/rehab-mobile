@@ -1,0 +1,97 @@
+<ion-content #modalContent>
+  <div class="wrap">
+    <h3>운동을 모두 받아왔습니다.</h3>
+    <h3>RPE 값을 입력해주세요.</h3>
+    <div class="list">
+      <div class="level" style="background-color: #dfe4fa;">
+        <div class="level-number">
+          <p>6</p>
+          <p>7</p>
+          <p>8</p>
+        </div>
+        <div class="level-content">
+          <p>매우 매우 편하다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #b3c3f4;">
+        <div class="level-number">
+          <p>9</p>
+          <p>10</p>
+        </div>
+        <div class="level-content">
+          <p>매우 편하다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #87a1eb;">
+        <div class="level-number">
+          <p>11</p>
+          <p>12</p>
+        </div>
+        <div class="level-content">
+          <p>편하다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #fddfc7;">
+        <div class="level-number">
+          <p>13</p>
+          <p>14</p>
+        </div>
+        <div class="level-content">
+          <p>약간 힘들다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #ffa360;">
+        <div class="level-number">
+          <p>15</p>
+          <p>16</p>
+        </div>
+        <div class="level-content">
+          <p>힘들다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #f6700d;">
+        <div class="level-number">
+          <p>17</p>
+          <p>18</p>
+        </div>
+        <div class="level-content">
+          <p>매우 힘들다</p>
+        </div>
+      </div>
+      <div class="level" style="background-color: #f11312;">
+        <div class="level-number">
+          <p>19</p>
+          <p>20</p>
+        </div>
+        <div class="level-content">
+          <p>매우 매우 힘들다</p>
+        </div>
+      </div>
+    </div>
+    <select name="rpe" id="rpe" class="rpe" (change)="selectOption($event)">
+      <option value="0">{{'select_one' | translate}}</option>
+      <option value="6" style="background-color: #dfe4fa;">6</option>
+      <option value="7" style="background-color: #dfe4fa;">7</option>
+      <option value="8" style="background-color: #dfe4fa;">8</option>
+      <option value="9" style="background-color: #b3c3f4;">9</option>
+      <option value="10" style="background-color: #b3c3f4;">10</option>
+      <option value="11" style="background-color: #87a1eb;">11</option>
+      <option value="12" style="background-color: #87a1eb;">12</option>
+      <option value="13" style="background-color: #fddfc7;">13</option>
+      <option value="14" style="background-color: #fddfc7;">14</option>
+      <option value="15" style="background-color: #ffa360;">15</option>
+      <option value="16" style="background-color: #ffa360;">16</option>
+      <option value="17" style="background-color: #f6700d;">17</option>
+      <option value="18" style="background-color: #f6700d;">18</option>
+      <option value="19" style="background-color: #f11312;">19</option>
+      <option value="20" style="background-color: #f11312;">20</option>
+    </select>
+  </div>
+</ion-content>
+
+<ion-footer #modalFooter>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="dismissModal()" [disabled]="this.rpeValue === 0">{{'finish_setting' |
+      translate}}</ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,21 @@
+.devices-modal   {
+  --backdrop-opacity: 0.8 !important;
+  .modal-wrapper {
+    // min-height: 150px !important;
+    --height: 50%;
+    --width: 90%;
+    position: absolute;
+    overflow-y: hidden;
+  }
+  .wrap {
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  h3 {
+    margin: 0;
+    padding: 16px;
+  }
+}
+

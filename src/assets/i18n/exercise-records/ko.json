@@ -1,0 +1,14 @@
+{
+  "exercise_records": "운동 기록 보기",
+  "summary": "요약",
+  "calendar": "달력",
+  "target_hr_remain_ratio": "목표 심박수 유지율",
+  "BPM_average": "BPM 평균",
+  "total_exercise_times": "총 운동 횟수",
+  "times": "회",
+  "total_exercise_time": "총 운동 시간",
+  "minute": "분",
+  "second": "초",
+  "records_list": "기록 리스트",
+  "no_records": "기록이 없습니다."
+}

@@ -1,0 +1,50 @@
+.rpe-modal {
+  --backdrop-opacity: 0.8 !important;
+  .modal-wrapper {
+    --height: 90%;
+    --width: 90%;
+    position: absolute;
+  }
+  .wrap {
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  h3 {
+    margin: 0;
+  }
+  .explain {
+    width: 80px;
+    margin-left: auto;
+  }
+  .rpe {
+    height: 40px;
+  }
+  .list {
+    padding: 8px 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .level {
+      display: flex;
+      align-items: center;
+      padding: 4px  0;
+      p {
+        text-align: center;
+        margin: 0;
+      }
+      &-number {
+        width: 20%;
+        p:not(:last-child) {
+          margin-bottom: 4px;
+        }
+      }
+      &-content {
+        width: 80%;
+      }
+    }
+  }
+}

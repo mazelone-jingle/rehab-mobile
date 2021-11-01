@@ -1,0 +1,21 @@
+<ion-header>
+  <h3>{{title}}</h3>
+</ion-header>
+
+<ion-content #modalContent>
+  <div class="wrap">
+    <ion-radio-group (ionChange)="radioGroupChange($event)">
+      <ion-item *ngFor="let device of devicesList">
+        <ion-label>{{device.name}}</ion-label>
+        <ion-radio slot="start" value={{device.id}}  ></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </div>
+</ion-content>
+
+<ion-footer #modalFooter>
+  <ion-toolbar>
+    <ion-button slot="start" (click)="dismissModal(false)">{{'cancel' | translate}}</ion-button>
+    <ion-button slot="end" (click)="dismissModal(true)" [disabled]="!deviceId">{{'finish_setting' | translate}}</ion-button>
+  </ion-toolbar>
+</ion-footer>

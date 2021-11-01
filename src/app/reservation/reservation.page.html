@@ -1,0 +1,83 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>운동 예약하기</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-title class="calendar-title">{{viewTitle}}</ion-title>
+  <calendar
+  [monthviewEventDetailTemplate]="template"
+  [eventSource]="eventSource"
+  [currentDate]="calendar.currentDate"
+  [dateFormatter]="calendar.dateFormatter"
+  (onCurrentDateChanged)="onCurrentDateChanged($event)"
+  (onEventSelected)="onEventSelected($event)"
+  (onTitleChanged)="onViewTitleChanged($event)"
+  (onTimeSelected)="onTimeSelected($event)"
+  [step]="calendar.step"
+>
+</calendar>
+  <!--
+        let-showEventDetail="showEventDetail"
+    let-selectedDate="selectedDate"
+    let-noEventsLabel="noEventsLabel"
+  -->
+  <ng-template #template>
+    <ion-list
+      class="event-detail-container"
+      has-bouncing="false"
+      *ngIf="showEventDetail"
+      overflow-scroll="false"
+    >
+      <ion-item *ngFor="let event of selectedDate?.events">
+        <div style="display: flex; flex: 1">
+          <div style="display: flex; flex-direction: row; flex: 9; align-items: center;">
+            <span *ngIf="!event.allDay" class="monthview-eventdetail-timecolumn"
+              >{{event.startTime|date: 'HH:mm'}} - {{event.endTime|date:
+              'HH:mm'}}
+            </span>
+
+            <span *ngIf="event.allDay" class="monthview-eventdetail-timecolumn"
+              >All day</span
+            >
+            <span class="event-detail"> | {{event.title}}</span>
+          </div>
+          <div style="display: flex; flex: 1; align-items: flex-end">
+            <ion-button [disabled]="!this.checkCanJoinChattingRoom(event.data?.from, event.data?.to) || (event.data.reservation.approvalResult === false || event.data.reservation.approvalResult === undefined)"
+              *ngIf="!!event.data?.reservation"
+              (click)="joinChat(event.data?.reservation)"
+            >
+              <ng-container *ngIf="event.data.reservation.approvalResult; else elseTemplate">대화방 참여</ng-container>
+              <ng-template #elseTemplate>
+                <ng-container *ngIf="!event.data.reservation.approvalResult">
+                  {{event.data.reservation.approvalResult === false || event.data.reservation.cancelledDate ? '예약 불가': '의사 미확인'}}</ng-container>
+              </ng-template>
+
+
+            </ion-button>
+
+            <div *ngIf="event.data?.reservable">
+              <ion-button
+                [disabled]="!event.data?.reservable"
+                (click)="onEventSelected(event)"
+              >
+                <div *ngIf="event.data?.reservable">
+                  <span>예약</span>
+                </div>
+              </ion-button>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+      <ion-item *ngIf="selectedDate?.events.length==0">
+        <div class="no-events-label">{{noReservation}}</div>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+
+
+</ion-content>

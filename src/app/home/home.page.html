@@ -1,0 +1,84 @@
+<ion-header>
+  <ng-container *ngIf="batteryPower; else elseTemplate">
+    <div class="battery-bar">
+      <ng-container *ngIf="batteryPower > 80">
+        <i class="icon icon-battery-100"></i>
+      </ng-container>
+      <ng-container *ngIf="batteryPower > 50 && batteryPower <= 80">
+        <i class="icon icon-battery-80"></i>
+      </ng-container>
+      <ng-container *ngIf="batteryPower > 30 && batteryPower <=50">
+        <i class="icon icon-battery-50"></i>
+      </ng-container>
+      <ng-container *ngIf="batteryPower <= 30">
+        <i class="icon icon-battery-30"></i>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <div class="bluetooth-bar">
+      <button class="bluetooth-btn" (click)="presentIsConnectModal()">
+        <i class="icon icon-bluetooth"></i>
+        {{'bluetooth' |  translate}}
+      </button>
+    </div>
+  </ng-template>
+</ion-header>
+
+<ion-content>
+  <div class="wrap">
+    <ul class="function-list">
+      <li class="function">
+        <button class="function-btn" [routerLink]="['/exercise-setting']">
+          <i class="icon icon-content"></i>
+          <p class="function-name">{{ 'exercise_setting' | translate }}</p>
+        </button>
+      </li>
+      <li class="function">
+        <button class="function-btn" [routerLink]="['/exercise-records']">
+          <i class="icon icon-search"></i>
+          <p class="function-name">{{ 'exercise_records' | translate }}</p>
+        </button>
+      </li>
+      <li class="function">
+        <button class="function-btn" (click)="routeToRealtimeExercise()">
+          <i class="icon icon-jogging"></i>
+          <p class="function-name">{{ 'real_time_exercise' | translate }}</p>
+        </button>
+      </li>
+      <li class="function">
+        <button class="function-btn" [routerLink]="['/reservation']">
+          <i class="icon icon-calendar"></i>
+          <p class="function-name">{{ 'reservation' | translate }}</p>
+        </button>
+      </li>
+      <li class="function">
+        <button
+          class="function-btn function-btn_2icon"
+          [routerLink]="['/noti-lang-setting']"
+        >
+          <div>
+            <i class="icon icon-alarm mr-8"></i>
+            <i class="icon icon-translate"></i>
+          </div>
+          <p class="function-name">{{ 'noti_and_lang_setting' | translate }}</p>
+        </button>
+      </li>
+      <li
+        class="function"
+        [routerLink]="['/personal-info-setting']"
+      >
+        <button class="function-btn">
+          <i class="icon icon-contact_information"></i>
+          <p class="function-name">{{ 'personal_info_setting' | translate }}</p>
+        </button>
+      </li>
+      <li class="function" [routerLink]="['/manual']">
+        <button class="function-btn">
+          <i class="icon icon-book"></i>
+          <p class="function-name">{{ 'app_manual' | translate }}</p>
+        </button>
+      </li>
+    </ul>
+  </div>
+</ion-content>

@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'exersice_info_setting' | translate}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button expand="full" (click)="startExercise()">
+        {{'exercise_start' | translate}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="setting-item">
+    <h3 class="title">{{'target_hr' | translate}}</h3>
+    <ul class="range">
+      <li class="lowest">{{prescription?.hrMin}}<span>BPM</span></li>
+      <li>
+        <ul class="dots-info">
+          <li class="lowest">{{'lowest_hr' | translate}}</li>
+          <li class="hightest">{{'hightest_hr' | translate}}</li>
+        </ul>
+        <ul class="dots">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </li>
+      <li class="hightest">{{prescription?.hrMax}}<span>BPM</span></li>
+    </ul>
+  </div>
+  <ion-item class="prescription">
+    <ion-label class="prescription-title">
+      <h3 class="title">{{'exercise_type' | translate}}</h3>
+    </ion-label>
+    <ul class="prescription-data">
+      <li *ngFor="let type of prescription?.exerciseTypes">{{type}}</li>
+    </ul>
+  </ion-item>
+  <ion-item class="prescription" *ngFor="let step of prescription?.steps; index as i;">
+    <div>
+      <ion-label class="prescription-title">
+        <h3>{{'step' | translate}} {{i+1}}</h3>
+      </ion-label>
+      <ul class="prescription-data">
+        <li>{{step.type}}</li>
+        <li>{{step.minute}} {{'minute' | translate}}</li>
+      </ul>
+    </div>
+  </ion-item>
+</ion-content>

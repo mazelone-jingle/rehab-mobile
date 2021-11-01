@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'personal_info_setting' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="infoForm" novalidate *ngIf="infoForm">
+    <ion-item class="form-group">
+      <ion-label for="name" position="fixed">{{'name' | translate}}</ion-label>
+      <ion-input type="text" formControlName="name" class="form-control" id="name"></ion-input>
+    </ion-item>
+    <div *ngIf="name.invalid && name.touched">
+      <small style="color: red;" *ngIf="name.errors.required">이름을 입력해주세요</small>
+    </div>
+    <ion-item class="form-group">
+      <ion-label for="gender" position="fixed">{{'gendar' | translate}}</ion-label>
+      <ion-radio-group formControlName="gender">
+        <ion-item>
+          <ion-label>{{'male' | translate}}</ion-label>
+          <ion-radio slot="start" [value]="true"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{'female' | translate}}</ion-label>
+          <ion-radio slot="start" [value]="false"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+      <ion-input type="text"  class="form-control" id="gender"></ion-input>
+    </ion-item>
+    <ion-item class="form-group">
+      <ion-label for="birthday" position="fixed">{{'birthday' | translate}}</ion-label>
+      <ion-datetime formControlName="birthday"></ion-datetime>
+    </ion-item>
+    <div *ngIf="birthday.invalid && birthday.touched">
+      <small style="color: red;" *ngIf="birthday.errors.required">생년월일을 입력해주세요</small>
+    </div>
+    <ion-item class="form-group">
+      <ion-label for="email" position="fixed">{{'email' | translate}}</ion-label>
+      <ion-input type="email" formControlName="email" class="form-control" id="email"></ion-input>
+    </ion-item>
+    <div *ngIf="email.invalid && email.touched">
+      <small style="color: red;" *ngIf="email.errors.required">이메일을 입력해주세요</small>
+      <small style="color: red;" *ngIf="email.errors.email">올바른 이메일 형식이 아닙니다</small>
+    </div>
+    <ion-item class="form-group">
+      <ion-label for="contact" position="fixed">{{'contact' | translate}}</ion-label>
+      <ion-input type="text" formControlName="contact" class="form-control" id="contact"></ion-input>
+    </ion-item>
+    <div *ngIf="contact.invalid && contact.touched">
+      <small style="color: red;" *ngIf="contact.errors.required">연락처를 입력해주세요</small>
+    </div>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="block" color="primary" (click)="saveData()" [disabled]="infoForm.invalid">{{'save' | translate}}</ion-button>
+</ion-footer>

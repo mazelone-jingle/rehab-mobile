@@ -1,0 +1,44 @@
+ion-item {
+    --highlight-height: 0;
+}
+
+ion-input, ion-button {
+    height: 60px;
+}
+
+.title-default {
+  text-align: center;
+  margin: 8px 0;
+  font-weight: bold;
+}
+
+.wrap {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+  }
+  img {
+    width: 150px;
+  }
+}
+
+.card {
+  width: 100%;
+  padding: 5px;
+  .button {
+    font-size: 16px;
+  }
+}
+
+.register {
+  display: flex;
+  .button {
+    width: 50%;
+  }
+}

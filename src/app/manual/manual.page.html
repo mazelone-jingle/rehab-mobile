@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'manual' |  translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item (click)="openPdfFile('heart recovering')">{{'heart_rehabilitation_guide' |  translate}}</ion-item>
+    <ion-item (click)="openPdfFile('app manual')">{{'app_manual' |  translate}}</ion-item>
+    <ion-item (click)="openPdfFile('q&a')">{{'q_and_a' |  translate}}</ion-item>
+    <ion-item (click)="openPdfFile('lifurance')">{{'lifurance' |  translate}}</ion-item>
+  </ion-list>
+</ion-content>

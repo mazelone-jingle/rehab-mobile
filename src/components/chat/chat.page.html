@@ -1,0 +1,119 @@
+<!-- <ng-container *ngIf="hubConnected; else unconnected"> -->
+<ion-header>
+  <!-- <ion-toolbar>
+      <div class="chatting-btns">
+        <ion-title>{{'chat.title' | translate}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="disconnect()">{{'chat.disconnect' | translate}}</ion-button>
+          <ion-button slot="end" fill="clear" (click)="openDrawer()">
+            <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </div>
+      <div>
+        <ion-buttons slot="end" class="func-btns">
+          <ion-button (click)="getParticipants()">{{'chat.participants_list' | translate}}</ion-button>
+          <ion-button (click)="createChannel()">{{'chat.channel_create' | translate}}</ion-button>
+          <ion-button (click)="showChannelList()">{{'chat.channel_list' | translate}}</ion-button>
+          <ion-button (click)="leaveChannel()">{{'chat.get_out_of_chatting_room' | translate}}</ion-button>
+        </ion-buttons>
+      </div>
+    </ion-toolbar> -->
+</ion-header>
+
+<!-- 채팅방 Drawer -->
+<ion-menu side="end" menuId="custom" contentId="chatmessage" class="my-custom-menu">
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-avatar>
+          <img src="../../../assets/person_add.svg" />
+        </ion-avatar>
+        <ion-label>{{'chat.add_partner' | translate}}</ion-label>
+      </ion-item>
+      <ion-item *ngFor="let user of userList">
+        {{user.email}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+<ion-router-outlet id="chatmessage"> </ion-router-outlet>
+<ion-content class="bg">
+  <div class="chat-container">
+    <div class="msg-container">
+      <ng-container *ngFor="let message of messages">
+        <ng-container [ngSwitch]="message.messageType">
+          <ng-container *ngSwitchCase="'TEXT'">
+            <app-msg-text [message]="message"></app-msg-text>
+          </ng-container>
+          <ng-container *ngSwitchCase="'EMERGENCY'">
+            <app-msg-emergency [message]="message"></app-msg-emergency>
+          </ng-container>
+          <ng-container *ngSwitchDefault> </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="rpe-shortcut">
+    <ul>
+      <li>
+        <button class="rpe-btn" style="background-color: #b3c3f4;" (click)="sendEmergency(8)">편해요. (RPE: 8)</button>
+      </li>
+      <li>
+        <button class="rpe-btn" style="background-color: #fddfc7;" (click)="sendEmergency(12)">보통이에요. (RPE: 12)</button>
+      </li>
+      <li>
+        <button class="rpe-btn" style="background-color: #f6700d;" (click)="sendEmergency(15)">힘들어요. (RPE: 15)</button>
+      </li>
+      <li>
+        <button class="rpe-btn" style="background-color: #f11312;" (click)="sendEmergency(19)">매우 힘들어요. (RPE: 19)</button>
+      </li>
+    </ul>
+  </div>
+  <div class="chat-controls" [ngClass]="{'active': showOptions}">
+    <ion-row class="option ion-text-center">
+      <ion-col size="4">
+        <ion-icon name="camera"></ion-icon>{{'chat.camera' | translate}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-icon name="image"></ion-icon>{{'chat.gallery' | translate}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-icon name="people"></ion-icon>{{'chat.contact' | translate}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-icon name="headset"></ion-icon> {{'chat.audio' | translate}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-icon name="pin"></ion-icon>{{'chat.location' | translate}}
+      </ion-col>
+      <ion-col size="4">
+        <ion-icon name="document"></ion-icon>
+        {{'chat.document' | translate}}
+      </ion-col>
+    </ion-row>
+    <ion-row class="bg-white" style="display: flex;  align-items: center;">
+      <ion-col size="11" class="ion-no-padding">
+        <ion-list lines="none" class="ion-no-padding">
+          <ion-item>
+            <ion-input id="chat-input" placeholder="메시지를 입력해주세요." type="text" (focus)="showOptionsToggle(false)">
+            </ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="1" class="ion-no-padding">
+        <p class="ion-text-center icon-controls">
+          <ion-icon mode="ios" name="send" class="text-primary" (click)="sendMessage()"></ion-icon>
+          <!-- <ion-icon mode="ios" name="add-circle" *ngIf="!showOptions" (click)="showOptionsToggle()"></ion-icon>
+          <ion-icon mode="ios" name="close-circle" *ngIf="showOptions" (click)="showOptionsToggle()"></ion-icon> -->
+        </p>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+<!-- </ng-container>
+
+<ng-template #unconnected>
+  <ion-button (click)="connectHubb()">채팅 연결</ion-button>
+</ng-template>
+ -->

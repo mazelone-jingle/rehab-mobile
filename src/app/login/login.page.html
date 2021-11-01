@@ -1,0 +1,38 @@
+<div class="wrap">
+  <div class="content">
+    <img src="assets/icon/rehab_icon.png" alt="">
+    <ion-card class="card">
+      <ion-title>{{'login' | translate}}</ion-title>
+      <form [formGroup]="loginForm" novalidate *ngIf="loginForm">
+        <ion-item class="form-group">
+          <ion-label for="id" position="fixed">{{'email' | translate}}</ion-label>
+          <ion-input type="text" formControlName="email" class="form-control" id="id"></ion-input>
+          <!--[class.item-inner-highlight]="email.valid && email.touched"-->
+        </ion-item>
+        <div *ngIf="email.invalid && email.touched">
+          <small style="color: red;" *ngIf="email.errors.required">이메일을 입력해주세요</small>
+          <small style="color: red;" *ngIf="email.errors.email">올바른 이메일 형식이 아닙니다</small>
+        </div>
+        <ion-item class="form-group">
+          <ion-label for="pwd" position="fixed">{{'password' | translate}}</ion-label>
+          <ion-input type="password" formControlName="password" class="form-control" id="pwd"></ion-input>
+        </ion-item>
+        <ion-item class="form-group">
+          <ion-label>{{'is_remember_email' | translate}}</ion-label>
+          <ion-checkbox slot="start" formControlName="isRememberEmail" class="form-control"></ion-checkbox>
+        </ion-item>
+        <div *ngIf="password.invalid && password.touched">
+          <small style="color: red;" *ngIf="password.errors.required">비밀번호를 입력해주세요</small>
+          <small style="color: red;" *ngIf="password.errors.minlength">비밀번호는 4자리 이상입니다</small>
+        </div>
+      </form>
+
+      <div class="register">
+        <ion-button expand="block" color="danger" [routerLink]="['/register']">{{'register' | translate}}</ion-button>
+        <ion-button expand="block" color="danger" [routerLink]="['/forgot-password']">{{'forgot_password' | translate}}
+        </ion-button>
+      </div>
+      <ion-button expand="block" (click)="login()" [disabled]="!this.loginForm.valid">{{'login' | translate}}</ion-button>
+    </ion-card>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{
+  "exercise_records": "View Exercise History",
+  "summary": "Summary",
+  "calendar": "Calendar",
+  "target_hr_remain_ratio": "Maintenance Rate of Target Heart Rate",
+  "BPM_average": "Average BPM",
+  "total_exercise_times": "Total Number of Exercise",
+  "times": "Times",
+  "total_exercise_time": "Total Exercise Time",
+  "minute": "Minutes",
+  "second": "Seconds",
+  "records_list": "History List",
+  "no_records": "No History"
+}

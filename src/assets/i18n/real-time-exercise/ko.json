@@ -1,0 +1,31 @@
+{
+  "real_time_exercise": "의료진과 운동하기",
+  "exercise_start": "운동 시작",
+  "step": "단계",
+  "chat": {
+    "title": "채팅",
+    "disconnect": "연결 중단",
+    "participants_list": "참여자 목록",
+    "channel_create": "채널 생성",
+    "channel_list": "채널 목록",
+    "get_out_of_chatting_room": "대화방 나가기",
+    "add_partner": "대화상대 추가",
+    "camera": "카메라",
+    "gallery": "사진",
+    "contact": "연락처",
+    "audio": "음성메시지",
+    "location": "위치",
+    "document": "문서"
+  },
+  "minute": "분",
+  "rpe": {
+    "popup_text": "운동이 종료되었습니다. RPE 값을 입력해주세요.",
+    "explain": "설명",
+    "confirm": "확인",
+    "select_one": "선택해 주세요."
+  },
+  "confirm": "확인",
+  "cancel": "취소",
+  "select_one": "선택해주세요",
+  "finish_setting": "설정 완료"
+}

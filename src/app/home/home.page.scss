@@ -1,0 +1,62 @@
+@import "../../theme/theme.scss";
+.battery-bar, .bluetooth-bar {
+  text-align: right;
+  height: 30px;
+  padding-right: 8px;
+  i {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.bluetooth-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.wrap {
+  height: 100%;
+}
+
+.function-list {
+  height: 100%;
+  --cols: 7;
+}
+
+.function {
+  height: calc(100% / var(--cols));
+  &:nth-child(2n) {
+    .function-btn {
+      background-color: #df7127;
+      color:#fff;
+    }
+  }
+  &-btn {
+    background-color: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    i {
+      width: 50px;
+      height: 50px;
+    }
+    &:active {
+      transform: translateY(3px);
+    }
+  }
+  &-btn_2icon {
+    i{
+      width: 30px;
+      height: 30px;
+    }
+  }
+  &-name {
+    font-size: 24px;
+  }
+}
+

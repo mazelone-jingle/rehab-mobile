@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'real_time_exercise' | translate}}</ion-title>
+
+    <ion-buttons slot="end">
+      <!-- <ion-button (click)="stopExercise()"
+        >stop</ion-button> -->
+      <ion-button (click)="startExercise()" [disabled]="isExercising$ | async"
+        >{{'exercise_start' | translate}}</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content">
+  <div class="chart-content" style="height: 40%">
+    <h3 class="title">{{'step' | translate}}{{step}} - {{prescription?.steps[step-1]?.type}}</h3>
+    <ul *ngIf="!!prescription" class="steps">
+      <li
+        class="step"
+        *ngFor="let round of prescription?.steps; index as i"
+        [ngClass]="(step >= i+1)? 'past': ''"
+      >
+        {{i+1}}
+      </li>
+    </ul>
+    <div class="info" *ngIf="step">
+      <p>{{prescription?.exerciseTypes}}</p>
+      <p>
+        {{seconds | minSec}}/{{totalExerciseTime}}{{'minute' |
+        translate}}
+      </p>
+    </div>
+
+    <!-- <ion-button (click)="sendEmergency()"> 힘들어요 </ion-button> -->
+    <div id="canvas" style="display: block; height: 200px"></div>
+  </div>
+  <ion-content class="chat-content" style="height: 60%">
+    <app-chat [reservId]="reservId" [channelId]="channelId" [rpeMsg]="rpeMsg" (sendCurrentRpeEvent)="sendEmergency($event)"></app-chat>
+  </ion-content>
+</ion-content>

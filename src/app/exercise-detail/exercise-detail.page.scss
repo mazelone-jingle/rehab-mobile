@@ -1,0 +1,35 @@
+ion-card {
+  border-radius: 5px;
+}
+
+ion-progress-bar {
+  height: 30px !important;
+  --buffer-background: #aaa;
+  --progress-background: linear-gradient(to right, red, yellow);
+}
+
+.hr-content {
+  text-align: center;
+  .hr-value {
+    font-size: 50px;
+    color: #df7127;
+    font-weight: bold;
+  }
+}
+
+.setting-item {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .content {
+    li {
+      list-style-type: disc;
+      text-indent: 2rem;
+      margin-bottom: 8px;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<ion-content #modalContent>
+  <div class="wrap">
+    <ion-radio-group value="connect"
+    (ionChange)="radioGroupChange($event)">
+      <ion-item>
+        <ion-label>{{'connect' | translate}}</ion-label>
+        <ion-radio slot="start" value="connect"></ion-radio>
+      </ion-item>
+      <ion-item>
+        <ion-label class="ion-text-wrap">{{'see_records' | translate}}</ion-label>
+        <ion-radio slot="start" value="unconnect"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </div>
+</ion-content>
+
+<ion-footer #modalFooter>
+  <ion-toolbar>
+    <ion-button expand="block" (click)="dismissModal()">{{'finish_setting' | translate}}</ion-button>
+  </ion-toolbar>
+</ion-footer>

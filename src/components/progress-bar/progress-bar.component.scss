@@ -1,0 +1,10 @@
+.progress {
+  height:30px;
+  margin:20px;
+  background-image:
+   linear-gradient(#ccc,#ccc),
+   linear-gradient(to right,  red , yellow );
+  background-size: var(--ratio,50%) 100%, 100% 100%;
+  background-position: right,left;
+  background-repeat:no-repeat;
+ }
