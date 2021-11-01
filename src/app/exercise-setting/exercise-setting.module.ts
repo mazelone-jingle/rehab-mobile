@@ -12,10 +12,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
+import { ComponentsModule } from 'src/components/components.module';
+import { SharedPipesModule } from 'src/pipes/shared-pipes.module';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/exercise-setting/', '.json');
-}
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/exercise-setting/', '.json');
 
 @NgModule({
   imports: [
@@ -30,7 +30,9 @@ export function createTranslateLoader(http: HttpClient) {
           deps: [HttpClient]
       },
       isolate: true
-    })
+    }),
+    ComponentsModule,
+    SharedPipesModule
   ],
   declarations: [ExerciseSettingPage]
 })

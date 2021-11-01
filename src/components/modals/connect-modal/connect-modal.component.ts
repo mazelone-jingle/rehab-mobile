@@ -7,7 +7,7 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['../../../theme/modals/_connect-modal.scss'],
 })
 export class ConnectModalComponent implements OnInit {
-  isConnect: boolean = true;
+  isConnect = true;
   constructor(public modalController: ModalController) {}
 
   ngOnInit() {}

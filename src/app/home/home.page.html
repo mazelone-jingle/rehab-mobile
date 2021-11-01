@@ -29,13 +29,13 @@
   <div class="wrap">
     <ul class="function-list">
       <li class="function">
-        <button class="function-btn" [routerLink]="['/exercise-setting']">
+        <button class="function-btn" [routerLink]="['/menu/exercise-setting']">
           <i class="icon icon-content"></i>
           <p class="function-name">{{ 'exercise_setting' | translate }}</p>
         </button>
       </li>
       <li class="function">
-        <button class="function-btn" [routerLink]="['/exercise-records']">
+        <button class="function-btn" [routerLink]="['/menu/records']">
           <i class="icon icon-search"></i>
           <p class="function-name">{{ 'exercise_records' | translate }}</p>
         </button>
@@ -47,7 +47,7 @@
         </button>
       </li>
       <li class="function">
-        <button class="function-btn" [routerLink]="['/reservation']">
+        <button class="function-btn" [routerLink]="['/menu/reservation']">
           <i class="icon icon-calendar"></i>
           <p class="function-name">{{ 'reservation' | translate }}</p>
         </button>
@@ -55,7 +55,7 @@
       <li class="function">
         <button
           class="function-btn function-btn_2icon"
-          [routerLink]="['/noti-lang-setting']"
+          [routerLink]="['/menu/noti-lang']"
         >
           <div>
             <i class="icon icon-alarm mr-8"></i>
@@ -66,14 +66,14 @@
       </li>
       <li
         class="function"
-        [routerLink]="['/personal-info-setting']"
+        [routerLink]="['/menu/personal-info-setting']"
       >
         <button class="function-btn">
           <i class="icon icon-contact_information"></i>
           <p class="function-name">{{ 'personal_info_setting' | translate }}</p>
         </button>
       </li>
-      <li class="function" [routerLink]="['/manual']">
+      <li class="function" [routerLink]="['/menu/manual']">
         <button class="function-btn">
           <i class="icon icon-book"></i>
           <p class="function-name">{{ 'app_manual' | translate }}</p>

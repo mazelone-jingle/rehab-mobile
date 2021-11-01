@@ -218,6 +218,6 @@ export class ExerciseRecordsPage implements OnInit {
   // #endregion
 
   async navToDetail(dailyData) {
-    await this.router.navigate(['./exercise-detail', dailyData]);
+    await this.router.navigate(['/menu/records/detail', dailyData]);
   }
 }

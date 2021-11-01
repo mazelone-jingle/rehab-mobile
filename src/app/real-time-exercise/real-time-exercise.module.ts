@@ -1,6 +1,5 @@
-import { EmergencyComponent } from './../../components/message/emergency/emergency.component';
+import { ComponentsModule } from './../../components/components.module';
 import { SharedPipesModule } from 'src/pipes/shared-pipes.module';
-import { ChatPage } from '../../components/chat/chat.page';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,16 +9,13 @@ import { IonicModule } from '@ionic/angular';
 import { RealTimeExercisePageRoutingModule } from './real-time-exercise-routing.module';
 
 import { RealTimeExercisePage } from './real-time-exercise.page';
-import { TextComponent } from 'src/components/message/text/text.component';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/real-time-exercise/', '.json');
-}
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/real-time-exercise/', '.json');
 
 @NgModule({
   imports: [
@@ -35,9 +31,10 @@ export function createTranslateLoader(http: HttpClient) {
       },
       isolate: true
     }),
-    SharedPipesModule
+    SharedPipesModule,
+    ComponentsModule
   ],
-  declarations: [RealTimeExercisePage, ChatPage, TextComponent, EmergencyComponent],
+  declarations: [RealTimeExercisePage],
 })
 export class RealTimeExercisePageModule {
   language$ = this.languageService.language$;

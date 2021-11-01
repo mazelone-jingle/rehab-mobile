@@ -200,7 +200,7 @@ export class ReservationPage implements OnInit {
 
   async joinChat(reserv: IReservation) {
     this.logger.log('chat', reserv);
-    this.router.navigate(['real-time-exercise'], {
+    this.router.navigate(['/menu/real-time-exercise'], {
       state: { reservId: reserv.id, channelId: reserv.channelId },
     });
   }

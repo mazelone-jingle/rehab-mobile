@@ -14,9 +14,7 @@ import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/forgot-password/', '.json');
-}
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/forgot-password/', '.json');
 
 @NgModule({
   imports: [

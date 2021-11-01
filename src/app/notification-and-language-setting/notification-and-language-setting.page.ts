@@ -33,7 +33,7 @@ export class NotificationAndLanguageSettingPage implements OnInit {
   }
 
   navToNotification() {
-    this.router.navigate(['./notification']);
+    this.router.navigate(['/menu/noti-lang/noti']);
   }
 
 }

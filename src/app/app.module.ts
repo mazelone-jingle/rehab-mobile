@@ -1,6 +1,4 @@
-import { GetDataComponent } from './../components/modals/get-data/get-data.component';
-import { RpeComponent } from './../components/modals/rpe/rpe.component';
-import { HrDetailComponent } from './../components/modals/hr-detail/hr-detail.component';
+import { ComponentsModule } from './../components/components.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -18,9 +16,6 @@ import {
 
 import { HttpService } from 'src/services/http.service';
 import { LoaderInterceptor } from 'src/interceptors/loader.interceptor';
-import { ConnectModalComponent } from './../components/modals/connect-modal/connect-modal.component';
-import { DevicesModalComponent } from 'src/components/modals/devices-modal/devices-modal.component';
-import { DetailListModalComponent } from 'src/components/modals/detail-list-modal/detail-list-modal.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { AppInterceptor } from 'src/interceptors/app.interceptor';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
@@ -41,12 +36,6 @@ export const httpLoaderFactory = (http: HttpClient) => new TranslateHttpLoader(h
 @NgModule({
   declarations: [
     AppComponent,
-    ConnectModalComponent,
-    DevicesModalComponent,
-    DetailListModalComponent,
-    HrDetailComponent,
-    RpeComponent,
-    GetDataComponent,
   ],
   entryComponents: [],
   imports: [
@@ -63,6 +52,7 @@ export const httpLoaderFactory = (http: HttpClient) => new TranslateHttpLoader(h
         deps: [HttpClient],
       },
     }),
+    ComponentsModule
   ],
   providers: [
     {

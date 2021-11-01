@@ -62,7 +62,7 @@ export class RegisterPage implements OnInit {
       if (res) {
         await this.alertSvc.presentAlert('가입신청 완료되었습니다. 의사의 승인을 기다려 주세요.', false, () => this.router.navigate(['/login']));
       } else {
-        this.alertSvc.presentAlert('의사가 승인을 해야 가입이 완료됩니다.', false, ()=> this.router.navigate(['./login']));
+        this.alertSvc.presentAlert('의사가 승인을 해야 가입이 완료됩니다.', false, ()=> this.router.navigate(['/login']));
       }
     });
   }

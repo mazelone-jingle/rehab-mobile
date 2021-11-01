@@ -71,7 +71,7 @@ export class LoginPage implements OnInit {
           .subscribe(async newPrescription => {
             const msg = '새로운 처방전을 받았습니다.';
             await this.storageSvc.set(PRESCRIPTION, newPrescription);
-            await this.alertSvc.presentAlert(msg, false, async () => await this.router.navigate(['./home']));
+            await this.alertSvc.presentAlert(msg, false, async () => await this.router.navigate(['/menu']));
           });
         },
         error: () => {

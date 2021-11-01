@@ -1,3 +1,5 @@
+import { SharedPipesModule } from 'src/pipes/shared-pipes.module';
+import { ComponentsModule } from './../../components/components.module';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
 
-export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/home/', '.json');
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/home/', '.json');
 
 @NgModule({
   imports: [
@@ -26,7 +28,9 @@ export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoad
           deps: [HttpClient]
       },
       isolate: true
-    })
+    }),
+    ComponentsModule,
+    SharedPipesModule
   ],
   declarations: [HomePage]
 })

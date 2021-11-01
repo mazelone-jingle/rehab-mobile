@@ -1,3 +1,5 @@
+import { SharedPipesModule } from 'src/pipes/shared-pipes.module';
+import { ComponentsModule } from './../../components/components.module';
 import { NgCalendarModule } from 'ionic2-calendar';
 import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
@@ -12,10 +14,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ExerciseRecordsPageRoutingModule } from './exercise-records-routing.module';
 import { ExerciseRecordsPage } from './exercise-records.page';
+import { ExerciseDetailPage } from './exercise-detail/exercise-detail.page';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/exercise-records/', '.json');
-}
+const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/exercise-records/', '.json');
 
 @NgModule({
   imports: [
@@ -32,8 +33,10 @@ export function createTranslateLoader(http: HttpClient) {
       isolate: true
     }),
     NgCalendarModule,
+    ComponentsModule,
+    SharedPipesModule
   ],
-  declarations: [ExerciseRecordsPage],
+  declarations: [ExerciseRecordsPage, ExerciseDetailPage],
 })
 export class ExerciseRecordsPageModule {
   language$ = this.languageService.language$;
