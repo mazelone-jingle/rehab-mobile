@@ -196,12 +196,11 @@ ManualPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 /*!*****************************************!*\
   !*** ./src/app/manual/manual.module.ts ***!
   \*****************************************/
-/*! exports provided: createTranslateLoader, ManualPageModule */
+/*! exports provided: ManualPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ManualPageModule", function() { return ManualPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
@@ -227,9 +226,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/manual/', '.json');
-}
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/manual/', '.json');
 let ManualPageModule = class ManualPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;

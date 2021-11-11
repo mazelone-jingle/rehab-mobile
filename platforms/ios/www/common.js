@@ -63,40 +63,6 @@ PrescriptionService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 /***/ }),
 
-/***/ "5Uro":
-/*!**************************************!*\
-  !*** ./src/modules/shared.module.ts ***!
-  \**************************************/
-/*! exports provided: SharedModule */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SharedModule", function() { return SharedModule; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
-
-
-
-let SharedModule = class SharedModule {
-};
-SharedModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-        declarations: [],
-        imports: [
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateModule"].forChild(),
-        ],
-        exports: [
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_2__["TranslateModule"],
-        ]
-    })
-], SharedModule);
-
-
-
-/***/ }),
-
 /***/ "74mu":
 /*!*************************************************************!*\
   !*** ./node_modules/@ionic/core/dist/esm/theme-ff3fc52f.js ***!
@@ -279,199 +245,6 @@ const createButtonActiveGesture = (el, isButton) => {
 
 /***/ }),
 
-/***/ "Ut+J":
-/*!***********************************************!*\
-  !*** ./src/services/watch-command.service.ts ***!
-  \***********************************************/
-/*! exports provided: WatchCommandService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WatchCommandService", function() { return WatchCommandService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _logger_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logger.service */ "O0ov");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "qCKp");
-/* harmony import */ var src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/constants/watch-ble-command */ "gbkr");
-/* harmony import */ var src_services_ble_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/services/ble.service */ "/zZW");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ "fXoL");
-
-
-
-
-
-
-let WatchCommandService = class WatchCommandService {
-    constructor(ble, loggerSvc) {
-        this.ble = ble;
-        this.loggerSvc = loggerSvc;
-    }
-    /**
-     * get watch battery information
-     */
-    sendBAT() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_BAT"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_BAT"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_BAT"]} err`, err));
-        });
-    }
-    /**
-     * check if there is some new data in the watch
-     */
-    sendRTS() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTS"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTS"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTS"]} err`, err));
-        });
-    }
-    /**
-     * check if there is some new data in the watch
-     */
-    sendRTH() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTH"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTH"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTH"]} err`, err));
-        });
-    }
-    /**
-     * check if there is some new data in the watch
-     */
-    sendRTE() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTE"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTE"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RTE"]} err`, err));
-        });
-    }
-    /**
-     * check if there is some new data in the watch
-     */
-    sendRND() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RND"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RND"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RND"]} err`, err));
-        });
-    }
-    /**
-     * get new data from the watch
-     */
-    sendRHD() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RHD"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RHD"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_RHD"]} err`, err));
-        });
-    }
-    /**
-     * send ok command
-     */
-    sendROK() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_ROK"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_ROK"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_ROK"]} err`, err));
-        });
-    }
-    /**
-     * send reask data command
-     */
-    sendREQ() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.ble
-                .writeCommand(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_REQ"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_REQ"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_REQ"]} err`, err));
-        });
-    }
-    /**
-     * set datetime
-     */
-    sendSTS() {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const date = new Date();
-            const y = date.getFullYear().toString().substr(2, 2);
-            const M = date.getMonth() + 1;
-            const d = date.getDate();
-            const h = date.getHours();
-            const m = date.getMinutes();
-            const command = `${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"].slice(0, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"].lastIndexOf('#') + 1)}${y}_${M}_${d}_${h}_${m}${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"].slice(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"].lastIndexOf('#') + 1)}`;
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["from"])(this.ble
-                .writeCommand(command, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STS"]} err`, err)));
-        });
-    }
-    /**
-     * set hrMin & hrMax
-     *
-     * @param prescription
-     */
-    sendSTH(prescription) {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const hrMin = prescription.hrMin;
-            const hrMax = prescription.hrMax;
-            const command = `${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"].slice(0, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"].lastIndexOf('#') + 1)}${hrMin}_${hrMax}${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"].slice(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"].lastIndexOf('#') + 1)}`;
-            return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["from"])(this.ble
-                .writeCommand(command, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"])
-                .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"]} ok`, res))
-                .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STH"]} err`, err)));
-        });
-    }
-    /**
-     * set exercise time of every step
-     *
-     * @param prescription
-     */
-    sendSTE(prescription) {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const steps = prescription.steps.map((data) => data.minute);
-            const lackOfCount = steps.length % 5 !== 0 ? 5 - (steps.length % 5) : 0;
-            let command = '';
-            let group = [];
-            for (let i = 0; i <= steps.length + lackOfCount; i++) {
-                if (steps[i]) {
-                    group.push(steps[i]);
-                }
-                else {
-                    group.push(0);
-                }
-                if (group.length % 5 === 0) {
-                    command = `${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"].slice(0, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"].lastIndexOf('#') + 1)}${group.join('_')}${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"].slice(src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"].lastIndexOf('#') + 1)}`;
-                    group = [];
-                    return Object(rxjs__WEBPACK_IMPORTED_MODULE_2__["from"])(this.ble
-                        .writeCommand(command, src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"])
-                        .then((res) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"]} ok`, res))
-                        .catch((err) => this.loggerSvc.log(`write ${src_constants_watch_ble_command__WEBPACK_IMPORTED_MODULE_3__["COMMAND_TYPE_STE"]} err`, err)));
-                }
-            }
-        });
-    }
-};
-WatchCommandService.ctorParameters = () => [
-    { type: src_services_ble_service__WEBPACK_IMPORTED_MODULE_4__["BleService"] },
-    { type: _logger_service__WEBPACK_IMPORTED_MODULE_1__["LoggerService"] }
-];
-WatchCommandService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_5__["Injectable"])({
-        providedIn: 'root'
-    })
-], WatchCommandService);
-
-
-
-/***/ }),
-
 /***/ "acej":
 /*!**************************************************************************!*\
   !*** ./node_modules/@ionic/core/dist/esm/framework-delegate-4392cd63.js ***!
@@ -517,126 +290,6 @@ const detachComponent = (delegate, element) => {
   return Promise.resolve();
 };
 
-
-
-
-/***/ }),
-
-/***/ "dvCk":
-/*!**************************************************!*\
-  !*** ./src/services/exercise-records.service.ts ***!
-  \**************************************************/
-/*! exports provided: ExerciseRecordsService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExerciseRecordsService", function() { return ExerciseRecordsService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _prescription_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./prescription.service */ "2VRz");
-
-
-
-let ExerciseRecordsService = class ExerciseRecordsService {
-    constructor(prescriptionSvc) {
-        this.prescriptionSvc = prescriptionSvc;
-    }
-    /**
-     * data for calendar
-     *
-     * @param dailyList
-     * @returns
-     */
-    handleExerciseAllRecords(exerciseRecords) {
-        return exerciseRecords.map(exercise => ({
-            title: '',
-            startTime: new Date(exercise.date),
-            endTime: new Date(new Date(exercise.date).getTime() + exercise.hrs.split(',').length * 1000),
-            allDay: false,
-            totalSeconds: exercise.hrs.split(',').length,
-            rpeStatus: exercise.rpe,
-            thrRetention: exercise.thrretention,
-            hrs: exercise.hrs,
-            prescriptionId: exercise.prescriptionId
-        }));
-    }
-    getExerciseTotalTime(id) {
-        return new Promise((resolve, reject) => {
-            this.prescriptionSvc.getPrescriptionById(id).subscribe(pres => {
-                resolve(pres.steps
-                    // .filter(step => step.type.includes('Main'))
-                    .map(step => step.minute)
-                    .reduce((prev, curr) => prev + curr));
-            });
-        });
-    }
-    /**
-     * data for pie chart
-     */
-    getExercisePeriodRecords(exerciseRecords, currExercisePeriod) {
-        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const today = new Date().getTime();
-            const exerciseInPeriod = exerciseRecords.filter(exer => new Date(exer.date).getTime() >= this.getPeriodDate(today, currExercisePeriod));
-            const exerciseTimes = exerciseInPeriod.length;
-            let exerciseTotalTime = 0;
-            let thrRetention = 0;
-            if (exerciseInPeriod.length > 0) {
-                const prescriptionIdArray = exerciseInPeriod.map(exercise => exercise.prescriptionId);
-                const uniqueIdArray = prescriptionIdArray.filter((item, pos) => prescriptionIdArray.indexOf(item) === pos);
-                const promises = yield uniqueIdArray.map(id => this.getExerciseTotalTime(id));
-                const everyPrescriptionExerciseTime = yield Promise.all(promises);
-                exerciseTotalTime = prescriptionIdArray
-                    .map(id => uniqueIdArray.indexOf(id))
-                    .map(idx => everyPrescriptionExerciseTime[idx])
-                    .reduce((prev, curr) => prev + curr);
-                thrRetention =
-                    Math.round(exerciseInPeriod
-                        .map(exercise => exercise.thrretention)
-                        .filter(exercise => !!exercise)
-                        .reduce((prev, curr) => prev + curr, 0) / exerciseTimes);
-            }
-            return { exerciseTimes, exerciseTotalTime, thrRetention };
-        });
-    }
-    getPeriodDate(today, currExercisePeriod) {
-        let minusMilliSeconds = 0;
-        let targetDate;
-        switch (currExercisePeriod) {
-            case '1주일':
-                minusMilliSeconds = 7 * 24 * 60 * 60 * 1000;
-                targetDate = today - minusMilliSeconds;
-                break;
-            case '1달':
-                minusMilliSeconds = 30 * 24 * 60 * 60 * 1000;
-                targetDate = today - minusMilliSeconds;
-                break;
-            case '3달':
-                minusMilliSeconds = 90 * 24 * 60 * 60 * 1000;
-                targetDate = today - minusMilliSeconds;
-                break;
-            case '6달':
-                minusMilliSeconds = 180 * 24 * 60 * 60 * 1000;
-                targetDate = today - minusMilliSeconds;
-                break;
-            case '1년':
-                minusMilliSeconds = 365 * 24 * 60 * 60 * 1000;
-                targetDate = today - minusMilliSeconds;
-                break;
-            default:
-                break;
-        }
-        return targetDate;
-    }
-};
-ExerciseRecordsService.ctorParameters = () => [
-    { type: _prescription_service__WEBPACK_IMPORTED_MODULE_2__["PrescriptionService"] }
-];
-ExerciseRecordsService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-        providedIn: 'root'
-    })
-], ExerciseRecordsService);
 
 
 
@@ -955,74 +608,6 @@ const hapticImpact = (options) => {
 
 /***/ }),
 
-/***/ "qir6":
-/*!*********************************************!*\
-  !*** ./src/services/reservation.service.ts ***!
-  \*********************************************/
-/*! exports provided: ReservationService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReservationService", function() { return ReservationService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./http.service */ "NtM8");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _logger_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./logger.service */ "O0ov");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./auth.service */ "LLt/");
-
-
-
-
-
-
-
-
-let ReservationService = class ReservationService extends _http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"] {
-    constructor(http, baseUrl, route, router, logger, authSvc) {
-        super(http, baseUrl + 'api/Reservation', route, router, logger, authSvc);
-    }
-    create(reservation) {
-        this.logger.log(reservation);
-        return this.http.post(this.baseUrl, reservation).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])((data) => this.logger.log(data)), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])((err) => {
-            this.logger.error(err);
-            throw err;
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["map"])((res) => res));
-    }
-    getReservation() {
-        const keyword = this.authSvc.username;
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const date = today.getDate();
-        return this.http.get(this.baseUrl + `/${year}/${month}/${date}?keyword=${keyword}`)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["tap"])((data) => this.logger.log(data)), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["catchError"])((err) => {
-            this.logger.error(err);
-            throw err;
-        }));
-    }
-};
-ReservationService.ctorParameters = () => [
-    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Inject"], args: [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],] }] },
-    { type: String, decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Inject"], args: ['BASE_URL',] }] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_6__["ActivatedRoute"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"] },
-    { type: _logger_service__WEBPACK_IMPORTED_MODULE_4__["LoggerService"] },
-    { type: _auth_service__WEBPACK_IMPORTED_MODULE_7__["AuthService"] }
-];
-ReservationService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Injectable"])({
-        providedIn: 'root',
-    })
-], ReservationService);
-
-
-
-/***/ }),
-
 /***/ "seLR":
 /*!************************************!*\
   !*** ./src/modules/form.module.ts ***!
@@ -1059,24 +644,23 @@ FormModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 /***/ }),
 
-/***/ "yHJi":
-/*!******************************************!*\
-  !*** ./src/services/exercise.service.ts ***!
-  \******************************************/
-/*! exports provided: ExerciseService */
+/***/ "v5U8":
+/*!***************************************************!*\
+  !*** ./src/services/push-notification.service.ts ***!
+  \***************************************************/
+/*! exports provided: PushNotificationService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExerciseService", function() { return ExerciseService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PushNotificationService", function() { return PushNotificationService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var _auth_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./auth.service */ "LLt/");
-/* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./http.service */ "NtM8");
-/* harmony import */ var _logger_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./logger.service */ "O0ov");
+/* harmony import */ var _storage_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./storage.service */ "61FP");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic-native/local-notifications/ngx */ "Bg0J");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _alert_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./alert.service */ "NqkH");
+/* harmony import */ var src_constants_storage_key__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/constants/storage-key */ "/z6A");
 
 
 
@@ -1084,97 +668,118 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-let ExerciseService = class ExerciseService extends _http_service__WEBPACK_IMPORTED_MODULE_6__["HttpService"] {
-    constructor(http, baseUrl, route, router, logger, authSvc) {
-        super(http, baseUrl + 'api/Exercise', route, router, logger, authSvc);
-    }
-    getExerciseRecords(pageNum, pageSize) {
-        const email = this.authSvc.username;
-        return this.http
-            .get(this.baseUrl +
-            `/ByEmail?keyword=${email}&pageNum=${pageNum}&pageSize=${pageSize}`)
-            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])((data) => {
-            this.logger.log('diary/pagedList', data);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["map"])((data) => data.items), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["catchError"])((err) => {
-            // this.handleError(err);
-            throw err;
-        }));
-    }
-    hrArrayDataToString(hrArray) {
-        return hrArray.join(',');
-    }
-    getThrRetention(prescription, hrMinMax, hrData) {
-        const exercises = prescription.steps;
-        const exerciseTime = [0]; // 각 단계별 운동 시간
-        const exerciseIsMain = []; // Main에 해당하는 운동 type
-        exercises.forEach((exercise, idx) => {
-            let baseSeconds = 0;
-            if (idx > 0) {
-                const baseMinutes = exercises
-                    .map((step) => step.minute)
-                    .slice(0, idx)
-                    .reduce((accumulator, currentValue) => accumulator + currentValue);
-                baseSeconds = Math.round(baseMinutes * 60);
-            }
-            exerciseTime.push(baseSeconds + exercise.minute * 60);
-            exerciseIsMain.push(exercise.type.includes('Main') ? 1 : 0);
+let PushNotificationService = class PushNotificationService {
+    constructor(localNotifications, platForm, alertSvc, storageSvc) {
+        this.localNotifications = localNotifications;
+        this.platForm = platForm;
+        this.alertSvc = alertSvc;
+        this.storageSvc = storageSvc;
+        this.platForm.ready().then(() => {
+            this.localNotifications.on('click').subscribe((res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+                console.log('click:', res);
+                //   let msg = res.data ? res.data.page : ''
+                //   await this.alertSvc.presentCustomizeAlert({
+                //     message: msg,
+                //     title: res.title,
+                //     subTitle: res.text,
+                //     backDropDismiss:  false,
+                //     buttons: [{
+                //       text: '확인',
+                //     }]
+                //   })
+            }));
+            this.localNotifications.on('trigger').subscribe((res) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+                console.log('trigger:', res);
+                //   let msg = res.data ? res.data.page : ''
+                //   await this.alertSvc.presentCustomizeAlert({
+                //     message: msg,
+                //     title: res.title,
+                //     subTitle: res.text,
+                //     backDropDismiss:  false,
+                //     buttons: [{
+                //       text: '확인',
+                //     }]
+                //   })
+            }));
         });
-        const mainHrs = []; // Main에 해당하는 HR
-        exerciseIsMain.forEach((exercise, idx) => {
-            if (exercise === 1) {
-                mainHrs.push(hrData.slice(exerciseTime[idx], exerciseTime[idx + 1]));
-            }
-        });
-        const flatHr = mainHrs.reduce((accu, curr) => accu.concat(curr));
-        this.logger.log('flat Hr', flatHr);
-        const rangeHr = flatHr.filter((hr) => +hr >= hrMinMax.min && +hr <= hrMinMax.max);
-        return Math.round((rangeHr.length / flatHr.length) * 100);
     }
-    sendExerciseData(prescription, rpeValue, exerciseData, exerciseDatetime, hrMixMax) {
+    prepareNotification(title, text) {
+        this.localNotifications.schedule({
+            title,
+            text,
+        });
+    }
+    scheduleNotification2(title, text) {
+        this.localNotifications.schedule({
+            title,
+            text,
+            data: { data: 'routing...' },
+            trigger: { in: 5, unit: _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_3__["ELocalNotificationTriggerUnit"].SECOND },
+            foreground: true
+        });
+    }
+    recurringNotification(title, text) {
+        this.localNotifications.schedule({
+            title,
+            text,
+            data: { page: 'routing...' },
+            trigger: { in: 5, unit: _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_3__["ELocalNotificationTriggerUnit"].SECOND },
+            foreground: true
+        });
+    }
+    setNotification(notification) {
+        notification.repeatWeekday.forEach((weekday) => {
+            const hour = +notification.time.substring(0, notification.time.indexOf(':'));
+            const minute = +notification.time.substring(notification.time.indexOf(':') + 1);
+            const alarm = {
+                id: +`${notification.id}${weekday.id}`,
+                title: '운동시간입니다',
+                text: '운동합시다!!!',
+                // data: { page: 'routing...' },
+                vibrate: notification.vibration,
+                silent: !notification.sound,
+                sound: notification.music,
+                count: 1,
+                every: { weekday: weekday.id, hour, minute, second: 0 },
+                foreground: true,
+            };
+            this.scheduleNotification(alarm);
+        });
+    }
+    scheduleNotification(options) {
+        this.localNotifications.schedule(options);
+        // cordova.plugins.notification.local.schedule(options);
+    }
+    deleteNotificationById(id) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            if (exerciseData.length > 0) {
-                const hrData = exerciseData
-                    .map((str) => str.substring(str.indexOf('#') + 1, str.lastIndexOf('#')))
-                    .map((str) => str.split('_'))
-                    .reduce((accu, curr) => accu.concat(curr))
-                    .map((str) => +str);
-                return this.postExercise(prescription, hrData, rpeValue, exerciseDatetime, hrMixMax, '').toPromise();
-            }
+            yield this.localNotifications.cancel(id);
         });
     }
-    postExercise(prescription, hrData, rpe, exerciseDatetime, hrMinMax, rpes) {
-        const exercise = {
-            patientEmail: this.authSvc.username,
-            id: 0,
-            date: exerciseDatetime,
-            thrRetention: this.getThrRetention(prescription, hrMinMax, hrData),
-            hrs: this.hrArrayDataToString(hrData),
-            rpes,
-            rpe,
-            prescriptionId: prescription.id,
-        };
-        return this.http.post(this.baseUrl, exercise).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["tap"])((data) => {
-            this.logger.log('api/Exercise', data);
-        }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["catchError"])((err) => {
-            // this.handleError(err);
-            throw err;
-        }));
+    getScheduledNotifications() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            const notis = yield this.localNotifications.getAll();
+            console.warn(notis);
+        });
+    }
+    clearAllNotification() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            yield this.localNotifications.cancelAll();
+            yield this.localNotifications.clearAll();
+            yield this.storageSvc.remove(src_constants_storage_key__WEBPACK_IMPORTED_MODULE_6__["NOTIFICATION_LIST"]);
+        });
     }
 };
-ExerciseService.ctorParameters = () => [
-    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Inject"], args: [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"],] }] },
-    { type: String, decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Inject"], args: ['BASE_URL',] }] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"] },
-    { type: _logger_service__WEBPACK_IMPORTED_MODULE_7__["LoggerService"] },
-    { type: _auth_service__WEBPACK_IMPORTED_MODULE_5__["AuthService"] }
+PushNotificationService.ctorParameters = () => [
+    { type: _ionic_native_local_notifications_ngx__WEBPACK_IMPORTED_MODULE_3__["LocalNotifications"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"] },
+    { type: _alert_service__WEBPACK_IMPORTED_MODULE_5__["AlertService"] },
+    { type: _storage_service__WEBPACK_IMPORTED_MODULE_1__["StorageService"] }
 ];
-ExerciseService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Injectable"])({
-        providedIn: 'root',
+PushNotificationService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
+        providedIn: 'root'
     })
-], ExerciseService);
+], PushNotificationService);
 
 
 

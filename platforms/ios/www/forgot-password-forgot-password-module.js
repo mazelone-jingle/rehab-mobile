@@ -143,12 +143,11 @@ RegisterService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 /*!***********************************************************!*\
   !*** ./src/app/forgot-password/forgot-password.module.ts ***!
   \***********************************************************/
-/*! exports provided: createTranslateLoader, ForgotPasswordPageModule */
+/*! exports provided: ForgotPasswordPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ForgotPasswordPageModule", function() { return ForgotPasswordPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
@@ -176,9 +175,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_9__["TranslateHttpLoader"](http, './assets/i18n/forgot-password/', '.json');
-}
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_9__["TranslateHttpLoader"](http, './assets/i18n/forgot-password/', '.json');
 let ForgotPasswordPageModule = class ForgotPasswordPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;

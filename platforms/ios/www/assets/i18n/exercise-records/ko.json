@@ -10,5 +10,15 @@
   "minute": "분",
   "second": "초",
   "records_list": "기록 리스트",
-  "no_records": "기록이 없습니다."
+  "no_records": "기록이 없습니다.",
+  "exercise_detail": "상세 운동 정보",
+  "hr_records": "심박수 기록",
+  "see_detail": "상세보기",
+  "exercise_summary": "운동 요약",
+  "exercise_type": "운동 유형",
+  "step": "단계",
+  "minutes": "분",
+  "hr_detail": {
+    "title": "상세 운동 정보"
+  }
 }

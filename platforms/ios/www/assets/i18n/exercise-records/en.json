@@ -10,5 +10,15 @@
   "minute": "Minutes",
   "second": "Seconds",
   "records_list": "History List",
-  "no_records": "No History"
+  "no_records": "No History",
+  "exercise_detail": "Exercise Detail Information",
+  "hr_records": "Heart Rate History",
+  "see_detail": "Show Details",
+  "exercise_summary": "Exercise Summary",
+  "exercise_type": "Exercise Type",
+  "step": "Step",
+  "minutes": "Minutes",
+  "hr_detail": {
+    "title": "Exercise Detail Information"
+  }
 }

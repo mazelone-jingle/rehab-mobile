@@ -178,7 +178,7 @@ let RegisterPage = class RegisterPage {
                 yield this.alertSvc.presentAlert('가입신청 완료되었습니다. 의사의 승인을 기다려 주세요.', false, () => this.router.navigate(['/login']));
             }
             else {
-                this.alertSvc.presentAlert('의사가 승인을 해야 가입이 완료됩니다.', false, () => this.router.navigate(['./login']));
+                this.alertSvc.presentAlert('의사가 승인을 해야 가입이 완료됩니다.', false, () => this.router.navigate(['/login']));
             }
         }));
     }
@@ -225,12 +225,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./src/app/register/register.module.ts ***!
   \*********************************************/
-/*! exports provided: createTranslateLoader, RegisterPageModule */
+/*! exports provided: RegisterPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RegisterPageModule", function() { return RegisterPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
@@ -256,9 +255,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/register/', '.json');
-}
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/register/', '.json');
 let RegisterPageModule = class RegisterPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;
