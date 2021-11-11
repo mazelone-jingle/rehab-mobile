@@ -4,26 +4,26 @@
 /*!***********************************************************************!*\
   !*** ./src/app/personal-info-setting/personal-info-setting.module.ts ***!
   \***********************************************************************/
-/*! exports provided: createTranslateLoader, PersonalInfoSettingPageModule */
+/*! exports provided: PersonalInfoSettingPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PersonalInfoSettingPageModule", function() { return PersonalInfoSettingPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var src_modules_form_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/modules/form.module */ "seLR");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
-/* harmony import */ var _personal_info_setting_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./personal-info-setting-routing.module */ "P/Gf");
-/* harmony import */ var _personal_info_setting_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./personal-info-setting.page */ "dwIo");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
-/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ngx-translate/http-loader */ "mqiu");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
-/* harmony import */ var src_services_language_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/services/language.service */ "lRKa");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
+/* harmony import */ var src_pipes_shared_pipes_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/pipes/shared-pipes.module */ "DwMb");
+/* harmony import */ var src_modules_form_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/modules/form.module */ "seLR");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "ofXK");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _personal_info_setting_routing_module__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./personal-info-setting-routing.module */ "P/Gf");
+/* harmony import */ var _personal_info_setting_page__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./personal-info-setting.page */ "dwIo");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
+/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ngx-translate/http-loader */ "mqiu");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
+/* harmony import */ var src_services_language_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! src/services/language.service */ "lRKa");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 
 
 
@@ -37,39 +37,39 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_9__["TranslateHttpLoader"](http, './assets/i18n/personal-info-setting/', '.json');
-}
+
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__["TranslateHttpLoader"](http, './assets/i18n/personal-info-setting/', '.json');
 let PersonalInfoSettingPageModule = class PersonalInfoSettingPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;
         this.languageService = languageService;
         this.language$ = this.languageService.language$;
-        this.language$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_10__["map"])(language => language.lang)).subscribe(lang => this.translateService.use(lang));
+        this.language$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_11__["map"])(language => language.lang)).subscribe(lang => this.translateService.use(lang));
     }
 };
 PersonalInfoSettingPageModule.ctorParameters = () => [
-    { type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_8__["TranslateService"] },
-    { type: src_services_language_service__WEBPACK_IMPORTED_MODULE_11__["LanguageService"] }
+    { type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateService"] },
+    { type: src_services_language_service__WEBPACK_IMPORTED_MODULE_12__["LanguageService"] }
 ];
 PersonalInfoSettingPageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["NgModule"])({
         imports: [
-            _angular_common__WEBPACK_IMPORTED_MODULE_3__["CommonModule"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"],
-            _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonicModule"],
-            _personal_info_setting_routing_module__WEBPACK_IMPORTED_MODULE_6__["PersonalInfoSettingPageRoutingModule"],
-            src_modules_form_module__WEBPACK_IMPORTED_MODULE_1__["FormModule"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_8__["TranslateModule"].forChild({
+            _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormsModule"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["IonicModule"],
+            _personal_info_setting_routing_module__WEBPACK_IMPORTED_MODULE_7__["PersonalInfoSettingPageRoutingModule"],
+            src_modules_form_module__WEBPACK_IMPORTED_MODULE_2__["FormModule"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateModule"].forChild({
                 loader: {
-                    provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_8__["TranslateLoader"],
+                    provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateLoader"],
                     useFactory: createTranslateLoader,
-                    deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_12__["HttpClient"]]
+                    deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_13__["HttpClient"]]
                 },
                 isolate: true
-            })
+            }),
+            src_pipes_shared_pipes_module__WEBPACK_IMPORTED_MODULE_1__["SharedPipesModule"]
         ],
-        declarations: [_personal_info_setting_page__WEBPACK_IMPORTED_MODULE_7__["PersonalInfoSettingPage"]]
+        declarations: [_personal_info_setting_page__WEBPACK_IMPORTED_MODULE_8__["PersonalInfoSettingPage"]]
     })
 ], PersonalInfoSettingPageModule);
 
@@ -257,6 +257,10 @@ let PersonalInfoSettingPage = class PersonalInfoSettingPage {
             history.back();
         });
     }
+    changeDate($event) {
+        const date = $event.target.value;
+        this.birthday.patchValue(date);
+    }
 };
 PersonalInfoSettingPage.ctorParameters = () => [
     { type: _services_patient_service__WEBPACK_IMPORTED_MODULE_8__["PatientService"] },
@@ -287,7 +291,7 @@ PersonalInfoSettingPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n  <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-back-button></ion-back-button>\n    </ion-buttons>\n    <ion-title>{{'personal_info_setting' | translate}}</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form [formGroup]=\"infoForm\" novalidate *ngIf=\"infoForm\">\n    <ion-item class=\"form-group\">\n      <ion-label for=\"name\" position=\"fixed\">{{'name' | translate}}</ion-label>\n      <ion-input type=\"text\" formControlName=\"name\" class=\"form-control\" id=\"name\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"name.invalid && name.touched\">\n      <small style=\"color: red;\" *ngIf=\"name.errors.required\">이름을 입력해주세요</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"gender\" position=\"fixed\">{{'gendar' | translate}}</ion-label>\n      <ion-radio-group formControlName=\"gender\">\n        <ion-item>\n          <ion-label>{{'male' | translate}}</ion-label>\n          <ion-radio slot=\"start\" [value]=\"true\"></ion-radio>\n        </ion-item>\n        <ion-item>\n          <ion-label>{{'female' | translate}}</ion-label>\n          <ion-radio slot=\"start\" [value]=\"false\"></ion-radio>\n        </ion-item>\n      </ion-radio-group>\n      <ion-input type=\"text\"  class=\"form-control\" id=\"gender\"></ion-input>\n    </ion-item>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"birthday\" position=\"fixed\">{{'birthday' | translate}}</ion-label>\n      <ion-datetime formControlName=\"birthday\"></ion-datetime>\n    </ion-item>\n    <div *ngIf=\"birthday.invalid && birthday.touched\">\n      <small style=\"color: red;\" *ngIf=\"birthday.errors.required\">생년월일을 입력해주세요</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"email\" position=\"fixed\">{{'email' | translate}}</ion-label>\n      <ion-input type=\"email\" formControlName=\"email\" class=\"form-control\" id=\"email\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"email.invalid && email.touched\">\n      <small style=\"color: red;\" *ngIf=\"email.errors.required\">이메일을 입력해주세요</small>\n      <small style=\"color: red;\" *ngIf=\"email.errors.email\">올바른 이메일 형식이 아닙니다</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"contact\" position=\"fixed\">{{'contact' | translate}}</ion-label>\n      <ion-input type=\"text\" formControlName=\"contact\" class=\"form-control\" id=\"contact\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"contact.invalid && contact.touched\">\n      <small style=\"color: red;\" *ngIf=\"contact.errors.required\">연락처를 입력해주세요</small>\n    </div>\n  </form>\n</ion-content>\n\n<ion-footer>\n  <ion-button expand=\"block\" color=\"primary\" (click)=\"saveData()\" [disabled]=\"infoForm.invalid\">{{'save' | translate}}</ion-button>\n</ion-footer>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n  <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-back-button></ion-back-button>\n    </ion-buttons>\n    <ion-title>{{'personal_info_setting' | translate}}</ion-title>\n\n    <ion-buttons slot=\"end\">\n      <ion-button (click)=\"saveData()\" [disabled]=\"infoForm.invalid\">{{'save' | translate}}</ion-button>\n    </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form [formGroup]=\"infoForm\" novalidate *ngIf=\"infoForm\">\n    <ion-item class=\"form-group\">\n      <ion-label for=\"name\" position=\"fixed\">{{'name' | translate}}</ion-label>\n      <ion-input type=\"text\" formControlName=\"name\" class=\"form-control\" id=\"name\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"name.invalid && name.touched\">\n      <small style=\"color: red;\" *ngIf=\"name.errors.required\">이름을 입력해주세요</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"gender\" position=\"fixed\">{{'gender' | translate}}</ion-label>\n      <ion-radio-group formControlName=\"gender\">\n        <ion-item>\n          <ion-label>{{'male' | translate}}</ion-label>\n          <ion-radio slot=\"start\" [value]=\"true\"></ion-radio>\n        </ion-item>\n        <ion-item>\n          <ion-label>{{'female' | translate}}</ion-label>\n          <ion-radio slot=\"start\" [value]=\"false\"></ion-radio>\n        </ion-item>\n      </ion-radio-group>\n      <ion-input type=\"text\"  class=\"form-control\" id=\"gender\"></ion-input>\n    </ion-item>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"birthday\" position=\"fixed\">{{'birthday' | translate}}</ion-label>\n      <ion-datetime formControlName=\"birthday\" pickerFormat=\"YYYY/MM/DD\" displayFormat=\"YYYY년 MM월 DD일\" (ionChange)=\"changeDate($event)\"></ion-datetime>\n    </ion-item>\n    <div *ngIf=\"birthday.invalid && birthday.touched\">\n      <small style=\"color: red;\" *ngIf=\"birthday.errors.required\">생년월일을 입력해주세요</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"email\" position=\"fixed\">{{'email' | translate}}</ion-label>\n      <ion-input type=\"email\" formControlName=\"email\" class=\"form-control\" id=\"email\" [disabled]=\"true\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"email.invalid && email.touched\">\n      <small style=\"color: red;\" *ngIf=\"email.errors.required\">이메일을 입력해주세요</small>\n      <small style=\"color: red;\" *ngIf=\"email.errors.email\">올바른 이메일 형식이 아닙니다</small>\n    </div>\n    <ion-item class=\"form-group\">\n      <ion-label for=\"contact\" position=\"fixed\">{{'contact' | translate}}</ion-label>\n      <ion-input type=\"text\" formControlName=\"contact\" class=\"form-control\" id=\"contact\"></ion-input>\n    </ion-item>\n    <div *ngIf=\"contact.invalid && contact.touched\">\n      <small style=\"color: red;\" *ngIf=\"contact.errors.required\">연락처를 입력해주세요</small>\n    </div>\n  </form>\n</ion-content>\n\n");
 
 /***/ }),
 

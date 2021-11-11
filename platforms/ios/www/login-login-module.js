@@ -84,7 +84,7 @@ let LoginPage = class LoginPage {
                         .subscribe((newPrescription) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
                         const msg = '새로운 처방전을 받았습니다.';
                         yield this.storageSvc.set(src_constants_common__WEBPACK_IMPORTED_MODULE_12__["PRESCRIPTION"], newPrescription);
-                        yield this.alertSvc.presentAlert(msg, false, () => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () { return yield this.router.navigate(['./home']); }));
+                        yield this.alertSvc.presentAlert(msg, false, () => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () { return yield this.router.navigate(['/menu']); }));
                     }));
                 },
                 error: () => {
@@ -185,12 +185,11 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************!*\
   !*** ./src/app/login/login.module.ts ***!
   \***************************************/
-/*! exports provided: createTranslateLoader, LoginPageModule */
+/*! exports provided: LoginPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoginPageModule", function() { return LoginPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
@@ -216,9 +215,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/login/', '.json');
-}
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_8__["TranslateHttpLoader"](http, './assets/i18n/login/', '.json');
 let LoginPageModule = class LoginPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;

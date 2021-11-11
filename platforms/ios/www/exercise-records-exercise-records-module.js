@@ -212,7 +212,7 @@ let ExerciseRecordsPage = class ExerciseRecordsPage {
     // #endregion
     navToDetail(dailyData) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            yield this.router.navigate(['./exercise-detail', dailyData]);
+            yield this.router.navigate(['/menu/records/detail', dailyData]);
         });
     }
 };
@@ -238,26 +238,28 @@ ExerciseRecordsPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 /*!*************************************************************!*\
   !*** ./src/app/exercise-records/exercise-records.module.ts ***!
   \*************************************************************/
-/*! exports provided: createTranslateLoader, ExerciseRecordsPageModule */
+/*! exports provided: ExerciseRecordsPageModule */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTranslateLoader", function() { return createTranslateLoader; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExerciseRecordsPageModule", function() { return ExerciseRecordsPageModule; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var ionic2_calendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ionic2-calendar */ "oksz");
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
-/* harmony import */ var src_services_language_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/services/language.service */ "lRKa");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
-/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
-/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ngx-translate/http-loader */ "mqiu");
-/* harmony import */ var _exercise_records_routing_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./exercise-records-routing.module */ "T27C");
-/* harmony import */ var _exercise_records_page__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./exercise-records.page */ "+nom");
+/* harmony import */ var src_pipes_shared_pipes_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/pipes/shared-pipes.module */ "DwMb");
+/* harmony import */ var _components_components_module__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../../components/components.module */ "xOzl");
+/* harmony import */ var ionic2_calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ionic2-calendar */ "oksz");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
+/* harmony import */ var src_services_language_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/services/language.service */ "lRKa");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/common */ "ofXK");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
+/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @ngx-translate/http-loader */ "mqiu");
+/* harmony import */ var _exercise_records_routing_module__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./exercise-records-routing.module */ "T27C");
+/* harmony import */ var _exercise_records_page__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./exercise-records.page */ "+nom");
+/* harmony import */ var _exercise_detail_exercise_detail_page__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./exercise-detail/exercise-detail.page */ "3nFk");
 
 
 
@@ -271,43 +273,240 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createTranslateLoader(http) {
-    return new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__["TranslateHttpLoader"](http, './assets/i18n/exercise-records/', '.json');
-}
+
+
+
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_12__["TranslateHttpLoader"](http, './assets/i18n/exercise-records/', '.json');
 let ExerciseRecordsPageModule = class ExerciseRecordsPageModule {
     constructor(translateService, languageService) {
         this.translateService = translateService;
         this.languageService = languageService;
         this.language$ = this.languageService.language$;
-        this.language$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(language => language.lang)).subscribe(lang => this.translateService.use(lang));
+        this.language$.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(language => language.lang)).subscribe(lang => this.translateService.use(lang));
     }
 };
 ExerciseRecordsPageModule.ctorParameters = () => [
-    { type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateService"] },
-    { type: src_services_language_service__WEBPACK_IMPORTED_MODULE_3__["LanguageService"] }
+    { type: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__["TranslateService"] },
+    { type: src_services_language_service__WEBPACK_IMPORTED_MODULE_5__["LanguageService"] }
 ];
 ExerciseRecordsPageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_6__["NgModule"])({
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_8__["NgModule"])({
         imports: [
-            _angular_common__WEBPACK_IMPORTED_MODULE_4__["CommonModule"],
-            _angular_forms__WEBPACK_IMPORTED_MODULE_7__["FormsModule"],
-            _ionic_angular__WEBPACK_IMPORTED_MODULE_8__["IonicModule"],
-            _exercise_records_routing_module__WEBPACK_IMPORTED_MODULE_11__["ExerciseRecordsPageRoutingModule"],
-            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateModule"].forChild({
+            _angular_common__WEBPACK_IMPORTED_MODULE_6__["CommonModule"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_9__["FormsModule"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_10__["IonicModule"],
+            _exercise_records_routing_module__WEBPACK_IMPORTED_MODULE_13__["ExerciseRecordsPageRoutingModule"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__["TranslateModule"].forChild({
                 loader: {
-                    provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_9__["TranslateLoader"],
+                    provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__["TranslateLoader"],
                     useFactory: createTranslateLoader,
-                    deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClient"]]
+                    deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClient"]]
                 },
                 isolate: true
             }),
-            ionic2_calendar__WEBPACK_IMPORTED_MODULE_1__["NgCalendarModule"],
+            ionic2_calendar__WEBPACK_IMPORTED_MODULE_3__["NgCalendarModule"],
+            _components_components_module__WEBPACK_IMPORTED_MODULE_2__["ComponentsModule"],
+            src_pipes_shared_pipes_module__WEBPACK_IMPORTED_MODULE_1__["SharedPipesModule"]
         ],
-        declarations: [_exercise_records_page__WEBPACK_IMPORTED_MODULE_12__["ExerciseRecordsPage"]],
+        declarations: [_exercise_records_page__WEBPACK_IMPORTED_MODULE_14__["ExerciseRecordsPage"], _exercise_detail_exercise_detail_page__WEBPACK_IMPORTED_MODULE_15__["ExerciseDetailPage"]],
     })
 ], ExerciseRecordsPageModule);
 
 
+
+/***/ }),
+
+/***/ "3nFk":
+/*!**************************************************************************!*\
+  !*** ./src/app/exercise-records/exercise-detail/exercise-detail.page.ts ***!
+  \**************************************************************************/
+/*! exports provided: ExerciseDetailPage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExerciseDetailPage", function() { return ExerciseDetailPage; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
+/* harmony import */ var _raw_loader_exercise_detail_page_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! raw-loader!./exercise-detail.page.html */ "8qfo");
+/* harmony import */ var _exercise_detail_page_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./exercise-detail.page.scss */ "52Mg");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "qCKp");
+/* harmony import */ var _components_modals_hr_detail_hr_detail_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../components/modals/hr-detail/hr-detail.component */ "6od+");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _services_exercise_records_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../services/exercise-records.service */ "dvCk");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! chart.js */ "MO+k");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! chartjs-plugin-annotation */ "Ym+k");
+/* harmony import */ var chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "0QAI");
+/* harmony import */ var src_services_prescription_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/services/prescription.service */ "2VRz");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/router */ "tyNb");
+
+
+
+
+
+
+
+
+
+
+
+
+
+let ExerciseDetailPage = class ExerciseDetailPage {
+    constructor(exerciseRecordsSvc, modalController, screenOrientation, route, prescriptionSvc) {
+        this.exerciseRecordsSvc = exerciseRecordsSvc;
+        this.modalController = modalController;
+        this.screenOrientation = screenOrientation;
+        this.route = route;
+        this.prescriptionSvc = prescriptionSvc;
+        this.dataset = [];
+        this.chart = [];
+        route.params.subscribe((params) => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            this.exerciseRecords = params;
+        }));
+    }
+    ngOnInit() {
+        Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["forkJoin"])([
+            this.prescriptionSvc.getPrescriptionById(this.exerciseRecords.prescriptionId)
+        ]).subscribe(res => {
+            this.prescription = res[0];
+            this.createCanvas();
+        });
+    }
+    createCanvas() {
+        this.canvas = document.createElement('canvas');
+        const ctx = this.canvas.getContext('2d');
+        chart_js__WEBPACK_IMPORTED_MODULE_8__["Chart"].plugins.register({ chartAnnotation: chartjs_plugin_annotation__WEBPACK_IMPORTED_MODULE_9__ });
+        setTimeout(() => {
+            this.chart = new chart_js__WEBPACK_IMPORTED_MODULE_8__["Chart"](ctx, {
+                type: 'line',
+                data: {
+                    labels: ['준비', ...this.prescription.steps.map(step => step.sequence + '단계'), '마무리'],
+                    datasets: [{
+                            label: '# of Heart beat',
+                            data: this.getEveryStepsData(),
+                            backgroundColor: 'transparent',
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }],
+                        xAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                    },
+                    annotation: {
+                        annotations: [{
+                                type: 'box',
+                                xScaleID: 'x-axis-0',
+                                yScaleID: 'y-axis-0',
+                                yMin: this.prescription.hrMin,
+                                yMax: this.prescription.hrMax,
+                                borderWidth: 1,
+                                backgroundColor: 'rgba(20, 173, 35, 0.2)',
+                                borderColor: 'rgba(20, 173, 35, 0.2)',
+                            }]
+                    }
+                },
+            });
+            const location = document.getElementById('record');
+            location.appendChild(this.canvas);
+        }, 100);
+    }
+    getEveryStepsData() {
+        const [start, ...hrs] = this.exerciseRecords.hrs.split(',');
+        const end = hrs.pop();
+        const minArray = [];
+        const data = this.prescription.steps.map(step => step.minute).map((min, idx) => {
+            minArray.push(min);
+            const pastMin = minArray.slice(0, idx).length > 0 ? minArray.slice(0, idx).reduce((accr, curr) => accr + curr) : 0;
+            const sec = min * 60;
+            return (hrs
+                .slice(pastMin * 60, pastMin * 60 + min * 60)
+                .map(res => Number(res))
+                .filter(res => !!res)
+                .reduce((accu, curr) => accu + curr) / sec);
+        });
+        return [start, ...data, end];
+    }
+    showHrDetail() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            const modal = yield this.modalController.create({
+                component: _components_modals_hr_detail_hr_detail_component__WEBPACK_IMPORTED_MODULE_4__["HrDetailComponent"],
+                componentProps: {
+                    hrData: this.exerciseRecords.hrs,
+                    prescription: this.prescription
+                },
+            });
+            yield modal.present();
+            yield modal.onWillDismiss().then(() => Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+                yield this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+            }));
+        });
+    }
+};
+ExerciseDetailPage.ctorParameters = () => [
+    { type: _services_exercise_records_service__WEBPACK_IMPORTED_MODULE_6__["ExerciseRecordsService"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"] },
+    { type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_10__["ScreenOrientation"] },
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_12__["ActivatedRoute"] },
+    { type: src_services_prescription_service__WEBPACK_IMPORTED_MODULE_11__["PrescriptionService"] }
+];
+ExerciseDetailPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_7__["Component"])({
+        selector: 'app-exercise-detail',
+        template: _raw_loader_exercise_detail_page_html__WEBPACK_IMPORTED_MODULE_1__["default"],
+        styles: [_exercise_detail_page_scss__WEBPACK_IMPORTED_MODULE_2__["default"]]
+    })
+], ExerciseDetailPage);
+
+
+
+/***/ }),
+
+/***/ "52Mg":
+/*!****************************************************************************!*\
+  !*** ./src/app/exercise-records/exercise-detail/exercise-detail.page.scss ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("ion-card {\n  border-radius: 5px;\n}\n\nion-progress-bar {\n  height: 30px !important;\n  --buffer-background: #aaa;\n  --progress-background: linear-gradient(to right, red, yellow);\n}\n\n.hr-content {\n  text-align: center;\n}\n\n.hr-content .hr-value {\n  font-size: 50px;\n  color: #df7127;\n  font-weight: bold;\n}\n\n.setting-item {\n  margin-top: 20px;\n  margin-bottom: 20px;\n}\n\n.setting-item .title {\n  font-size: 20px;\n  font-weight: bold;\n  margin-bottom: 16px;\n}\n\n.setting-item .content li {\n  list-style-type: disc;\n  text-indent: 2rem;\n  margin-bottom: 8px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL2V4ZXJjaXNlLWRldGFpbC5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxrQkFBQTtBQUNGOztBQUVBO0VBQ0UsdUJBQUE7RUFDQSx5QkFBQTtFQUNBLDZEQUFBO0FBQ0Y7O0FBRUE7RUFDRSxrQkFBQTtBQUNGOztBQUFFO0VBQ0UsZUFBQTtFQUNBLGNBQUE7RUFDQSxpQkFBQTtBQUVKOztBQUVBO0VBQ0UsZ0JBQUE7RUFDQSxtQkFBQTtBQUNGOztBQUFFO0VBQ0UsZUFBQTtFQUNBLGlCQUFBO0VBQ0EsbUJBQUE7QUFFSjs7QUFDSTtFQUNFLHFCQUFBO0VBQ0EsaUJBQUE7RUFDQSxrQkFBQTtBQUNOIiwiZmlsZSI6ImV4ZXJjaXNlLWRldGFpbC5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpb24tY2FyZCB7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbn1cblxuaW9uLXByb2dyZXNzLWJhciB7XG4gIGhlaWdodDogMzBweCAhaW1wb3J0YW50O1xuICAtLWJ1ZmZlci1iYWNrZ3JvdW5kOiAjYWFhO1xuICAtLXByb2dyZXNzLWJhY2tncm91bmQ6IGxpbmVhci1ncmFkaWVudCh0byByaWdodCwgcmVkLCB5ZWxsb3cpO1xufVxuXG4uaHItY29udGVudCB7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgLmhyLXZhbHVlIHtcbiAgICBmb250LXNpemU6IDUwcHg7XG4gICAgY29sb3I6ICNkZjcxMjc7XG4gICAgZm9udC13ZWlnaHQ6IGJvbGQ7XG4gIH1cbn1cblxuLnNldHRpbmctaXRlbSB7XG4gIG1hcmdpbi10b3A6IDIwcHg7XG4gIG1hcmdpbi1ib3R0b206IDIwcHg7XG4gIC50aXRsZSB7XG4gICAgZm9udC1zaXplOiAyMHB4O1xuICAgIGZvbnQtd2VpZ2h0OiBib2xkO1xuICAgIG1hcmdpbi1ib3R0b206IDE2cHg7XG4gIH1cbiAgLmNvbnRlbnQge1xuICAgIGxpIHtcbiAgICAgIGxpc3Qtc3R5bGUtdHlwZTogZGlzYztcbiAgICAgIHRleHQtaW5kZW50OiAycmVtO1xuICAgICAgbWFyZ2luLWJvdHRvbTogOHB4O1xuICAgIH1cbiAgfVxufVxuIl19 */");
+
+/***/ }),
+
+/***/ "8qfo":
+/*!******************************************************************************************************************!*\
+  !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/exercise-records/exercise-detail/exercise-detail.page.html ***!
+  \******************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n  <ion-toolbar>\n    <ion-buttons slot=\"start\">\n      <ion-back-button></ion-back-button>\n    </ion-buttons>\n    <ion-title>{{'exercise_detail' | translate}}</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-card>\n    <ion-card-header color=\"medium\">\n      <ion-card-title>{{'target_hr_remain_ratio' | translate}}</ion-card-title>\n    </ion-card-header>\n    <ion-card-content class=\"hr-content\">\n      <app-progress-bar [ratio]=\"exerciseRecords.thrRetention\"></app-progress-bar>\n      <ion-label class=\"hr-value\">{{exerciseRecords.thrRetention}}%</ion-label>\n    </ion-card-content>\n  </ion-card>\n  <ion-card>\n    <ion-card-header color=\"medium\">\n      <ion-card-title>{{'hr_records' | translate}}</ion-card-title>\n    </ion-card-header>\n    <ion-card-content>\n      <div *ngIf=\"chart\" id=\"record\" style=\"display: block; height: 200px; \"></div>\n      <ion-buttons>\n        <ion-button color=\"primary\" fill=\"outline\" size=\"small\" shape=\"round\" style=\"margin-left: auto; z-index: 10;\" (click)=\"showHrDetail()\">{{'see_detail' | translate}}</ion-button>\n      </ion-buttons>\n    </ion-card-content>\n  </ion-card>\n  <ion-card *ngIf=\"prescription\">\n    <ion-card-header color=\"medium\">\n      <ion-card-title>{{'exercise_summary' | translate}}</ion-card-title>\n    </ion-card-header>\n    <ion-card-content>\n      <div class=\"setting-item\">\n        <h3 class=\"title\">{{'exercise_type' | translate}}</h3>\n        <ul class=\"content\">\n          <li>{{prescription.exerciseTypeValue}}</li>\n        </ul>\n      </div>\n      <div class=\"setting-item\" *ngFor=\"let step of prescription.steps; index as i;\">\n        <h3 class=\"title\">{{'step' | translate}} {{i+1}}</h3>\n        <ul class=\"content\">\n          <li>{{step.type}}</li>\n          <li>{{step.minute}} {{'minutes' | translate}}</li>\n        </ul>\n      </div>\n    </ion-card-content>\n  </ion-card>\n</ion-content>\n");
 
 /***/ }),
 
@@ -324,15 +523,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var _exercise_records_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./exercise-records.page */ "+nom");
+/* harmony import */ var _exercise_detail_exercise_detail_page__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./exercise-detail/exercise-detail.page */ "3nFk");
+/* harmony import */ var _exercise_records_page__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./exercise-records.page */ "+nom");
+
 
 
 
 
 const routes = [
+    { path: '', redirectTo: 'records', pathMatch: 'full' },
     {
         path: '',
-        component: _exercise_records_page__WEBPACK_IMPORTED_MODULE_3__["ExerciseRecordsPage"]
+        component: _exercise_records_page__WEBPACK_IMPORTED_MODULE_4__["ExerciseRecordsPage"]
+    },
+    {
+        path: 'detail',
+        component: _exercise_detail_exercise_detail_page__WEBPACK_IMPORTED_MODULE_3__["ExerciseDetailPage"]
     }
 ];
 let ExerciseRecordsPageRoutingModule = class ExerciseRecordsPageRoutingModule {
@@ -343,6 +549,126 @@ ExerciseRecordsPageRoutingModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__
         exports: [_angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterModule"]],
     })
 ], ExerciseRecordsPageRoutingModule);
+
+
+
+/***/ }),
+
+/***/ "dvCk":
+/*!**************************************************!*\
+  !*** ./src/services/exercise-records.service.ts ***!
+  \**************************************************/
+/*! exports provided: ExerciseRecordsService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExerciseRecordsService", function() { return ExerciseRecordsService; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _prescription_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./prescription.service */ "2VRz");
+
+
+
+let ExerciseRecordsService = class ExerciseRecordsService {
+    constructor(prescriptionSvc) {
+        this.prescriptionSvc = prescriptionSvc;
+    }
+    /**
+     * data for calendar
+     *
+     * @param dailyList
+     * @returns
+     */
+    handleExerciseAllRecords(exerciseRecords) {
+        return exerciseRecords.map(exercise => ({
+            title: '',
+            startTime: new Date(exercise.date),
+            endTime: new Date(new Date(exercise.date).getTime() + exercise.hrs.split(',').length * 1000),
+            allDay: false,
+            totalSeconds: exercise.hrs.split(',').length,
+            rpeStatus: exercise.rpe,
+            thrRetention: exercise.thrretention,
+            hrs: exercise.hrs,
+            prescriptionId: exercise.prescriptionId
+        }));
+    }
+    getExerciseTotalTime(id) {
+        return new Promise((resolve, reject) => {
+            this.prescriptionSvc.getPrescriptionById(id).subscribe(pres => {
+                resolve(pres.steps
+                    // .filter(step => step.type.includes('Main'))
+                    .map(step => step.minute)
+                    .reduce((prev, curr) => prev + curr));
+            });
+        });
+    }
+    /**
+     * data for pie chart
+     */
+    getExercisePeriodRecords(exerciseRecords, currExercisePeriod) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            const today = new Date().getTime();
+            const exerciseInPeriod = exerciseRecords.filter(exer => new Date(exer.date).getTime() >= this.getPeriodDate(today, currExercisePeriod));
+            const exerciseTimes = exerciseInPeriod.length;
+            let exerciseTotalTime = 0;
+            let thrRetention = 0;
+            if (exerciseInPeriod.length > 0) {
+                const prescriptionIdArray = exerciseInPeriod.map(exercise => exercise.prescriptionId);
+                const uniqueIdArray = prescriptionIdArray.filter((item, pos) => prescriptionIdArray.indexOf(item) === pos);
+                const promises = yield uniqueIdArray.map(id => this.getExerciseTotalTime(id));
+                const everyPrescriptionExerciseTime = yield Promise.all(promises);
+                exerciseTotalTime = prescriptionIdArray
+                    .map(id => uniqueIdArray.indexOf(id))
+                    .map(idx => everyPrescriptionExerciseTime[idx])
+                    .reduce((prev, curr) => prev + curr);
+                thrRetention =
+                    Math.round(exerciseInPeriod
+                        .map(exercise => exercise.thrretention)
+                        .filter(exercise => !!exercise)
+                        .reduce((prev, curr) => prev + curr, 0) / exerciseTimes);
+            }
+            return { exerciseTimes, exerciseTotalTime, thrRetention };
+        });
+    }
+    getPeriodDate(today, currExercisePeriod) {
+        let minusMilliSeconds = 0;
+        let targetDate;
+        switch (currExercisePeriod) {
+            case '1주일':
+                minusMilliSeconds = 7 * 24 * 60 * 60 * 1000;
+                targetDate = today - minusMilliSeconds;
+                break;
+            case '1달':
+                minusMilliSeconds = 30 * 24 * 60 * 60 * 1000;
+                targetDate = today - minusMilliSeconds;
+                break;
+            case '3달':
+                minusMilliSeconds = 90 * 24 * 60 * 60 * 1000;
+                targetDate = today - minusMilliSeconds;
+                break;
+            case '6달':
+                minusMilliSeconds = 180 * 24 * 60 * 60 * 1000;
+                targetDate = today - minusMilliSeconds;
+                break;
+            case '1년':
+                minusMilliSeconds = 365 * 24 * 60 * 60 * 1000;
+                targetDate = today - minusMilliSeconds;
+                break;
+            default:
+                break;
+        }
+        return targetDate;
+    }
+};
+ExerciseRecordsService.ctorParameters = () => [
+    { type: _prescription_service__WEBPACK_IMPORTED_MODULE_2__["PrescriptionService"] }
+];
+ExerciseRecordsService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+        providedIn: 'root'
+    })
+], ExerciseRecordsService);
 
 
 

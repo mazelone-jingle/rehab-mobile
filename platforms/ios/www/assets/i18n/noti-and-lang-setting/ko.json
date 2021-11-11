@@ -2,5 +2,11 @@
   "noti_and_lang_setting": "알람 및 언어 설정",
   "notification_setting": "알림 설정",
   "exercise_schedule_notification": "운동 스케쥴 알림",
-  "language_setting": "언어 설정"
+  "language_setting": "언어 설정",
+  "notification_time": "알람 시간 설정",
+  "notification_weekdays": "알람 반복 요일",
+  "every": "마다",
+  "notification_sound": "알람 방식-소리",
+  "notification_vibration": "알람 방식-진동",
+  "notification_music": "음악을 선택해주세요"
 }

@@ -18,9 +18,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reservation_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./reservation-routing.module */ "I049");
 /* harmony import */ var _reservation_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./reservation.page */ "JIXN");
 /* harmony import */ var ionic2_calendar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ionic2-calendar */ "oksz");
-/* harmony import */ var src_modules_shared_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/modules/shared.module */ "5Uro");
-/* harmony import */ var src_services_consultation_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/services/consultation.service */ "uqZs");
-/* harmony import */ var src_services_reservation_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! src/services/reservation.service */ "qir6");
+/* harmony import */ var src_services_consultation_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/services/consultation.service */ "uqZs");
+/* harmony import */ var src_services_reservation_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/services/reservation.service */ "qir6");
+/* harmony import */ var _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @ngx-translate/http-loader */ "mqiu");
+/* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @ngx-translate/core */ "sYmb");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 
 
 
@@ -32,6 +34,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+const createTranslateLoader = (http) => new _ngx_translate_http_loader__WEBPACK_IMPORTED_MODULE_10__["TranslateHttpLoader"](http, './assets/i18n/reservation/', '.json');
 let ReservationPageModule = class ReservationPageModule {
 };
 ReservationPageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
@@ -41,10 +46,17 @@ ReservationPageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])
             _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"],
             _reservation_routing_module__WEBPACK_IMPORTED_MODULE_5__["ReservationPageRoutingModule"],
-            src_modules_shared_module__WEBPACK_IMPORTED_MODULE_8__["SharedModule"],
             ionic2_calendar__WEBPACK_IMPORTED_MODULE_7__["NgCalendarModule"],
+            _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__["TranslateModule"].forChild({
+                loader: {
+                    provide: _ngx_translate_core__WEBPACK_IMPORTED_MODULE_11__["TranslateLoader"],
+                    useFactory: createTranslateLoader,
+                    deps: [_angular_common_http__WEBPACK_IMPORTED_MODULE_12__["HttpClient"]]
+                },
+                isolate: true
+            }),
         ],
-        providers: [src_services_consultation_service__WEBPACK_IMPORTED_MODULE_9__["ConsultationService"], src_services_reservation_service__WEBPACK_IMPORTED_MODULE_10__["ReservationService"]],
+        providers: [src_services_consultation_service__WEBPACK_IMPORTED_MODULE_8__["ConsultationService"], src_services_reservation_service__WEBPACK_IMPORTED_MODULE_9__["ReservationService"]],
         declarations: [_reservation_page__WEBPACK_IMPORTED_MODULE_6__["ReservationPage"]],
     })
 ], ReservationPageModule);
@@ -709,7 +721,7 @@ let ReservationPage = class ReservationPage {
     joinChat(reserv) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             this.logger.log('chat', reserv);
-            this.router.navigate(['real-time-exercise'], {
+            this.router.navigate(['/menu/real-time-exercise'], {
                 state: { reservId: reserv.id, channelId: reserv.channelId },
             });
         });
