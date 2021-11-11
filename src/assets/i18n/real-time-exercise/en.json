@@ -15,7 +15,12 @@
     "contact": "Contact",
     "audio": "Voice Message",
     "location": "Location",
-    "document": "Document"
+    "document": "Document",
+    "difficulty1": "Comfortable",
+    "difficulty2": "Normal",
+    "difficulty3": "Tired",
+    "difficulty4": "Very hard",
+    "input_message": "Please enter some messages."
   },
   "minute": "Minutes",
   "rpe": {

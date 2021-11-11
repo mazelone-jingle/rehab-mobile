@@ -9,7 +9,6 @@ export const COMMAND_TYPE_STE = 'STE#@';
 export const COMMAND_TYPE_RTS = 'RTS#@';
 export const COMMAND_TYPE_RTH = 'RTH#@';
 export const COMMAND_TYPE_RTE = 'RTE#@';
-export const COMMAND_TYPE_SSE = 'SSE#@';
 
 export const RESPONSE_TYPE_HDA = 'HDA#@';
 export const RESPONSE_TYPE_NDA = 'NDA#@';
@@ -20,5 +19,5 @@ export const RESPONSE_TYPE_STE = 'STE#OK@';
 export const RESPONSE_TYPE_SSE = 'SSE#@';
 export const RESPONSE_TYPE_THR = 'THR#@';
 
-export const RESPONSE_TYPE_ERR = 'ERR#';
+export const RESPONSE_TYPE_ERR = 'ERR#@';
 export const RESPONSE_CONFIG_BUSY = 'CONFIG BUSY';

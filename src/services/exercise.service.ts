@@ -25,16 +25,9 @@ export class ExerciseService extends HttpService {
     super(http, baseUrl + 'api/Exercise', route, router, logger, authSvc);
   }
 
-  getExerciseRecords(
-    pageNum: number,
-    pageSize: number
-  ): Observable<IExercise[]> {
+  getExerciseRecords(pageNum: number, pageSize: number): Observable<IExercise[]> {
     const email = this.authSvc.username;
-    return this.http
-      .get<IPagedList<IExercise>>(
-        this.baseUrl +
-          `/ByEmail?keyword=${email}&pageNum=${pageNum}&pageSize=${pageSize}`
-      )
+    return this.http.get<IPagedList<IExercise>>(`${this.baseUrl}/ByEmail?keyword=${email}&pageNum=${pageNum}&pageSize=${pageSize}`)
       .pipe(
         tap((data) => {
           this.logger.log('diary/pagedList', data);
@@ -51,11 +44,7 @@ export class ExerciseService extends HttpService {
     return hrArray.join(',');
   }
 
-  getThrRetention(
-    prescription: IPrescription,
-    hrMinMax: any,
-    hrData: number[]
-  ) {
+  getThrRetention(prescription: IPrescription, hrMinMax: any, hrData: number[]) {
     const exercises = prescription.steps;
     const exerciseTime = [0]; // 각 단계별 운동 시간
     const exerciseIsMain = []; // Main에 해당하는 운동 type
@@ -82,6 +71,7 @@ export class ExerciseService extends HttpService {
 
     const flatHr = mainHrs.reduce((accu, curr) => accu.concat(curr));
     this.logger.log('flat Hr', flatHr);
+    this.logger.log('hr min, max:', hrMinMax);
     const rangeHr = flatHr.filter(
       (hr) => +hr >= hrMinMax.min && +hr <= hrMinMax.max
     );
@@ -89,41 +79,33 @@ export class ExerciseService extends HttpService {
     const res = Math.round((rangeHr.length / flatHr.length) * 100);
     this.logger.log('thr retention: ', res);
 
-    return res? res : 0;
+    return res ? res : 0;
   }
 
-  async sendExerciseData(
-    prescription,
-    rpeValue: number,
-    exerciseData: string[],
-    exerciseDatetime: Date,
-    hrMixMax: any
-  ) {
+  async sendExerciseData(prescription, rpeValue: number, exerciseData: string[], exerciseDatetime: Date, hrMixMax: any, rpes: IRpes[]) {
     if (exerciseData.length > 0) {
       const hrData = exerciseData
         .map((str) => str.substring(str.indexOf('#') + 1, str.lastIndexOf('#')))
         .map((str) => str.split('_'))
         .reduce((accu, curr) => accu.concat(curr))
         .map((str) => +str);
-      return this.postExercise(
-        prescription,
-        hrData,
-        rpeValue,
-        exerciseDatetime,
-        hrMixMax,
-        ''
-      ).toPromise();
+
+      let rpesData = '';
+      if (rpes) {
+        const rpesSecond = rpes.map(v => v.second);
+        rpesData = hrData.map((value, idx) => {
+          if (rpesSecond.includes(idx)) {
+            return rpes.find(v => v.second === idx).rpe;
+          }
+          return null;
+        }).join(',');
+        console.log(rpesData);
+      }
+      return this.postExercise(prescription, hrData, rpeValue, exerciseDatetime, hrMixMax, rpesData).toPromise();
     }
   }
 
-  postExercise(
-    prescription: IPrescription,
-    hrData: number[],
-    rpe: number,
-    exerciseDatetime: Date,
-    hrMinMax: any,
-    rpes: string
-  ) {
+  postExercise(prescription: IPrescription, hrData: number[], rpe: number, exerciseDatetime: Date, hrMinMax: any, rpes: string) {
     const exercise: IExerciseRequest = {
       patientEmail: this.authSvc.username,
       id: 0,

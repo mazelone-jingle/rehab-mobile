@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
 import { HttpClient } from '@angular/common/http';
 
+
 const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/login/', '.json');
 
 @NgModule({

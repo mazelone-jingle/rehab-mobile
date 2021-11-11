@@ -18,7 +18,7 @@
       <ion-input type="text" formControlName="name" class="form-control" id="name"></ion-input>
     </ion-item>
     <div *ngIf="name.invalid && name.touched">
-      <small style="color: red;" *ngIf="name.errors.required">이름을 입력해주세요</small>
+      <small style="color: red;" *ngIf="name.errors.required">{{'please_enter_name' | translate}}</small>
     </div>
     <ion-item class="form-group">
       <ion-label for="gender" position="fixed">{{'gender' | translate}}</ion-label>
@@ -39,22 +39,22 @@
       <ion-datetime formControlName="birthday" pickerFormat="YYYY/MM/DD" displayFormat="YYYY년 MM월 DD일" (ionChange)="changeDate($event)"></ion-datetime>
     </ion-item>
     <div *ngIf="birthday.invalid && birthday.touched">
-      <small style="color: red;" *ngIf="birthday.errors.required">생년월일을 입력해주세요</small>
+      <small style="color: red;" *ngIf="birthday.errors.required">{{'please_enter_birthday' | translate}}</small>
     </div>
     <ion-item class="form-group">
       <ion-label for="email" position="fixed">{{'email' | translate}}</ion-label>
       <ion-input type="email" formControlName="email" class="form-control" id="email" [disabled]="true"></ion-input>
     </ion-item>
     <div *ngIf="email.invalid && email.touched">
-      <small style="color: red;" *ngIf="email.errors.required">이메일을 입력해주세요</small>
-      <small style="color: red;" *ngIf="email.errors.email">올바른 이메일 형식이 아닙니다</small>
+      <small style="color: red;" *ngIf="email.errors.required">{{'please_enter_email' | translate}}</small>
+      <small style="color: red;" *ngIf="email.errors.email">{{'email_format_not_correct' | translate}}</small>
     </div>
     <ion-item class="form-group">
       <ion-label for="contact" position="fixed">{{'contact' | translate}}</ion-label>
       <ion-input type="text" formControlName="contact" class="form-control" id="contact"></ion-input>
     </ion-item>
     <div *ngIf="contact.invalid && contact.touched">
-      <small style="color: red;" *ngIf="contact.errors.required">연락처를 입력해주세요</small>
+      <small style="color: red;" *ngIf="contact.errors.required">{{'please_enter_contact' | translate}}</small>
     </div>
   </form>
 </ion-content>

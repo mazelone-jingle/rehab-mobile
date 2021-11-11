@@ -1,8 +1,12 @@
-import { BehaviorSubject, Subscription, throwError } from 'rxjs';
+import { BehaviorSubject, Subscription, throwError, Observable, Subject } from 'rxjs';
 import { ConnectModalComponent } from 'src/components/modals/connect-modal/connect-modal.component';
 import { DevicesModalComponent } from 'src/components/modals/devices-modal/devices-modal.component';
 import { RpeComponent } from 'src/components/modals/rpe/rpe.component';
 import { PRESCRIPTION } from 'src/constants/common';
+import {
+  CANCEL, CONFIRM, CONNECT_FAILED, CONNECTING, GETTING_DATA, NOT_RESERVED_TIME, SCAN, SCAN_FAILED,
+  SELECT_DEVICE, WAIT_FOR_GETTING_DATA
+} from 'src/constants/language-key';
 import {
   RESPONSE_TYPE_END, RESPONSE_TYPE_ERR, RESPONSE_TYPE_HDA, RESPONSE_TYPE_NDA
 } from 'src/constants/watch-ble-command';
@@ -10,6 +14,7 @@ import { IReservation } from 'src/models/i-reservation';
 import { AlertService } from 'src/services/alert.service';
 import { BleService } from 'src/services/ble.service';
 import { ExerciseService } from 'src/services/exercise.service';
+import { LanguageService } from 'src/services/language.service';
 import { LoadingService } from 'src/services/loading.service';
 import { LoggerService } from 'src/services/logger.service';
 import { ReservationService } from 'src/services/reservation.service';
@@ -19,6 +24,8 @@ import { WatchCommandService } from 'src/services/watch-command.service';
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
+import { TranslateLoader } from '@ngx-translate/core';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -34,16 +41,17 @@ export class HomePage implements OnInit {
   // connectStatus = false;
   exerciseData: string[] = [];
   exerciseSubject = new BehaviorSubject<string[]>(this.exerciseData);
-  isScaned = false;
+  isScanned = false;
   connectSubscription: Subscription = null;
 
   tempExerciseData = [];
   callREQTimes = 0;
-  exerciseDatetime: Date;
+  exerciseDateTime: Date;
   hrMixMax: { min: string; max: string };
 
   callBATTimes = 0;
   sub: Subscription;
+  isConnecting$ = new Subject<boolean>();
   constructor(
     public modalController: ModalController,
     private zone: NgZone,
@@ -52,15 +60,16 @@ export class HomePage implements OnInit {
     private alertSvc: AlertService,
     private loggerSvc: LoggerService,
     private storageSvc: StorageService,
-    private watchCommandService: WatchCommandService,
+    private watchCommandSvc: WatchCommandService,
     private exerciseSvc: ExerciseService,
     private reservationSvc: ReservationService,
-    private router: Router
+    private router: Router,
+    private languageSvc: LanguageService
   ) {
+
   }
 
   async ngOnInit() {
-    console.log(await this.storageSvc.getDataOfUser());
     if (!await this.ble.isConnected()) {
       await this.presentIsConnectModal();
     }
@@ -68,22 +77,27 @@ export class HomePage implements OnInit {
 
   ionViewWillEnter() {
     this.sub = new Subscription();
+    this.sub.add(this.ble.isConnecting$.subscribe(obs => {
+      this.zone.run(() => {
+        this.isConnecting$.next(obs);
+      });
+    }));
     this.setSubscriptions();
   }
 
   setSubscriptions() {
-    this.sub.add(this.ble.BATService$
-      .subscribe({
+    this.sub.add(
+      this.ble.BATService$.subscribe({
         next: async (obs) => {
           const batPattern = new RegExp(/^BAT#[0-9]{1,3}@$/g);
           if (batPattern.test(obs)) {
             this.callBATTimes = 0;
             await this.loadingSvc.dismiss();
-            const battery = this.ble.handleBAT(obs);
+            const battery = obs.substring(obs.lastIndexOf('#') + 1, obs.lastIndexOf('@'));;
             await this.zone.run(async () => {
               this.batteryPower = +battery;
               await this.loadingSvc.present();
-              await this.watchCommandService.sendRND();
+              await this.watchCommandSvc.sendRND();
             });
           } else {
             if (this.callBATTimes >= 10) {
@@ -92,7 +106,7 @@ export class HomePage implements OnInit {
               await this.presentScanFailedAlert();
             } else {
               this.callBATTimes++;
-              await this.watchCommandService.sendBAT();
+              await this.watchCommandSvc.sendBAT();
             }
           }
         },
@@ -108,8 +122,8 @@ export class HomePage implements OnInit {
       if (obs === RESPONSE_TYPE_HDA) {
         await this.loadingSvc.dismiss();
         await this.loadingSvc.present();
-        await this.watchCommandService.sendRTS();
-        await this.loadingSvc.create(`디바이스에 저장된 데이터들을 받아오는 중입니다. 잠시만 기다려주세요......`);
+        await this.watchCommandSvc.sendRTS();
+        await this.loadingSvc.create(await this.languageSvc.getI18nLang(WAIT_FOR_GETTING_DATA));
         await this.loadingSvc.present();
         this.exerciseData = [];
       } else if (obs === RESPONSE_TYPE_NDA) {
@@ -121,25 +135,25 @@ export class HomePage implements OnInit {
       if (obs === RESPONSE_TYPE_ERR) {
         await this.loadingSvc.dismiss();
       }
-      const [y, M, d, h, m] = obs.substring(obs.indexOf('#') + 1, obs.lastIndexOf('@') - 1).split('_');
-      this.exerciseDatetime = new Date(`${y}/${M}/${d} ${h}:${m}`);
-      await this.watchCommandService.sendRTH();
+      const [y, M, d, h, m] = obs.substring(obs.indexOf('#') + 1, obs.lastIndexOf('@')).split('_');
+      this.exerciseDateTime = new Date(+('20' + y), +M - 1, +d, +h, +m);
+      await this.watchCommandSvc.sendRTH();
     }));
 
     this.sub.add(this.ble.RTHService$.subscribe(async obs => {
       if (obs === RESPONSE_TYPE_ERR) {
         await this.loadingSvc.dismiss();
       }
-      const [min, max] = obs.substring(obs.indexOf('#') + 1, obs.lastIndexOf('@') - 1).split('_');
+      const [min, max] = obs.substring(obs.indexOf('#') + 1, obs.lastIndexOf('@')).split('_');
       this.hrMixMax = { min, max };
-      await this.watchCommandService.sendRTE();
+      await this.watchCommandSvc.sendRTE();
     }));
 
     this.sub.add(this.ble.RTEService$.subscribe(async obs => {
       if (obs === RESPONSE_TYPE_ERR) {
         await this.loadingSvc.dismiss();
       }
-      await this.watchCommandService.sendRHD();
+      await this.watchCommandSvc.sendRHD();
     }));
 
     this.sub.add(this.ble.RHDService$.subscribe(async (obs) => {
@@ -152,7 +166,7 @@ export class HomePage implements OnInit {
       } else {
         this.tempExerciseData.push(obs);
         this.callREQTimes++;
-        await this.watchCommandService.sendREQ();
+        await this.watchCommandSvc.sendREQ();
       }
     }));
 
@@ -172,13 +186,13 @@ export class HomePage implements OnInit {
             } else {
               this.tempExerciseData.slice(0, 1);
               this.callREQTimes++;
-              await this.watchCommandService.sendREQ();
+              await this.watchCommandSvc.sendREQ();
             }
           } else {
             this.callREQTimes = 0;
             this.tempExerciseData = [];
             this.exerciseData.push(lastData);
-            await this.watchCommandService.sendROK();
+            await this.watchCommandSvc.sendROK();
           }
         }
       }
@@ -200,13 +214,13 @@ export class HomePage implements OnInit {
         await rpeModal.present();
         const { data } = await rpeModal.onWillDismiss();
         const prescription = await this.storageSvc.get(PRESCRIPTION);
-        await this.exerciseSvc.sendExerciseData(prescription, data.rpeValue, this.exerciseData, this.exerciseDatetime, this.hrMixMax);
+        await this.exerciseSvc.sendExerciseData(prescription, data.rpeValue, this.exerciseData, this.exerciseDateTime, this.hrMixMax, null);
         await this.loadingSvc.present();
-        await this.watchCommandService.sendRND();
+        await this.watchCommandSvc.sendRND();
       } else {
         this.callREQTimes++;
         this.tempExerciseData.push(obs);
-        await this.watchCommandService.sendREQ();
+        await this.watchCommandSvc.sendREQ();
       }
     }));
   }
@@ -232,13 +246,13 @@ export class HomePage implements OnInit {
 
   async scanBLE() {
     this.devices = [];
-    await this.loadingSvc.create('Scan...');
+    await this.loadingSvc.create(await this.languageSvc.getI18nLang(SCAN));
     await this.loadingSvc.present();
     return this.ble
       .scan()
       .subscribe({
         next: async (device) => {
-          this.isScaned = true;
+          this.isScanned = true;
           if (device) {
             if (this.devices.indexOf((d) => d.id === device.id) < 0) {
               this.devices.push(device);
@@ -247,7 +261,7 @@ export class HomePage implements OnInit {
         },
         error: async (e) => {
           await this.loadingSvc.dismiss();
-          this.isScaned = true;
+          this.isScanned = true;
           throwError(e);
         },
         complete: async () => {
@@ -259,8 +273,7 @@ export class HomePage implements OnInit {
               backdropDismiss: false,
               componentProps: {
                 devicesList: this.devices,
-                // TODO: i18n
-                title: '디바이스를 선택해주세요.'
+                title: await this.languageSvc.getI18nLang(SELECT_DEVICE)
               },
             });
             await modal.present();
@@ -278,16 +291,16 @@ export class HomePage implements OnInit {
 
   async presentScanFailedAlert() {
     const alertOptions = {
-      message: '스캔 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(SCAN_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             await this.scanBLE();
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: () => {
           },
         },
@@ -299,44 +312,44 @@ export class HomePage implements OnInit {
 
   async connect(deviceId: string) {
     this.connectedDeviceId = deviceId;
-    await this.loadingSvc.create('Connect...');
-    await this.loadingSvc.present();
-    this.connectSubscription = this.ble
-      .connect(deviceId)
+
+    this.connectSubscription = this.ble.connect(deviceId)
+      .pipe(
+        tap(async () => await this.loadingSvc.create(await this.languageSvc.getI18nLang(CONNECTING))),
+        tap(async () => await this.loadingSvc.present())
+      )
       .subscribe({
         next: async (peripheral) => {
           await this.loadingSvc.dismiss();
-          this.connectedDeviceId = deviceId;
-          this.peripheral = peripheral;
-          await this.loadingSvc.create('Getting data...');
+
+          await this.loadingSvc.create(await this.languageSvc.getI18nLang(GETTING_DATA));
           await this.loadingSvc.present();
           this.callBATTimes++;
-          await this.watchCommandService.sendBAT();
+          await this.watchCommandSvc.sendBAT();
         },
         error: async (e) => {
           this.batteryPower = null;
           await this.loadingSvc.dismiss();
-          throwError(e);
           await this.presentConnectFailedAlert(deviceId);
+          // throw new Error(e);
         },
         complete: () => { }
       });
-    return this.connectSubscription as Subscription;
   }
 
   async presentConnectFailedAlert(deviceId) {
     const alertOptions = {
-      message: '연결 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(CONNECT_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             this.connectSubscription.unsubscribe();
             await this.connect(deviceId);
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: async () => {
             this.batteryPower = null;
             this.connectSubscription.unsubscribe();
@@ -350,26 +363,18 @@ export class HomePage implements OnInit {
 
   ionViewWillLeave(): void {
     this.sub.unsubscribe();
+    console.warn('====== leave home page');
   }
 
   routeToRealtimeExercise() {
-    this.reservationSvc.getReservation().subscribe(async (reservation) => {
-      if (reservation.length > 0) {
-        const availableReservation = this.checkReservationIsAvailableNow(reservation);
-        //by-pass
-        if (availableReservation.length > 0) {
-          this.router.navigate(['/menu/real-time-exercise'], {
-            state: { reservId: availableReservation[0].id, channelId: availableReservation[0].channelId },
-          });
-        } else {
-          await this.alertSvc.presentAlert(
-            '예약한 날짜 및 시간이 아닙니다. 또는 예약한 정보가 없습니다.',
-            false
-          );
-        }
+    this.reservationSvc.getNowAvailableReservation().subscribe(async availableReservation => {
+      if (availableReservation.length > 0) {
+        this.router.navigate(['/menu/real-time-exercise'], {
+          state: { reserveId: availableReservation[0].id, channelId: availableReservation[0].channelId },
+        });
       } else {
         await this.alertSvc.presentAlert(
-          '예약한 날짜 및 시간이 아닙니다. 또는 예약한 정보가 없습니다.',
+          await this.languageSvc.getI18nLang(NOT_RESERVED_TIME),
           false
         );
       }
@@ -379,7 +384,7 @@ export class HomePage implements OnInit {
   checkReservationIsAvailableNow(reservations: IReservation[]) {
     return reservations
       .filter((reservation) => reservation.approvalResult)
-      .filter((reservation) => this.checkIsBefore5Minutes(reservation.from, reservation.to));
+      .filter((reservation) => this.checkIsBefore5Minutes(reservation.from, reservation.to)) || [];
   }
 
   checkIsBefore5Minutes(dateFrom: Date, dateTo: Date) {

@@ -1,9 +1,11 @@
+import { LanguageService } from './../../services/language.service';
 import { AlertService } from './../../services/alert.service';
 import { LoggerService } from './../../services/logger.service';
 import { RegisterService } from './../../services/register.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CONFIRM_EMAIL_IS_SENT } from 'src/constants/language-key';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,13 +14,14 @@ import { Router } from '@angular/router';
 })
 export class ForgotPasswordPage implements OnInit {
   forgotPwdForm: FormGroup;
-  get email() { return this.forgotPwdForm.get('email') }
+  get email() { return this.forgotPwdForm.get('email'); }
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private router: Router,
     private registerSvc: RegisterService,
     private logger: LoggerService,
-    private alertSvc: AlertService
+    private alertSvc: AlertService,
+    private languageSvc: LanguageService
     ) {
     this.buildForm();
   }
@@ -27,16 +30,18 @@ export class ForgotPasswordPage implements OnInit {
   }
 
   buildForm() {
-    this.forgotPwdForm = this.fb.group({
+    this.forgotPwdForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-    })
+    });
   }
 
   resetPassword() {
     this.registerSvc.forgotPassword(this.getEmail())
-    .subscribe(res => {
+    .subscribe(async res => {
       this.logger.log('forgot password.result', res);
-      this.alertSvc.presentAlert('확인 메일이 발송되었습니다.', false, () => this.router.navigate(['/login']));
+      this.alertSvc.presentAlert(
+        await this.languageSvc.getI18nLang(CONFIRM_EMAIL_IS_SENT)
+        , false, () => this.router.navigate(['/login']));
     }, err => {
       this.logger.error(err);
     }, () => {

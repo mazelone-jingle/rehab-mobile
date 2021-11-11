@@ -1,3 +1,5 @@
+import { LanguageService } from './../services/language.service';
+import { AlertService } from './../services/alert.service';
 import { Observable } from 'rxjs';
 import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { AuthService, GrantTypes } from 'src/services/auth.service';
@@ -8,12 +10,20 @@ import {
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
+import { LOG_OUT } from 'src/constants/language-key';
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
   httpHeader: any = { 'Content-Type': 'application/json' };
 
-  constructor(private inj: Injector, private router: Router, private loggerSvc: LoggerService) {}
+  constructor(
+    private inj: Injector,
+    private router: Router,
+    private loggerSvc: LoggerService,
+    private authSvc: AuthService,
+    private alertSvc: AlertService,
+    private languageSvc: LanguageService
+    ) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -42,16 +52,16 @@ export class AppInterceptor implements HttpInterceptor {
     }
 
     // Clone the request to add the new header.
-    const authReq = req.clone({ headers: new HttpHeaders(headers) });
+    const request = req.clone({ headers: new HttpHeaders(headers) });
     // console.log('authReq', req.headers);
 
     // Pass on the cloned request instead of the original request.
-    return next.handle(authReq).pipe(
+    return next.handle(request).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse && event.status === 204) {
           return null;
         }
-        return authReq;
+        return request;
       }),
       catchError((error, caught) => {
         this.loggerSvc.error({ error, caught });
@@ -65,7 +75,9 @@ export class AppInterceptor implements HttpInterceptor {
               reqBody !== undefined &&
               reqBody.grantType === GrantTypes.refresh
             ) {
-              throw error;
+              this.languageSvc.getI18nLang(LOG_OUT).then(text => {
+                this.alertSvc.presentAlert(text, false, () => this.handleAuthFail());
+              });
             } else {
               return authService.extendToken().pipe(
                 mergeMap((t: any) => {
@@ -80,7 +92,17 @@ export class AppInterceptor implements HttpInterceptor {
               );
             }
           } else {
-            throw error;
+            // throw error;
+            if (request.url.endsWith('/api/Token')) {
+              let message = error.error.message;
+
+              if (message.title !== undefined) {
+                message = message.title;
+              }
+              this.alertSvc.presentAlert(message, false, null);
+            } else {
+              this.handleAuthFail();
+            }
           }
         } else if (error.status === 404 || error.status === 500) {
           // TODO: report....
@@ -98,5 +120,9 @@ export class AppInterceptor implements HttpInterceptor {
         throw error;
       })
     );
+  }
+
+  handleAuthFail() {
+    this.authSvc.logOut();
   }
 }

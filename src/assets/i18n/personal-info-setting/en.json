@@ -7,5 +7,10 @@
   "birthday":"Date of Birth",
   "email":"Email",
   "contact":"Contact",
-  "save": "Save"
+  "save": "Save",
+  "please_enter_name": "Please enter your name.",
+  "please_enter_birthday": "Please enter your birthday.",
+  "please_enter_email": "Please enter your email.",
+  "email_format_not_correct": "Email format is not correct.",
+  "please_enter_contact": "Please enter your contact."
 }

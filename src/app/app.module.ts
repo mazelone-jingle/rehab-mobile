@@ -30,6 +30,8 @@ import { File } from '@ionic-native/File/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { map } from 'rxjs/operators';
 import { LanguageService } from 'src/services/language.service';
+// import { StoreModule } from '@ngrx/store';
+import { loginStateReducer } from 'src/reducer/login-state.reducer';
 
 export const httpLoaderFactory = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
@@ -52,7 +54,8 @@ export const httpLoaderFactory = (http: HttpClient) => new TranslateHttpLoader(h
         deps: [HttpClient],
       },
     }),
-    ComponentsModule
+    ComponentsModule,
+    // StoreModule.forRoot({ isLogin: loginStateReducer })
   ],
   providers: [
     {

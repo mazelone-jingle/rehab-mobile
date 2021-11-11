@@ -43,4 +43,12 @@ export class LanguageService {
   async getLangLastSetting() {
     return await this.storage.get(LANG);
   }
+
+  getI18nLang(key: string) {
+    return this.translateService.get(key).toPromise();
+  }
+
+  getCurrentLang(): string {
+    return this.translateService.currentLang || null;
+  }
 }

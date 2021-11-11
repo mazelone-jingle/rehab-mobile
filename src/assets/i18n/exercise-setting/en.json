@@ -1,13 +1,14 @@
 {
   "exersice_info_setting": "Exercise and Heart Rate Settings",
   "target_hr": "Target Heart Rate",
-  "lowest_hr": "Lowest Heart Rate",
-  "hightest_hr": "Highest Heart Rate",
+  "lowest_hr": "Lowest",
+  "hightest_hr": "Highest",
   "exercise_type": "Exercise Type",
   "step": "Step",
   "minute": "Minutes",
   "exercise_start": "Start Exercise",
   "exercising": "exercising...",
   "confirm": "Confirm",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "finish_setting": "Done"
 }

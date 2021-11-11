@@ -1,3 +1,4 @@
+import { LanguageService } from './../../../../services/language.service';
 import { INotification, NotificationSettingService } from '../../../../services/notification-setting.service';
 import { DetailListModalComponent } from 'src/components/modals/detail-list-modal/detail-list-modal.component';
 import { ModalController } from '@ionic/angular';
@@ -7,36 +8,8 @@ import { FileChooser } from '@ionic-native/file-chooser/ngx';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ILocalNotification } from '@ionic-native/local-notifications';
 import { PushNotificationService } from 'src/services/push-notification.service';
+import { LANG_KO } from 'src/constants/common';
 
-const WEEKDAY_DATA_LIST = [{
-  text: '월요일',
-  eng: 'mon',
-  id: 1,
-}, {
-  text: '화요일',
-  eng: 'tue',
-  id: 2,
-}, {
-  text: '수요일',
-  eng: 'wed',
-  id: 3,
-}, {
-  text: '목요일',
-  eng: 'thu',
-  id: 4,
-}, {
-  text: '금요일',
-  eng: 'fri',
-  id: 5,
-}, {
-  text: '토요일',
-  eng: 'sat',
-  id: 6,
-}, {
-  text: '일요일',
-  eng: 'sun',
-  id: 7,
-}];
 
 @Component({
   selector: 'app-notification-detail',
@@ -57,13 +30,15 @@ export class NotificationDetailPage implements OnInit, OnDestroy {
     private modalController: ModalController,
     private fileChooser: FileChooser,
     private route: ActivatedRoute,
-    private notificationSettingSvc: NotificationSettingService,
+    private notiStorageSvc: NotificationSettingService,
     private router: Router,
     private zone: NgZone,
-    private pushNotificationSvc: PushNotificationService) {
+    private pushNotificationSvc: PushNotificationService,
+    public languageSvc: LanguageService
+    ) {
       route.params.subscribe(async params => {
         this.notificationId = +params.id;
-        await this.notificationSettingSvc.getNotificationById(this.notificationId)
+        await this.notiStorageSvc.getNotificationById(this.notificationId)
         .then(notification => {
           this.zone.run(() => {
             this.notificationStatus = notification.status;
@@ -90,9 +65,9 @@ export class NotificationDetailPage implements OnInit, OnDestroy {
       music: this.notificationMusic,
       repeatWeekday: this.repeatWeekday
     };
-    await this.notificationSettingSvc.saveNotificationById(this.notificationId, updatedNotification).then(()=> {
-      this.pushNotificationSvc.setNotification(updatedNotification);
-      this.notificationSettingSvc.updateNotification.next(true);
+    await this.notiStorageSvc.saveNotificationById(this.notificationId, updatedNotification).then(()=> {
+      this.pushNotificationSvc.setWeeklyNotification(updatedNotification);
+      this.notiStorageSvc.updateNotification.next(true);
     });
   }
 
@@ -107,11 +82,73 @@ export class NotificationDetailPage implements OnInit, OnDestroy {
   }
 
   async showWeekDayModal() {
+    let weekdayDataList;
+    if (this.languageSvc.getCurrentLang() === LANG_KO) {
+      weekdayDataList = [{
+        text: '월요일',
+        eng: 'mon',
+        id: 1,
+      }, {
+        text: '화요일',
+        eng: 'tue',
+        id: 2,
+      }, {
+        text: '수요일',
+        eng: 'wed',
+        id: 3,
+      }, {
+        text: '목요일',
+        eng: 'thu',
+        id: 4,
+      }, {
+        text: '금요일',
+        eng: 'fri',
+        id: 5,
+      }, {
+        text: '토요일',
+        eng: 'sat',
+        id: 6,
+      }, {
+        text: '일요일',
+        eng: 'sun',
+        id: 7,
+      }];
+    } else {
+      weekdayDataList = [{
+        text: 'Mon',
+        eng: 'mon',
+        id: 1,
+      }, {
+        text: 'Tue',
+        eng: 'tue',
+        id: 2,
+      }, {
+        text: 'Wed',
+        eng: 'wed',
+        id: 3,
+      }, {
+        text: 'Thu',
+        eng: 'thu',
+        id: 4,
+      }, {
+        text: 'Fri',
+        eng: 'fri',
+        id: 5,
+      }, {
+        text: 'Sat',
+        eng: 'sat',
+        id: 6,
+      }, {
+        text: 'Sun',
+        eng: 'sun',
+        id: 7,
+      }];
+    }
     const modal = await this.modalController.create({
       component: DetailListModalComponent,
       componentProps: {
         title: '알람 반복 요일',
-        dataList: WEEKDAY_DATA_LIST,
+        dataList: weekdayDataList,
         currValue: (this.repeatWeekday) || [],
         isChooseMulti: true
       },

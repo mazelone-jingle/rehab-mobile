@@ -1,0 +1,9 @@
+{
+  "reservation": "운동 예약하기",
+  "no_reservation": "예약가능한 일정이 없습니다.",
+  "join_chatting_room": "대화방 참여",
+  "unable_to_reserve": "예약 거절",
+  "reservation_not_confirmed": "의사 승인 대기중",
+  "reserve": "예약하기",
+  "reservation_canceled": "예약 취소"
+}

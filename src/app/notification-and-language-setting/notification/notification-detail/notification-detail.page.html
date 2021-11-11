@@ -22,11 +22,14 @@
         {{'notification_weekdays' | translate}}
       </ion-label>
       <ion-label color="primary" class="content">
+        <ng-container *ngIf="languageSvc.getCurrentLang() === 'en'">{{'every' | translate}}</ng-container>
+
         <ng-container *ngFor="let weekday of repeatWeekday; index as i">
-          {{weekday.text}}
+          {{weekday.eng | translate}}
           <span *ngIf="i < repeatWeekday.length - 1">,</span>
         </ng-container>
-        {{'every' | translate}}</ion-label>
+        <ng-container *ngIf="languageSvc.getCurrentLang() === 'ko';">{{'every' | translate}}</ng-container>
+      </ion-label>
     </ion-item>
     <ion-item class="setting-item">
       <ion-label class="title">

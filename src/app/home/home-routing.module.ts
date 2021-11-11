@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
-    canActivate: [AuthGuard]
+    // canActivate: [AuthGuard]
   },
   {
     path: 'exercise-setting',

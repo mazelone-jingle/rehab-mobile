@@ -22,11 +22,13 @@ export class AppComponent implements OnInit{
     private languageSvc: LanguageService,
     private translateSvc: TranslateService,
     private screenOrientation: ScreenOrientation) {
-      this.initailizeApp();
+      this.initializeApp();
   }
 
-  initailizeApp() {
+  initializeApp() {
     this.platform.ready().then(async () => {
+      this.platform.backButton.subscribeWithPriority(1, () => { // to disable hardware back button on whole app
+      });
       await this.storageSvc.init();
       this.languageSvc.setInitState();
       await this.languageSvc.getAndSetLastSetting();

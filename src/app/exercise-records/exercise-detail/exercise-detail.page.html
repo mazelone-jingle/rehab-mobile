@@ -33,19 +33,25 @@
       <ion-card-title>{{'exercise_summary' | translate}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <div class="setting-item">
-        <h3 class="title">{{'exercise_type' | translate}}</h3>
-        <ul class="content">
-          <li>{{prescription.exerciseTypeValue}}</li>
+      <ion-item class="prescription">
+        <ion-label class="prescription-title">
+          <h3 class="title">{{'exercise_type' | translate}}</h3>
+        </ion-label>
+        <ul class="prescription-data">
+          <li *ngFor="let type of prescription?.exerciseTypes">{{type}}</li>
         </ul>
-      </div>
-      <div class="setting-item" *ngFor="let step of prescription.steps; index as i;">
-        <h3 class="title">{{'step' | translate}} {{i+1}}</h3>
-        <ul class="content">
-          <li>{{step.type}}</li>
-          <li>{{step.minute}} {{'minutes' | translate}}</li>
-        </ul>
-      </div>
+      </ion-item>
+      <ion-item class="prescription" *ngFor="let step of prescription?.steps; index as i;">
+        <div>
+          <ion-label class="prescription-title">
+            <h3>{{'step' | translate}} {{i+1}}</h3>
+          </ion-label>
+          <ul class="prescription-data">
+            <li>{{step.type}}</li>
+            <li>{{step.minute}} {{'minute' | translate}}</li>
+          </ul>
+        </div>
+      </ion-item>
     </ion-card-content>
   </ion-card>
 </ion-content>

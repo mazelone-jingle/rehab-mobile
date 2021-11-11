@@ -13,7 +13,7 @@ import { AuthService } from './auth.service';
 import { LoggerService } from './logger.service';
 import { IHrMessage } from 'src/models/ihr-message';
 import { IEmergencyMessage } from 'src/models/i-emergency-message';
-import { IExcerciseStepMessage } from 'src/models/i-excercise-step-message';
+import { IExerciseStepMessage } from 'src/models/i-excercise-step-message';
 import { IStopSignal } from 'src/models/istop-signal';
 @Injectable({
   providedIn: 'root',
@@ -54,7 +54,11 @@ export class ChatService {
   recvStopSignalMessage$ = this.recvStopSignalMessage.asObservable();
   handShake$ = this.handShakeSubject.asObservable();
   join$ = this.joinSubject.asObservable();
-  constructor(private authSvc: AuthService, private logger: LoggerService) {}
+
+  constructor(
+    private authSvc: AuthService,
+    private logger: LoggerService
+    ) {}
 
   public async startAsync() {
     this.logger.log('Hub connecting ...');
@@ -127,7 +131,8 @@ export class ChatService {
 
     this.hubConn.on(ChatMethodName.messageReceived, (message: ITextMessage) => {
       this.logger.log('message received', message);
-      this.recvMessage.next(message);
+      const localTime = new Date(message.sendDateTime + 'Z'); // transfer to local time
+      this.recvMessage.next({...message, sendDateTime: localTime});
     });
 
     this.hubConn.on(ChatMethodName.isExerciseStopReceived, (signal: any) => {
@@ -180,6 +185,7 @@ export class ChatService {
         throw reason;
       });
   }
+
   async leaveAsync(channelId: string) {
     return this.hubConn
       .invoke(ChatMethodName.leave, channelId)
@@ -252,7 +258,7 @@ export class ChatService {
       });
   }
 
-  sendExerciseStep(msg: IExcerciseStepMessage) {
+  sendExerciseStepWithChatHub(msg: IExerciseStepMessage) {
     this.hubConn
       .invoke(ChatMethodName.sendExerciseStep, msg)
       .then(() => {
@@ -285,7 +291,7 @@ export class ChatService {
       .start()
       .then(() => {
         this.logger.log('Current state -> ', this.hubConn.state);
-        this.connected = this.hubConn.state == HubConnectionState.Connected;
+        this.connected = this.hubConn.state === HubConnectionState.Connected;
         if (this.connected) {
           this.connectionEstablished.next(this.connected);
         }
@@ -301,8 +307,10 @@ export class ChatService {
 
   private removeAllEvents() {
     for (const method in ChatMethodName) {
-      this.hubConn.off(method);
-      this.logger.debug(`${method} event removed`);
+      if ({}.hasOwnProperty.call(ChatMethodName, method)) {
+        this.hubConn.off(method);
+        this.logger.debug(`${method} event removed`);
+      }
     }
   }
 }

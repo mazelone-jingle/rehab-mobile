@@ -1,10 +1,8 @@
 import { PushNotificationService } from '../../../services/push-notification.service';
-import { Subject } from 'rxjs';
 import { INotification, NotificationSettingService } from '../../../services/notification-setting.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, NgZone } from '@angular/core';
-import { NOTIFICATION_STATUS, NOTIFICATION_TIME } from 'src/constants/storage-key';
-import { ILocalNotification } from '@ionic-native/local-notifications/ngx';
+import { NOTIFICATION_STATUS } from 'src/constants/storage-key';
 
 @Component({
   selector: 'app-notification',
@@ -17,25 +15,25 @@ export class NotificationPage implements OnInit {
 
   constructor(
     private zone: NgZone,
-    private notificationSettingSvc: NotificationSettingService,
+    private notiStorageSvc: NotificationSettingService,
     private router: Router,
     private pushNotificationSvc: PushNotificationService
     ) {
-    this.notificationSettingSvc.updateNotification.subscribe(async obs => {
+    this.notiStorageSvc.updateNotification.subscribe(async obs => {
       if (obs) {
         await this.zone.run(async () => {
-          this.notificationList = await this.notificationSettingSvc.getNotificationList();
+          this.notificationList = await this.notiStorageSvc.getNotificationList();
         });
       }
     });
   }
 
   async ngOnInit() {
-    this.notificationList = await this.notificationSettingSvc.getNotificationList();
+    this.notificationList = await this.notiStorageSvc.getNotificationList();
   }
 
   async addNotification() {
-    await this.notificationSettingSvc.addNewNotification().then(id => {
+    await this.notiStorageSvc.addNewNotification().then(id => {
       this.router.navigate(['/menu/noti-lang/noti/detail', id]);
     });
   }
@@ -49,12 +47,12 @@ export class NotificationPage implements OnInit {
             await this.pushNotificationSvc.deleteNotificationById(+`${id}${weekday.id}`);
           });
         } else {
-          this.pushNotificationSvc.setNotification(notification);
+          this.pushNotificationSvc.setWeeklyNotification(notification);
         }
         return notification;
       }
     });
-    await this.notificationSettingSvc.updateNotificationWithProperties(id, NOTIFICATION_STATUS, $event.detail.checked);
+    await this.notiStorageSvc.updateNotificationWithProperties(id, NOTIFICATION_STATUS, $event.detail.checked);
   }
 
   async getNotifications() {

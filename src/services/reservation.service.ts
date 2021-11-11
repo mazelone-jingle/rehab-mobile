@@ -7,6 +7,7 @@ import { IReservation } from 'src/models/i-reservation';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -49,5 +50,37 @@ export class ReservationService extends HttpService {
         throw err;
       })
     );
+  }
+
+  searchById(id: number) {
+    return this.http.get<IReservation>(`${this.baseUrl}/${id}`)
+    .pipe(
+      catchError((err: HttpErrorResponse) => {
+        this.logger.error(err);
+        throw err;
+      })
+    );
+  }
+
+  getNowAvailableReservation(): Observable<IReservation[]> {
+    return this.getReservation().pipe(
+      map(reservation => this.checkReservationIsAvailableNow(reservation))
+    );
+  }
+
+  checkReservationIsAvailableNow(reservations: IReservation[]): IReservation[] {
+    return reservations
+      .filter((reservation) => reservation.approvalResult)
+      .filter((reservation) => this.checkIsBefore5Minutes(reservation.from, reservation.to));
+  }
+
+  checkIsBefore5Minutes(dateFrom: Date, dateTo: Date): boolean {
+    const now = new Date().getTime();
+    const reservationDateFrom = new Date(dateFrom).getTime();
+    const reservationDateTo = new Date(dateTo).getTime();
+    const min = 5;
+    const availableDateFrom = reservationDateFrom - min * 60 * 1000;
+    // this.loggerSvc.log('reserve from - ', reservationDateFrom, 'now', now);
+    return reservationDateTo >= now && availableDateFrom <= now;
   }
 }

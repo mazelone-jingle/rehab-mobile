@@ -20,7 +20,7 @@
   <div [hidden]="segmentStatus !== 'summary'">
     <ion-item class="" button (click)="showPeriodDetail()" detail="false">
       <ion-label class="record-title">
-        <h3>{{period}}</h3>
+        <h3>{{period?.text}}</h3>
       </ion-label>
       <ion-icon slot="end" name="chevron-forward"></ion-icon>
     </ion-item>

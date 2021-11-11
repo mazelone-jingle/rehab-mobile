@@ -1,6 +1,6 @@
 import { IPrescriptionStep } from 'src/services/prescription.service';
 
-export interface IExcerciseStepMessage {
+export interface IExerciseStepMessage {
   channelId: string;
   messageStatus: string;
   messageType: string;

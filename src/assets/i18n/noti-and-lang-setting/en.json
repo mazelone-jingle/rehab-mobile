@@ -1,12 +1,20 @@
 {
   "noti_and_lang_setting": "Notification and Language Settings",
   "notification_setting": "Notification Settings",
-  "exercise_schedule_notification": "Excercise Schedule Notification",
+  "exercise_schedule_notification": "Exercise Schedule Notification",
   "language_setting": "Language Settings",
-  "notification_time": "Notification Time Settings",
+  "notification_time": "Time",
   "notification_weekdays": "Repeat",
   "every": "Every",
-  "notification_sound": "Notification-Sound",
-  "notification_vibration": "Notification-Vibration",
-  "notification_music": "Select a Music"
+  "notification_sound": "Sound",
+  "notification_vibration": "Vibration",
+  "notification_music": "Select a Music",
+  "create_alarm": "Create a New Notification",
+  "mon": "Mon",
+  "tue": "Tue",
+  "wed": "Wed",
+  "thu": "Thu",
+  "fri": "Fri",
+  "sat": "Sat",
+  "sun": "Sun"
 }

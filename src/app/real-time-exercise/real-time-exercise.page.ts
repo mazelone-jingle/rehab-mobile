@@ -1,15 +1,23 @@
+import { ReservationService } from 'src/services/reservation.service';
 import { Chart } from 'chart.js';
 import * as chartAnnotation from 'chartjs-plugin-annotation';
-import { BehaviorSubject, Subscription, throwError } from 'rxjs';
+import { BehaviorSubject, interval, Subscription, throwError } from 'rxjs';
+import { take, tap } from 'rxjs/operators';
 import { DevicesModalComponent } from 'src/components/modals/devices-modal/devices-modal.component';
 import { RpeComponent } from 'src/components/modals/rpe/rpe.component';
 import { PRESCRIPTION } from 'src/constants/common';
 import {
-    RESPONSE_TYPE_END, RESPONSE_TYPE_ERR, RESPONSE_TYPE_HDA, RESPONSE_TYPE_NDA, RESPONSE_TYPE_SSE,
-    RESPONSE_TYPE_STE, RESPONSE_TYPE_STH, RESPONSE_TYPE_STS, RESPONSE_TYPE_THR
+  ASK_TO_RESET_WATCH, CANCEL, CHAT_JOIN_ROOM, CHAT_LEAVE_ROOM, CONFIRM, CONNECT_BROKE_UP,
+  CONNECT_FAILED, CONNECTING, DIFFICULTY, DOCTOR_STOP_EXERCISE, FINISH_RESET, GETTING_DATA,
+  HEART_BEAT, NOT_GET_PRESCRIPTION, SCAN, SCAN_FAILED, SELECT_DEVICE2, WAIT_FOR_GETTING_DATA, NOT_RESERVED_TIME
+} from 'src/constants/language-key';
+import {
+  RESPONSE_TYPE_END, RESPONSE_TYPE_ERR, RESPONSE_TYPE_HDA, RESPONSE_TYPE_NDA, RESPONSE_TYPE_SSE,
+  RESPONSE_TYPE_STE, RESPONSE_TYPE_STH, RESPONSE_TYPE_STS, RESPONSE_TYPE_THR
 } from 'src/constants/watch-ble-command';
+import { environment as ENV } from 'src/environments/environment';
 import { IEmergencyMessage } from 'src/models/i-emergency-message';
-import { IExcerciseStepMessage } from 'src/models/i-excercise-step-message';
+import { IExerciseStepMessage } from 'src/models/i-excercise-step-message';
 import { IHrMessage } from 'src/models/ihr-message';
 import { IStopSignal } from 'src/models/istop-signal';
 import { AlertService } from 'src/services/alert.service';
@@ -18,18 +26,16 @@ import { BleService } from 'src/services/ble.service';
 import { ChatService } from 'src/services/chat.service';
 import { CommonService } from 'src/services/common.service';
 import { ExerciseService, IRpes } from 'src/services/exercise.service';
+import { LanguageService } from 'src/services/language.service';
 import { LoadingService } from 'src/services/loading.service';
 import { LoggerService } from 'src/services/logger.service';
 import { IPrescription } from 'src/services/prescription.service';
-import { RealTimeExerciseService } from 'src/services/real-time-exercise.service';
 import { StorageService } from 'src/services/storage.service';
 import { WatchCommandService } from 'src/services/watch-command.service';
 
-import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-
-import { environment as ENV } from '../../environments/environment';
 
 @Component({
   selector: 'app-real-time-exercise',
@@ -37,42 +43,47 @@ import { environment as ENV } from '../../environments/environment';
   styleUrls: ['./real-time-exercise.page.scss'],
 })
 export class RealTimeExercisePage implements OnInit {
-  canvas: HTMLCanvasElement;
-  chart: any;
-  dataset: Array<IChartItem> = [];
-  realtime = false;
-  reservId: number;
-  channelId: string;
-  prescription: IPrescription;
+  // chart properties
+  chart: Chart;
+
+  // template display properties
   step: number;
-  totalExerciseTime: number;
-  rateArray: number[] = [];
-  seconds = 0;
-  heartRate: number;
-  isToggleChat = false;
-  isShowChat = false;
-  isChatConnected: boolean;
-  interval: any;
-  timer: any;
-  rpesSecondsArray: IRpes[] = [];
-  devices: Array<any> = [];
-  connectSubscription: Subscription = null;
   isExercising$ = new BehaviorSubject<boolean>(false);
   rpeMsg: IEmergencyMessage;
-  sub: Subscription;
+  currentExercisingSeconds = 0;
+  totalExerciseTime: number;
+
+  // chat hub properties
+  reserveId: number;
+  channelId: string;
+  isChatConnected: boolean;
+
+  prescription: IPrescription;
+  heartRate: number;
+  rpesSecondsArray: IRpes[] = [];
   callBATTimes = 0;
   exerciseData = [];
-  exerciseSubject = new BehaviorSubject<string[]>(this.exerciseData);
-  exerciseDatetime: Date;
+  tempExerciseData = [];
+  exerciseDateTime: Date;
   hrMixMax: { min: string; max: string };
   callREQTimes = 0;
-  tempExerciseData = [];
-  exerciseFinished = false; // 운동 끝내 여부 판단
-  realtimeConnect: boolean;
-  isExercisingSubscription: Subscription;
+
+  // status
+  isExerciseFinished = false; // 운동 끝내 여부 판단
+  isRealtimeConnect: boolean; // connect with bluetooth in realtime-exercise page
+  isExerciseFinishedAndRestart = false;
+  isReconnect = false; // 운동 중에서 연결 끊기고 다시 연결인지 판단
+
+  // subscription
+  connectSubscription: Subscription = null;
+  sub: Subscription;
+  countdownSubscription: Subscription;
+
+  // dummy
+  interval: any;
+  timer: any;
 
   constructor(
-    private realTimeExerciseSvc: RealTimeExerciseService,
     private ble: BleService,
     private zone: NgZone,
     private alertSvc: AlertService,
@@ -86,192 +97,73 @@ export class RealTimeExercisePage implements OnInit {
     private exerciseSvc: ExerciseService,
     private modalController: ModalController,
     private watchCommandSvc: WatchCommandService,
-    private loadingSvc: LoadingService
+    private loadingSvc: LoadingService,
+    private languageSvc: LanguageService,
+    private reservationSvc: ReservationService
   ) {
     this.route.queryParams.subscribe((params) => {
-      this.loggerSvc.log(params);
       if (!!this.router.getCurrentNavigation().extras.state) {
-        this.reservId =
-          this.router.getCurrentNavigation().extras.state.reservId;
-        this.channelId =
-          this.router.getCurrentNavigation().extras.state.channelId;
+        this.reserveId = this.router.getCurrentNavigation().extras.state.reserveId;
+        this.channelId = this.router.getCurrentNavigation().extras.state.channelId;
 
         this.loggerSvc.log('channelId ? ', this.channelId);
-        this.loggerSvc.log('reservId ? ', this.reservId);
+        this.loggerSvc.log('reserveId ? ', this.reserveId);
       }
     });
-
-    this.sub = new Subscription();
-
-    this.sub.add(
-      this.chatSvc.connection$.subscribe((isConnected) => {
-        this.zone.run(() => {
-          this.isChatConnected = isConnected;
-        });
-      })
-    );
-
-    this.sub.add(
-      this.chatSvc.newOnlineUser$.subscribe((res) => {
-        this.commonSvc.presentToast(
-          '',
-          `${res.userName} 님이 대화방에 참여 하였습니다.`
-        );
-        this.chatSvc.handShake(this.channelId);
-      })
-    );
-
-    this.sub.add(
-      this.chatSvc.leave$.subscribe((res) => {
-        this.commonSvc.presentToast(
-          '',
-          `${res.userName} 님이 대화방을 나갔습니다.`
-        );
-      })
-    );
-
-    this.sub.add(
-      this.chatSvc.recvStopSignalMessage$.subscribe(
-        async (signal: IStopSignal) => {
-          if (signal.channelId === this.channelId) {
-            if (signal.isExerciseStop) {
-              const msg =
-                '의사가 운동을 종료하였습니다. 메뉴화면으로 돌아갑니다.';
-              await this.alertSvc.presentAlert(
-                msg,
-                false,
-                async () => await this.router.navigate(['/menu'])
-              );
-            }
-          }
-        }
-      )
-    );
   }
 
   async ngOnInit() {
-    const isConnected = await this.ble.isConnected();
+    this.sub = new Subscription();
     if (ENV.useDummyData) {
       await this.getLastPrescription();
       return;
     }
-    if (!isConnected) {
-      await this.scanBLE();
-    } else {
+    const isConnected = await this.ble.isConnected();
+    if (isConnected) {
       await this.getLastPrescription();
+    } else {
+      await this.scanBLE();
     }
   }
 
   ionViewWillEnter() {
+    this.sub.add(
+      this.ble.isConnecting$.subscribe(res => {
+        this.zone.run(() => {
+          if (!res) {
+            console.warn('===== realtime exercise connect broke up');
+            this.isExercising$.next(false);
+          }
+        });
+      })
+    );
+    this.setChattingRoomSubscription();
     this.setSubscriptions();
   }
 
+  async getLastPrescription() {
+    this.prescription = await this.storageSvc.get(PRESCRIPTION);
+    this.loggerSvc.log('prescription', this.prescription);
+    if (!this.prescription) {
+      await this.alertSvc.presentAlert(
+        await this.languageSvc.getI18nLang(NOT_GET_PRESCRIPTION));
+      this.router.navigate(['/menu']);
+    } else {
+      if (!document.getElementById('hrChart')) {
+        await this.createCanvas();
+      }
+      this.totalExerciseTime = this.prescription.steps
+        .map((step) => step.minute)
+        .reduce((accr, curr) => accr + curr);
+
+      if (this.isExerciseFinishedAndRestart) {
+        await this.setExerciseInfoData();
+      }
+    }
+  }
+
   setSubscriptions() {
-    this.sub.add(
-      this.ble.SSEResponse$.subscribe({
-        next: (obs) => {
-          if (obs === RESPONSE_TYPE_SSE) {
-            this.ble.serviceTypeSubject.next(RESPONSE_TYPE_THR);
-          }
-        },
-        error: (e) => {},
-        complete: () => {},
-      })
-    );
-
-    this.sub.add(
-      this.ble.THRResponse$.subscribe({
-        next: async (obs) => {
-          if (obs === RESPONSE_TYPE_END) {
-            this.ble.realtimeDataSubject.next('');
-            this.exerciseFinished = true;
-          } else {
-            const thrPattern = new RegExp(
-              /^THR#[0-9]_[0-9]{1,3}\$[0-9]{1,4}@$/g
-            );
-            if (thrPattern.test(obs)) {
-              this.ble.realtimeDataSubject.next(obs);
-            }
-          }
-        },
-        error: (e) => {},
-        complete: () => {},
-      })
-    );
-
-    // update chart
-    this.sub.add(
-      this.ble.realtimeData$.subscribe({
-        next: (data) => {
-          if (data === '') {
-            setTimeout(async () => {
-              await this.loadingSvc.create('Getting data...');
-              await this.loadingSvc.present();
-              await this.watchCommandSvc.sendBAT();
-            }, 1000);
-            return;
-          }
-
-          if (data === undefined) {
-            return;
-          }
-          //step
-          const step = +data.substring(
-            data.indexOf('#') + 1,
-            data.indexOf('_')
-          );
-          //hr data
-          const rate = +data.substring(
-            data.indexOf('_') + 1,
-            data.indexOf('$')
-          );
-          // second
-          const second = +data.substring(
-            data.indexOf('$') + 1,
-            data.indexOf('@')
-          );
-          const baseSeconds = this.realTimeExerciseSvc.getBaseSeconds(
-            step,
-            this.prescription
-          );
-          if (second === 1) {
-            //단계가 올라감
-            const prescriptionSteps = this.prescription.steps.find(
-              (v) => v.sequence === step
-            );
-            const exerciseStepMsg: IExcerciseStepMessage = {
-              channelId: this.channelId,
-              currentStep: prescriptionSteps,
-              currentStepCount: step,
-              exerciseType: this.prescription.exerciseTypes[0],
-              messageStatus: 'send',
-              messageType: 'ExerciseStep',
-              sendDateTime: new Date(),
-              totalMinute: this.totalExerciseTime,
-              totalStepCount: this.prescription.steps.length,
-              userEmail: this.authSvc.username,
-            };
-            this.chatSvc.sendExerciseStep(exerciseStepMsg);
-          }
-          this.heartRate = rate;
-          this.zone.run(() => {
-            this.step = step;
-            this.seconds = second + baseSeconds;
-          });
-          if (this.available) {
-            this.addData({
-              label: second + baseSeconds,
-              data: rate,
-            } as IChartItem);
-            this.sendHeartRate(rate, step, second + baseSeconds);
-            this.rateArray.push(rate);
-          }
-        },
-        error: (error) => {},
-        complete: () => {},
-      })
-    );
-
+    // BAT
     this.sub.add(
       this.ble.BATService$.subscribe({
         next: async (obs) => {
@@ -279,8 +171,7 @@ export class RealTimeExercisePage implements OnInit {
           if (batPattern.test(obs)) {
             this.callBATTimes = 0;
             await this.loadingSvc.dismiss();
-            this.ble.handleBAT(obs);
-            if (this.realtimeConnect || this.exerciseFinished) {
+            if (this.isRealtimeConnect || this.isExerciseFinished) {
               await this.watchCommandSvc.sendRND();
             } else {
               await this.watchCommandSvc.sendSTS();
@@ -288,7 +179,7 @@ export class RealTimeExercisePage implements OnInit {
           } else {
             if (this.callBATTimes >= 10) {
               await this.loadingSvc.dismiss();
-              this.realtimeConnect = false;
+              this.isRealtimeConnect = false;
               await this.ble.disconnect();
               await this.presentScanFailedAlert();
             } else {
@@ -306,6 +197,159 @@ export class RealTimeExercisePage implements OnInit {
       })
     );
 
+    // STS
+    this.sub.add(
+      this.ble.STSService$.subscribe({
+        next: async (obs) => {
+          if (obs === RESPONSE_TYPE_STS) {
+            await this.watchCommandSvc.sendSTH(this.prescription);
+          }
+        },
+        error: (err) => {
+          this.loggerSvc.error('STS error', err);
+        },
+        complete: () => {
+          this.loggerSvc.info('STS complete');
+        },
+      })
+    );
+
+    // STH
+    this.sub.add(
+      this.ble.STHService$.subscribe({
+        next: async (obs) => {
+          if (obs === RESPONSE_TYPE_STH) {
+            await this.watchCommandSvc.sendSTE(this.prescription);
+          }
+        },
+        error: (err) => {
+          this.loggerSvc.error('STH error', err);
+        },
+        complete: () => {
+          this.loggerSvc.info('STH complete');
+        },
+      })
+    );
+
+    // STE
+    this.sub.add(
+      this.ble.STEService$.subscribe({
+        next: async (obs) => {
+          if (obs.includes(RESPONSE_TYPE_STE)) {
+            this.isExercising$.next(true);
+          }
+        },
+        error: (err) => {
+          this.loggerSvc.error('STE error', err);
+        },
+        complete: () => {
+          this.loggerSvc.info('STE complete');
+        },
+      })
+    );
+
+    // SSE
+    this.sub.add(
+      this.ble.SSEResponse$.subscribe({
+        next: (obs) => {
+          if (obs === RESPONSE_TYPE_SSE) {
+            this.ble.commandTypeSubject.next(RESPONSE_TYPE_THR);
+          }
+        },
+        error: (e) => { },
+        complete: () => { },
+      })
+    );
+
+    // THR
+    this.sub.add(
+      this.ble.THRResponse$.subscribe({
+        next: async (obs) => {
+          if (obs === RESPONSE_TYPE_END) {
+            this.ble.realtimeDataSubject.next('');
+            this.isExerciseFinished = true;
+          } else {
+            // stop countdown because exercise has not done
+            if (this.countdownSubscription) {
+              this.countdownSubscription.unsubscribe();
+            }
+
+            const thrPattern = new RegExp(
+              /^THR#[0-9]_[0-9]{1,3}\$[0-9]{1,4}@$/g
+            );
+            if (thrPattern.test(obs)) {
+              this.ble.realtimeDataSubject.next(obs);
+            }
+          }
+        },
+        error: (e) => { },
+        complete: () => { },
+      })
+    );
+
+    // update chart
+    this.sub.add(
+      this.ble.realtimeData$.subscribe({
+        next: (data) => {
+          if (data === '') {
+            setTimeout(async () => {
+              // 해당 번의 데이터를 모두 받아왔을 때 다시 BAT로부터 시작하고 다음 번의 데이터가 있는지를 확인함
+              await this.loadingSvc.create(await this.languageSvc.getI18nLang(GETTING_DATA));
+              await this.loadingSvc.present();
+              await this.watchCommandSvc.sendBAT();
+            }, 1000);
+            return;
+          }
+
+          //step
+          const step = +data.substring(
+            data.indexOf('#') + 1,
+            data.indexOf('_')
+          );
+          //hr data
+          const rate = +data.substring(
+            data.indexOf('_') + 1,
+            data.indexOf('$')
+          );
+          // second
+          const second = +data.substring(
+            data.indexOf('$') + 1,
+            data.indexOf('@')
+          );
+          const elapsedSeconds = getElapsedSeconds(step, this.prescription);
+          if (second === 1) { //단계가 올라감
+            const prescriptionSteps = this.prescription.steps.find(v => v.sequence === step);
+            const exerciseStepMsg: IExerciseStepMessage = {
+              channelId: this.channelId,
+              currentStep: prescriptionSteps,
+              currentStepCount: step,
+              exerciseType: this.prescription.exerciseTypes[0],
+              messageStatus: 'send',
+              messageType: 'ExerciseStep',
+              sendDateTime: new Date(),
+              totalMinute: this.totalExerciseTime,
+              totalStepCount: this.prescription.steps.length,
+              userEmail: this.authSvc.username,
+            };
+            this.chatSvc.sendExerciseStepWithChatHub(exerciseStepMsg);
+          }
+          this.heartRate = rate;
+          this.zone.run(() => {
+            this.step = step;
+            this.currentExercisingSeconds = second + elapsedSeconds;
+          });
+
+          const chartData: IChartItem = { label: second + elapsedSeconds, data: rate };
+          this.addDataToChart(chartData);
+
+          this.sendHeartRateWithChatHub(rate, step, second + elapsedSeconds);
+        },
+        error: (error) => { },
+        complete: () => { },
+      })
+    );
+
+    // RND
     this.sub.add(
       this.ble.RNDService$.subscribe(async (obs) => {
         if (obs === RESPONSE_TYPE_HDA) {
@@ -313,14 +357,13 @@ export class RealTimeExercisePage implements OnInit {
           await this.loadingSvc.present();
           await this.watchCommandSvc.sendRTS();
           await this.loadingSvc.create(
-            `디바이스에 저장된 데이터들을 받아오는 중입니다. 잠시만 기다려주세요......`
+            await this.languageSvc.getI18nLang(WAIT_FOR_GETTING_DATA)
           );
           await this.loadingSvc.present();
           this.exerciseData = [];
         } else if (obs === RESPONSE_TYPE_NDA) {
-          if (this.exerciseFinished) {
+          if (this.isExerciseFinished) {
             await this.ble.disconnect();
-            this.rateArray = [];
             this.isExercising$.next(false);
           } else {
             await this.watchCommandSvc.sendSTS();
@@ -329,48 +372,44 @@ export class RealTimeExercisePage implements OnInit {
       })
     );
 
+    // RTS 시계에 저장된 데이터의 시간정보를 요청.
     this.sub.add(
       this.ble.RTSService$.subscribe(async (obs) => {
-        if (obs === RESPONSE_TYPE_ERR) {
-          await this.loadingSvc.dismiss();
-        }
         const [y, M, d, h, m] = obs
           .substring(obs.indexOf('#') + 1, obs.lastIndexOf('@'))
           .split('_');
-        this.exerciseDatetime = new Date(+('20' + y), +M - 1, +d, +h, +m);
+        this.exerciseDateTime = new Date(+('20' + y), +M - 1, +d, +h, +m);
+        this.loggerSvc.log('exercise datetime:', this.exerciseDateTime);
         await this.watchCommandSvc.sendRTH();
       })
     );
 
+    // RTH 저장된 데이터의 목표 심박수 요청
     this.sub.add(
       this.ble.RTHService$.subscribe(async (obs) => {
-        if (obs === RESPONSE_TYPE_ERR) {
-          await this.loadingSvc.dismiss();
-        }
         const [min, max] = obs
           .substring(obs.indexOf('#') + 1, obs.lastIndexOf('@'))
           .split('_');
         this.hrMixMax = { min, max };
+        this.loggerSvc.log('RTH hr min max', this.hrMixMax);
         await this.watchCommandSvc.sendRTE();
       })
     );
 
+    // RTE 저장된 운동 시간 요청
     this.sub.add(
       this.ble.RTEService$.subscribe(async (obs) => {
-        if (obs === RESPONSE_TYPE_ERR) {
-          await this.loadingSvc.dismiss();
-        }
+        // example: RTE#1_1_0_0_0@
+        // 1 step: 1min, 2 step: 1min
         await this.watchCommandSvc.sendRHD();
       })
     );
 
+    // RHD
     this.sub.add(
       this.ble.RHDService$.subscribe(async (obs) => {
-        if (obs === RESPONSE_TYPE_ERR) {
-          await this.loadingSvc.dismiss();
-        }
         if (obs === RESPONSE_TYPE_END) {
-          this.exerciseSubject.next(this.exerciseData);
+          // this.exerciseSubject.next(this.exerciseData);
           await this.loadingSvc.dismiss();
         } else {
           this.tempExerciseData.push(obs);
@@ -380,6 +419,7 @@ export class RealTimeExercisePage implements OnInit {
       })
     );
 
+    // REQ
     this.sub.add(
       this.ble.REQService$.subscribe(async (obs) => {
         if (obs === RESPONSE_TYPE_ERR) {
@@ -392,11 +432,11 @@ export class RealTimeExercisePage implements OnInit {
             const exerciseDataPattern = new RegExp(/.*\@$/g);
             if (
               lastData !==
-                this.tempExerciseData[this.tempExerciseData.length - 2] ||
+              this.tempExerciseData[this.tempExerciseData.length - 2] ||
               !exerciseDataPattern.test(lastData)
             ) {
               if (this.callREQTimes >= 10) {
-                this.realtimeConnect = false;
+                this.isRealtimeConnect = false;
                 await this.loadingSvc.dismiss();
                 await this.ble.disconnect();
                 await this.presentScanFailedAlert();
@@ -416,14 +456,12 @@ export class RealTimeExercisePage implements OnInit {
       })
     );
 
+    // ROK
     this.sub.add(
       this.ble.ROKService$.subscribe(async (obs) => {
-        if (obs === RESPONSE_TYPE_ERR) {
+        if (obs === RESPONSE_TYPE_END) { // 데이터 전송 종료
           await this.loadingSvc.dismiss();
-        }
-        if (obs === RESPONSE_TYPE_END) {
-          this.exerciseSubject.next(this.exerciseData);
-          await this.loadingSvc.dismiss();
+
           const rpeModal = await this.modalController.create({
             component: RpeComponent,
             backdropDismiss: false,
@@ -433,16 +471,19 @@ export class RealTimeExercisePage implements OnInit {
           await rpeModal.present();
           const { data } = await rpeModal.onWillDismiss();
           const prescription = await this.storageSvc.get(PRESCRIPTION);
-          await this.exerciseSvc.sendExerciseData(
-            prescription,
-            data.rpeValue,
-            this.exerciseData,
-            this.exerciseDatetime,
-            this.hrMixMax
-          );
-          this.sendStopSignal();
-          // await this.loadingSvc.present();
-          // await this.watchCommandSvc.sendRND();
+          await this.exerciseSvc.sendExerciseData(prescription, data.rpeValue, this.exerciseData,
+            this.exerciseDateTime, this.hrMixMax, this.rpesSecondsArray);
+          if (this.isExerciseFinished) {
+            this.isExercising$.next(false);
+            this.sendStopSignalWithChatHub();
+            // 전송 후에 자동으로 연결 종단
+            await this.ble.disconnect();
+
+            // 운동 종료, 조건 리셋
+            this.isReconnect = false;
+          } else {
+            await this.watchCommandSvc.sendSTS();
+          }
         } else {
           this.callREQTimes++;
           this.tempExerciseData.push(obs);
@@ -450,95 +491,63 @@ export class RealTimeExercisePage implements OnInit {
         }
       })
     );
+  }
 
+  setChattingRoomSubscription() {
     this.sub.add(
-      this.ble.STSService$.subscribe({
-        next: async (obs) => {
-          if (obs === RESPONSE_TYPE_STS) {
-            await this.watchCommandSvc.sendSTH(this.prescription);
-          }
-        },
-        error: (err) => {
-          this.loggerSvc.error('STS error', err);
-        },
-        complete: () => {
-          this.loggerSvc.info('STS complete');
-        },
+      this.chatSvc.connection$.subscribe((isConnected) => {
+        this.zone.run(() => {
+          this.isChatConnected = isConnected;
+        });
       })
     );
 
     this.sub.add(
-      this.ble.STHService$.subscribe({
-        next: async (obs) => {
-          if (obs === RESPONSE_TYPE_STH) {
-            await this.watchCommandSvc.sendSTE(this.prescription);
-          }
-        },
-        error: (err) => {
-          this.loggerSvc.error('STH error', err);
-        },
-        complete: () => {
-          this.loggerSvc.info('STH complete');
-        },
+      this.chatSvc.newOnlineUser$.subscribe(async (res) => {
+        this.commonSvc.presentToast(
+          '',
+          `${res.userName} ` + (await this.languageSvc.getI18nLang(CHAT_JOIN_ROOM))
+        );
+        this.chatSvc.handShake(this.channelId);
       })
     );
 
     this.sub.add(
-      this.ble.STEService$.subscribe({
-        next: async (obs) => {
-          if (obs.includes(RESPONSE_TYPE_STE)) {
-            this.isExercising$.next(true);
-          }
-        },
-        error: (err) => {
-          this.loggerSvc.error('STE error', err);
-        },
-        complete: () => {
-          this.loggerSvc.info('STE complete');
-        },
+      this.chatSvc.leave$.subscribe(async (res) => {
+        this.commonSvc.presentToast(
+          '',
+          `${res.userName} ` + + (await this.languageSvc.getI18nLang(CHAT_LEAVE_ROOM))
+        );
       })
     );
-  }
 
-  sendStopSignal() {
-    const signal: IStopSignal = {
-      messageType: 'TEXT',
-      sendDateTime: new Date(),
-      messageStatus: 'send',
-      userEmail: this.authSvc.username,
-      channelId: this.channelId,
-      isExerciseStop: true,
-    };
-    this.loggerSvc.log('stop signal', signal);
-    this.chatSvc.sendStopSignal(signal);
-  }
-
-  getRpesValue() {
-    const rpesValue = this.rateArray.map((_) => '-1');
-    this.rpesSecondsArray.forEach((data) => {
-      rpesValue[data.second] = data.rpe + '';
-    });
-    return rpesValue.join(',');
-  }
-
-  checkIsBefore5Minutes(dateFrom: Date, dateTo: Date) {
-    const now = new Date().getTime();
-    const reservationDateFrom = new Date(dateFrom).getTime();
-    const reservationDateTo = new Date(dateTo).getTime();
-    const min = 5;
-    const availableDateFrom = reservationDateFrom - min * 60 * 1000;
-    return reservationDateTo >= now && availableDateFrom <= now;
+    this.sub.add(
+      this.chatSvc.recvStopSignalMessage$.subscribe(
+        async (signal: IStopSignal) => {
+          if (signal.channelId === this.channelId) {
+            if (signal.isExerciseStop) {
+              const msg = await this.languageSvc.getI18nLang(DOCTOR_STOP_EXERCISE);
+              await this.alertSvc.presentAlert(
+                msg,
+                false,
+                async () => await this.router.navigate(['/menu'])
+              );
+            }
+          }
+        }
+      )
+    );
   }
 
   async scanBLE() {
-    this.devices = [];
-    await this.loadingSvc.create('Scan...');
+    const devices = [];
+    await this.loadingSvc.create(await this.languageSvc.getI18nLang(SCAN));
     await this.loadingSvc.present();
     this.ble.scan().subscribe({
       next: async (device) => {
         if (device) {
-          if (this.devices.indexOf((d) => d.id === device.id) < 0) {
-            this.devices.push(device);
+          if (devices.indexOf((d) => d.id === device.id) < 0) {
+            devices.push(device);
           }
         }
       },
@@ -549,16 +558,14 @@ export class RealTimeExercisePage implements OnInit {
       },
       complete: async () => {
         await this.loadingSvc.dismiss();
-        if (this.devices.length > 0) {
+        if (devices.length > 0) {
           const modal = await this.modalController.create({
             component: DevicesModalComponent,
             cssClass: 'devices-modal',
             backdropDismiss: false,
             componentProps: {
-              devicesList: this.devices,
-              // TODO: i18n
-              title:
-                '시계와 연결되어 있지 않습니다. 데이터 전송하시려면 디바이스를 선택해주세요.',
+              devicesList: devices,
+              title: await this.languageSvc.getI18nLang(SELECT_DEVICE2),
             },
           });
           await modal.present();
@@ -576,17 +583,17 @@ export class RealTimeExercisePage implements OnInit {
 
   async presentScanFailedAlert() {
     const alertOptions = {
-      message: '스캔 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(SCAN_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             await this.scanBLE();
           },
         },
         {
-          text: '취소',
-          handler: () => {},
+          text: await this.languageSvc.getI18nLang(CANCEL),
+          handler: () => { },
         },
       ],
       backdropDismiss: false,
@@ -595,46 +602,57 @@ export class RealTimeExercisePage implements OnInit {
   }
 
   async connect(deviceId: string) {
-    await this.loadingSvc.create('Connect...');
-    await this.loadingSvc.present();
-    this.connectSubscription = this.ble.connect(deviceId).subscribe({
-      next: async () => {
-        this.exerciseFinished = false;
-        this.realtimeConnect = true;
-        await this.loadingSvc.dismiss();
-        await this.getLastPrescription();
-      },
-      error: async (e) => {
-        await this.loadingSvc.dismiss();
-        this.realtimeConnect = false;
-        this.ble.realtimeDataSubject.next();
-        // if (this.isExercising$.value) {
-             /** 연결 끊어질 때 처음부터 시작하려면 */
-        //   await this.presentConnectInterruptAlert(deviceId);
-        // } else {
-        /** 연결 끊어질 때 그냥 다시 연결해서 남어지는 것을 계속 진행하려면 */
-        await this.presentConnectFailedAlert(deviceId);
-        // }
-        throwError(e);
-      },
-      complete: () => {},
-    });
-    return this.connectSubscription as Subscription;
+    this.connectSubscription = this.ble.connect(deviceId)
+      .pipe(
+        tap(async () => await this.loadingSvc.create(await this.languageSvc.getI18nLang(CONNECTING))),
+        tap(async () => await this.loadingSvc.present()),
+        tap(() => this.isExerciseFinished = false),
+        tap(() => this.isRealtimeConnect = true),
+        tap(() => this.callBATTimes = 0)
+      )
+      .subscribe({
+        next: async () => {
+          await this.loadingSvc.dismiss();
+          await this.getLastPrescription();
+          if (this.isReconnect) {
+            // countdown
+            const time = interval(1000).pipe(take(3)); // 연결후 3초 count down
+            this.countdownSubscription = time.subscribe({
+              next: obs => {},
+              error: error => {},
+              complete: async () => {
+                  await this.loadingSvc.dismiss();
+
+                  this.isExerciseFinished = true;
+                  await this.watchCommandSvc.sendBAT();
+              }
+            });
+          }
+        },
+        error: async (e) => {
+          await this.loadingSvc.dismiss();
+          this.isRealtimeConnect = false;
+          await this.presentConnectFailedAlert(deviceId);
+          throwError(e);
+        },
+        complete: () => { },
+      });
   }
 
   async presentConnectFailedAlert(deviceId) {
     const alertOptions = {
-      message: '연결 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(CONNECT_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             this.connectSubscription.unsubscribe();
             await this.connect(deviceId);
+            this.isReconnect = true;
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: async () => {
             this.isExercising$.next(false);
             this.connectSubscription.unsubscribe();
@@ -645,42 +663,31 @@ export class RealTimeExercisePage implements OnInit {
     };
     await this.alertSvc.presentCustomizeAlert(alertOptions);
   }
-
+/*
   async presentConnectInterruptAlert(deviceId) {
     const alertOptions = {
-      message: `연결 중단되었습니다. 디시 운동하시겠습니까?`,
+      message: await this.languageSvc.getI18nLang(CONNECT_BROKE_UP),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             this.isExercising$.next(false);
-            this.ble.serviceTypeSubject.next();
+            this.ble.commandTypeSubject.next();
             this.connectSubscription.unsubscribe();
             // reset chart
-            this.rateArray = [];
-            this.realtime = true;
             if (
-              this.chart.data.datasets &&
-              this.chart.data.datasets[0]?.data.length > 0
+              (this.chart.data.datasets &&
+                this.chart.data.datasets[0]?.data.length > 0) ||
+              document.getElementById('hrChart')
             ) {
-              this.removeData(this.chart);
-              this.step = 0;
-              this.seconds = 0;
-              this.chart.destroy();
-              const hrChart = document.getElementById('hrChart');
-              const location = document.getElementById('canvas');
-              location.removeChild(hrChart);
-              this.createCanvas();
-              setTimeout(() => {
-                this.canvas.id = 'hrChart';
-                location.appendChild(this.canvas);
-              }, 1000);
+              this.resetChart();
+              await this.createCanvas();
             }
             await this.presentResetWatchAlert(deviceId);
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: async () => {
             this.isExercising$.next(false);
             this.connectSubscription.unsubscribe();
@@ -694,17 +701,16 @@ export class RealTimeExercisePage implements OnInit {
 
   async presentResetWatchAlert(deviceId) {
     const alertOptions = {
-      message:
-        '다시 운동하시려면 시계를 리셋하십시오. <br>시계를 리셋하셨습니까?',
+      message: await this.languageSvc.getI18nLang(ASK_TO_RESET_WATCH),
       buttons: [
         {
-          text: '리셋 완료',
+          text: await this.languageSvc.getI18nLang(FINISH_RESET),
           handler: async () => {
             await this.connect(deviceId);
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: async () => {
             this.isExercising$.next(false);
             this.connectSubscription.unsubscribe();
@@ -715,44 +721,30 @@ export class RealTimeExercisePage implements OnInit {
     };
     await this.alertSvc.presentCustomizeAlert(alertOptions);
   }
-
-  ionViewWillLeave(): void {
+*/
+  async ionViewWillLeave() {
+    if (this.isRealtimeConnect) {
+      await this.ble.disconnect();
+    }
     if (this.connectSubscription) {
       this.connectSubscription.unsubscribe();
     }
     this.sub.unsubscribe();
   }
 
-  ionViewDidLeave() {
+  async ionViewDidLeave() {
     // this.stopExercise();
-    this.chatSvc.leaveAsync(this.channelId).then(() => {
-      this.loggerSvc.log('진료모임을 나갔습니다.');
-      this.chatSvc.stopAsync().then(() => {
-        this.loggerSvc.log('실시간 서버와 접속을 종료했습니다.');
-      });
-    });
+    await this.chatSvc.leaveAsync(this.channelId);
+    this.loggerSvc.log('진료모임을 나갔습니다.');
+    await this.chatSvc.stopAsync();
+    this.loggerSvc.log('실시간 서버와 접속을 종료했습니다.');
   }
 
-  sendEmergency(rpeValue: number) {
-    this.addRpe(rpeValue);
-    const msg: IEmergencyMessage = {
-      channelId: this.channelId,
-      messageStatus: 'send',
-      messageType: 'EMERGENCY',
-      rate: this.heartRate,
-      seconds: this.seconds,
-      sendDateTime: new Date(),
-      userEmail: this.authSvc.username,
-      rpeValue,
-    };
-    this.chatSvc.sendEmergency(msg);
-    this.rpeMsg = msg;
-    this.rpesSecondsArray.push({ rpe: rpeValue, second: this.seconds });
-  }
-
-  createCanvas() {
-    this.canvas = document.createElement('canvas');
-    const ctx = this.canvas.getContext('2d');
+  async createCanvas() {
+    const textHeartBeat = await this.languageSvc.getI18nLang(HEART_BEAT);
+    const textDifficulty = await this.languageSvc.getI18nLang(DIFFICULTY);
+    const chatCanvas = document.createElement('canvas');
+    const ctx = chatCanvas.getContext('2d');
 
     Chart.plugins.register({ chartAnnotation });
     setTimeout(() => {
@@ -762,7 +754,7 @@ export class RealTimeExercisePage implements OnInit {
           labels: this.labels,
           datasets: [
             {
-              label: '# of Heart beat',
+              label: textHeartBeat,
               data: [],
               spanGaps: false,
               lineTension: 0.2,
@@ -776,7 +768,7 @@ export class RealTimeExercisePage implements OnInit {
               },
             },
             {
-              label: 'Hardness',
+              label: textDifficulty,
               data: [],
               backgroundColor: 'rgba(0, 0, 0, 0)',
               borderColor: 'rgba(0, 0, 0, 1)',
@@ -801,9 +793,6 @@ export class RealTimeExercisePage implements OnInit {
           legend: {
             display: false,
           },
-          onclick: (point, event) => {
-            this.loggerSvc.log('point', point, 'event', event);
-          },
           scales: {
             yAxes: [
               // {
@@ -827,22 +816,21 @@ export class RealTimeExercisePage implements OnInit {
           }
         },
       });
-      this.loggerSvc.log('chart', this.chart);
     }, 100);
     setTimeout(() => {
       const location = document.getElementById('canvas');
-      this.canvas.id = 'hrChart';
-      location.appendChild(this.canvas);
+      chatCanvas.id = 'hrChart';
+      location.appendChild(chatCanvas);
     }, 300);
   }
 
-  addRpe(rpe) {
+  addRpeToChart(rpe) {
     const heartRatesData = this.heartRateData;
     if (!!heartRatesData && heartRatesData.length > 0) {
       const latestHr = heartRatesData[heartRatesData.length - 1];
-      const latestLable = this.labels[this.labels.length - 1];
+      const latestLabel = this.labels[this.labels.length - 1];
       const point = {
-        x: latestLable,
+        x: latestLabel,
         y: latestHr,
         z: rpe,
       };
@@ -854,71 +842,159 @@ export class RealTimeExercisePage implements OnInit {
     }
   }
 
+  set rpeData(value: { x: number; y: any; z: any }[]) {
+    this.chart.data.datasets[1].data = value;
+  }
+
   get rpeData() {
     return this.chart.data.datasets[1].data;
+  }
+
+  set heartRateData(value: any[]) {
+    this.chart.data.datasets[0].data = value;
   }
 
   get heartRateData() {
     return this.chart.data.datasets[0].data;
   }
 
+  set labels(value: number[]) {
+    this.chart.data.labels = value;
+  }
+
   get labels(): number[] {
     return this.chart?.data?.labels || [];
   }
 
-  async setExerciseInfoData() {
-    this.rateArray = [];
-    this.realtime = true;
-
-    this.authSvc.extendToken().subscribe(async (isRefreshed) => {
-      if (isRefreshed) {
-        await this.loadingSvc.create('Getting data...');
-        await this.loadingSvc.present();
-        await this.watchCommandSvc.sendBAT();
-      }
-    });
+  checkReservationAvailable() {
+    if (this.reserveId) {
+      this.reservationSvc.searchById(this.reserveId).subscribe(async obs => {
+        const dateTo = new Date(obs.to);
+        const now = new Date();
+        if (dateTo.valueOf() >= now.valueOf()) {
+          await this.handleStartExercise();
+        } else {
+          await this.alertSvc.presentAlert(
+            await this.languageSvc.getI18nLang(NOT_RESERVED_TIME),
+            false,
+            () => this.router.navigate(['/menu'])
+          );
+        }
+      });
+    }
   }
 
-  removeData(chart) {
-    chart.data.labels.pop();
-    chart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
-    });
-    chart.update();
-  }
-
-  async startExercise() {
+  async handleStartExercise() {
+    this.isExerciseFinished = false;
     if (ENV.useDummyData) {
       this.generateRandomHeartRate();
     } else {
       const isConnected = await this.ble.isConnected();
       if (!isConnected) {
-        await this.scanBLE();
-      } else {
-        //reset chart
         if (
-          this.chart.data.datasets &&
-          this.chart.data.datasets[0]?.data.length > 0
+          (this.chart?.data.datasets &&
+            this.chart?.data.datasets[0]?.data.length > 0) ||
+          document.getElementById('hrChart')
         ) {
-          this.removeData(this.chart);
-          this.step = 0;
-          this.seconds = 0;
-          this.chart.destroy();
-          const hrChart = document.getElementById('hrChart');
-          const location = document.getElementById('canvas');
-          location.removeChild(hrChart);
-          this.createCanvas();
-          setTimeout(() => {
-            this.canvas.id = 'hrChart';
-            location.appendChild(this.canvas);
-          }, 1000);
+          this.resetChart();
+        }
+        await this.scanBLE();
+        this.isExerciseFinishedAndRestart = true;
+      } else {
+        if (
+          (this.chart?.data.datasets &&
+            this.chart?.data.datasets[0]?.data.length > 0) ||
+          document.getElementById('hrChart')
+        ) {
+          this.resetChart();
+          await this.createCanvas();
         }
         await this.setExerciseInfoData();
       }
     }
   }
 
-  async stopExercise() {
+  resetChart() {
+    this.rpeData = [];
+    this.heartRateData = [];
+    this.labels = [];
+    this.step = 0;
+    this.currentExercisingSeconds = 0;
+    this.chart.destroy();
+    const hrChart = document.getElementById('hrChart');
+    const location = document.getElementById('canvas');
+    location.removeChild(hrChart);
+  }
+
+  async setExerciseInfoData() {
+    // this.rateArray = [];
+    this.isExerciseFinishedAndRestart = false;
+    this.authSvc.extendToken().subscribe(async (isRefreshed) => {
+      if (isRefreshed) {
+        await this.loadingSvc.create(await this.languageSvc.getI18nLang(GETTING_DATA));
+        await this.loadingSvc.present();
+        await this.watchCommandSvc.sendBAT();
+      }
+    });
+  }
+
+  addDataToChart(item: IChartItem) {
+    this.labels.push(item.label);
+    this.heartRateData.push(item.data);
+
+    if (this.labels.length > 100) {
+      this.labels.splice(0, 1);
+      this.heartRateData.splice(0, 1);
+    }
+
+    this.chart.update();
+  }
+
+  sendEmergencyWithChatHub(rpeValue: number) {
+    this.addRpeToChart(rpeValue);
+    const msg: IEmergencyMessage = {
+      channelId: this.channelId,
+      messageStatus: 'send',
+      messageType: 'EMERGENCY',
+      rate: this.heartRate,
+      seconds: this.currentExercisingSeconds,
+      sendDateTime: new Date(),
+      userEmail: this.authSvc.username,
+      rpeValue,
+    };
+    this.chatSvc.sendEmergency(msg);
+    this.rpeMsg = msg;
+    this.rpesSecondsArray.push({ rpe: rpeValue, second: this.currentExercisingSeconds });
+  }
+
+  private sendStopSignalWithChatHub() {
+    const signal: IStopSignal = {
+      messageType: 'TEXT',
+      sendDateTime: new Date(),
+      messageStatus: 'send',
+      userEmail: this.authSvc.username,
+      channelId: this.channelId,
+      isExerciseStop: true,
+    };
+    this.loggerSvc.log('stop signal', signal);
+    this.chatSvc.sendStopSignal(signal);
+  }
+
+  private sendHeartRateWithChatHub(rate: number, round: number, second: number) {
+    this.chatSvc.sendHeartRate({
+      channelId: this.channelId,
+      messageStatus: 'send',
+      messageType: 'HeartRate',
+      rate,
+      round,
+      seconds: second,
+      userEmail: this.authSvc.username,
+      sendDateTime: new Date(),
+    } as IHrMessage);
+  }
+
+  // #region FOR DUMMY DATA
+  private async stopExercise() {
     if (!!this.interval && !!this.timer) {
       clearInterval(this.interval);
       clearTimeout(this.timer);
@@ -941,52 +1017,12 @@ export class RealTimeExercisePage implements OnInit {
         prescription,
         this.exerciseData,
         data.rpeValue,
-        this.exerciseDatetime,
+        this.exerciseDateTime,
         this.hrMixMax,
         ''
       )
       .toPromise();
-    this.sendStopSignal();
-  }
-
-  addData(item: IChartItem) {
-    this.labels.push(item.label);
-    this.heartRateData.push(item.data);
-
-    if (this.labels.length > 100) {
-      this.labels.splice(0, 1);
-      this.heartRateData.splice(0, 1);
-    }
-
-    this.chart.update();
-  }
-
-  get available(): boolean {
-    return this.realtime;
-  }
-
-  async getLastPrescription() {
-    this.prescription = await this.storageSvc.get(PRESCRIPTION);
-    this.createCanvas();
-    this.loggerSvc.log('prescription', this.prescription);
-    if (!this.prescription) {
-      await this.alertSvc.presentAlert(
-        `You have not gotten the latest prescription`
-      );
-      this.router.navigate(['/menu']);
-    } else {
-      this.totalExerciseTime = this.prescription.steps
-        .map((step) => step.minute)
-        .reduce((accr, curr) => accr + curr);
-    }
-  }
-
-  async toggleChat() {
-    this.isShowChat = !this.isShowChat;
-  }
-
-  getUpdatedValue(e) {
-    this.isShowChat = e;
+    this.sendStopSignalWithChatHub();
   }
 
   private generateRandomHeartRate() {
@@ -1001,7 +1037,7 @@ export class RealTimeExercisePage implements OnInit {
       let currentPrescriptionStep = this.prescription.steps.find(
         (s) => s.sequence === step
       );
-      let exerciseStepMsg: IExcerciseStepMessage = {
+      let exerciseStepMsg: IExerciseStepMessage = {
         channelId: this.channelId,
         currentStep: currentPrescriptionStep,
         currentStepCount: step,
@@ -1013,7 +1049,7 @@ export class RealTimeExercisePage implements OnInit {
         totalStepCount,
         userEmail: this.authSvc.username,
       };
-      this.chatSvc.sendExerciseStep(exerciseStepMsg);
+      this.chatSvc.sendExerciseStepWithChatHub(exerciseStepMsg);
 
       this.interval = setInterval(() => {
         this.timer = setTimeout(() => {
@@ -1039,47 +1075,52 @@ export class RealTimeExercisePage implements OnInit {
                 currentStep: currentPrescriptionStep,
                 currentStepCount: step,
               };
-              this.chatSvc.sendExerciseStep(exerciseStepMsg);
+              this.chatSvc.sendExerciseStepWithChatHub(exerciseStepMsg);
             }
           }
 
-          this.loggerSvc.log('totalExcerciseTime ', this.totalExerciseTime);
+          this.loggerSvc.log('totalExerciseTime ', this.totalExerciseTime);
 
-          const baseSeconds = this.realTimeExerciseSvc.getBaseSeconds(
-            1,
-            this.prescription
-          );
+          const baseSeconds = getElapsedSeconds(1, this.prescription);
           this.loggerSvc.log('prescription', this.prescription);
           this.loggerSvc.log('base seconds', baseSeconds);
 
-          this.addData({
+          this.addDataToChart({
             label: second + baseSeconds,
             data: rate,
           } as IChartItem);
-          this.sendHeartRate(rate, 1, second + baseSeconds);
+          this.sendHeartRateWithChatHub(rate, 1, second + baseSeconds);
           this.exerciseData.push(rate);
-          this.seconds = second;
+          this.currentExercisingSeconds = second;
           this.heartRate = rate;
         }, 100);
       }, 100);
     });
   }
+  // #endregion
 
-  private sendHeartRate(rate: number, round: number, second: number) {
-    this.chatSvc.sendHeartRate({
-      channelId: this.channelId,
-      messageStatus: 'send',
-      messageType: 'HeartRate',
-      rate,
-      round,
-      seconds: second,
-      userEmail: this.authSvc.username,
-      sendDateTime: new Date(),
-    } as IHrMessage);
-  }
 }
 
 interface IChartItem {
   label: number;
   data: number;
 }
+
+/**
+ * chart에서 옳은 촛수를 나타나기 위하여, 운동 횟차 > 1 때는, 앞 횟차의 촛수들을 현재 촛수하고 합산함.
+ *
+ * @param round: 현재 횟수
+ * @param prescription: 운동 처방
+ * @returns
+ */
+const getElapsedSeconds = (round: number, prescription: IPrescription) => {
+  let baseSeconds = 0;
+  if (round > 1) {
+    const baseMinutes = prescription.steps
+      .map(step => step.minute)
+      .slice(0, round - 1)
+      .reduce((accumulator, currentValue) => accumulator + currentValue);
+    baseSeconds = Math.round(baseMinutes * 60);
+  }
+  return baseSeconds;
+};

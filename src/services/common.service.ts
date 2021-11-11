@@ -9,9 +9,9 @@ export class CommonService {
 
   async presentToast(header: string, message: string, duration: number = 1000) {
     const toast = await this.toastCtrl.create({
-      header: header,
-      message: message,
-      duration: duration,
+      header,
+      message,
+      duration,
       position: 'bottom',
     });
     return toast.present();

@@ -1,18 +1,24 @@
+import { LanguageService } from 'src/services/language.service';
 import { Injectable } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+import { PLEASE_WAIT } from 'src/constants/language-key';
+import { LANG_KO } from 'src/constants/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoadingService {
   loading: HTMLIonLoadingElement;
+  defaultText = '';
+  constructor(
+    public loadingController: LoadingController,
+    private languageSvc: LanguageService
+  ) { }
 
-  constructor(public loadingController: LoadingController) {}
-
-  async create(msg: string = 'Please wait...') {
+  async create(msg: string = '') {
     this.loading = await this.loadingController.create({
       message: msg,
-      // duration: 5 * 1000
+      duration: 10 * 1000
     });
 
     return this.loading;

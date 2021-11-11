@@ -1,3 +1,4 @@
+import { LanguageService } from 'src/services/language.service';
 import { StorageService } from './../../services/storage.service';
 import { PrescriptionService } from './../../services/prescription.service';
 import { IS_REMEMBER_EMAIL, LAST_EMAIL } from 'src/constants/storage-key';
@@ -10,6 +11,7 @@ import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { PermissionService } from '../../services/permission.service';
 import { PRESCRIPTION } from 'src/constants/common';
+import { DOCTOR_HAS_TO_APPROVE, GET_NEW_PRESCRIPTION } from 'src/constants/language-key';
 
 @Component({
   selector: 'app-login',
@@ -23,13 +25,14 @@ export class LoginPage implements OnInit {
   get isRememberEmail() { return this.loginForm.get('isRememberEmail'); }
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private router: Router,
     private alertSvc: AlertService,
     private permissionSvc: PermissionService,
     private authSvc: AuthService,
     private prescriptionSvc: PrescriptionService,
-    private storageSvc: StorageService
+    private storageSvc: StorageService,
+    private languageSvc: LanguageService
   ) {
     this.buildForm();
   }
@@ -46,7 +49,7 @@ export class LoginPage implements OnInit {
   }
 
   buildForm() {
-    this.loginForm = this.fb.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(4)]],
       isRememberEmail: [false]
@@ -69,14 +72,19 @@ export class LoginPage implements OnInit {
         next: () => {
           this.prescriptionSvc.getLastPrescription(this.authSvc.username)
           .subscribe(async newPrescription => {
-            const msg = '새로운 처방전을 받았습니다.';
-            await this.storageSvc.set(PRESCRIPTION, newPrescription);
-            await this.alertSvc.presentAlert(msg, false, async () => await this.router.navigate(['/menu']));
+            const oldPrescription = await this.storageSvc.get(PRESCRIPTION);
+            if (oldPrescription && oldPrescription.id === newPrescription.id) {
+              this.router.navigate(['/menu']);
+            } else {
+              await this.storageSvc.set(PRESCRIPTION, newPrescription);
+              const msg = await this.languageSvc.getI18nLang(GET_NEW_PRESCRIPTION);
+              await this.alertSvc.presentAlert(msg, false, async () => await this.router.navigate(['/menu']));
+            }
           });
         },
-        error: () => {
+        error: async () => {
           this.alertSvc.presentAlert(
-            '의사가 승인을 해야 가입이 완료됩니다.',
+            await this.languageSvc.getI18nLang(DOCTOR_HAS_TO_APPROVE),
             false
           );
         }

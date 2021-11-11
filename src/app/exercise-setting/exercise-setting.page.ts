@@ -1,12 +1,17 @@
 import { Subscription, throwError } from 'rxjs';
 import { DevicesModalComponent } from 'src/components/modals/devices-modal/devices-modal.component';
 import {
+    ASK_TO_SEND_PRESCRIPTION_TO_WATCH, CANCEL, CONFIRM, FINISHED_SETTING, GETTING_DATA, SCAN,
+    SCAN_FAILED, SELECT_DEVICE, SENT_PRESCRIPTION_TO_WATCH, CONNECTING, CONNECT_FAILED
+} from 'src/constants/language-key';
+import {
     RESPONSE_TYPE_STE, RESPONSE_TYPE_STH, RESPONSE_TYPE_STS
 } from 'src/constants/watch-ble-command';
 import { AlertService } from 'src/services/alert.service';
 import { AuthService } from 'src/services/auth.service';
 import { BleService } from 'src/services/ble.service';
 import { ExerciseSettingService } from 'src/services/exercise-setting.service';
+import { LanguageService } from 'src/services/language.service';
 import { LoadingService } from 'src/services/loading.service';
 import { LoggerService } from 'src/services/logger.service';
 import { IPrescription, PrescriptionService } from 'src/services/prescription.service';
@@ -41,7 +46,8 @@ export class ExerciseSettingPage implements OnInit {
     private modalController: ModalController,
     private router: Router,
     private watchCommandSvc: WatchCommandService,
-    private loggerSvc: LoggerService
+    private loggerSvc: LoggerService,
+    private languageSvc: LanguageService
   ) {
   }
 
@@ -55,7 +61,7 @@ export class ExerciseSettingPage implements OnInit {
   }
 
   async setExerciseInfoData() {
-    await this.loadingSvc.create('Getting data...');
+    await this.loadingSvc.create(await this.languageSvc.getI18nLang(GETTING_DATA));
     await this.loadingSvc.present();
     await this.watchCommandSvc.sendBAT();
   }
@@ -69,7 +75,6 @@ export class ExerciseSettingPage implements OnInit {
           if (batPattern.test(obs)) {
             this.callBATTimes = 0;
             await this.loadingSvc.dismiss();
-            this.ble.handleBAT(obs);
             await this.watchCommandSvc.sendSTS();
           } else {
             if (this.callBATTimes >= 10) {
@@ -124,7 +129,7 @@ export class ExerciseSettingPage implements OnInit {
       .subscribe({
       next: async obs => {
         if (obs.includes(RESPONSE_TYPE_STE)) {
-          const msg = `시계로 처방전 전송이 완료되었습니다.`;
+          const msg = await this.languageSvc.getI18nLang(SENT_PRESCRIPTION_TO_WATCH);
           await this.alertSvc.presentAlert(msg, false, async () => {
             await this.ble.disconnect();
           });
@@ -143,16 +148,16 @@ export class ExerciseSettingPage implements OnInit {
     if (await this.ble.isConnected()) {
       this.alertSvc.presentCustomizeAlert(
         {
-          message: '처방전 데이터를 시계로 전송하시겠습니까?',
+          message: await this.languageSvc.getI18nLang(ASK_TO_SEND_PRESCRIPTION_TO_WATCH),
           buttons: [
             {
-              text: '설정완료',
+              text: await this.languageSvc.getI18nLang(FINISHED_SETTING),
               handler: async () => {
                 this.setExerciseInfoData();
               },
             },
             {
-              text: '취소',
+              text: await this.languageSvc.getI18nLang(CANCEL),
               handler: () => {
               },
             },
@@ -166,7 +171,7 @@ export class ExerciseSettingPage implements OnInit {
 
   async scanBLE() {
     this.devices = [];
-    await this.loadingSvc.create('Scan...');
+    await this.loadingSvc.create(await this.languageSvc.getI18nLang(SCAN));
     await this.loadingSvc.present();
     return this.ble.scan()
       .subscribe({
@@ -191,8 +196,7 @@ export class ExerciseSettingPage implements OnInit {
               backdropDismiss: false,
               componentProps: {
                 devicesList: this.devices,
-                // TODO: i18n
-                title: '시계와 연결되어 있지 않습니다. 데이터 전송하시려면 디바이스를 선택해주세요.'
+                title: await this.languageSvc.getI18nLang(SELECT_DEVICE)
               },
             });
             await modal.present();
@@ -210,16 +214,16 @@ export class ExerciseSettingPage implements OnInit {
 
   async presentScanFailedAlert() {
     const alertOptions = {
-      message: '스캔 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(SCAN_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             await this.scanBLE();
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: () => {
           },
         },
@@ -230,7 +234,7 @@ export class ExerciseSettingPage implements OnInit {
   }
 
   async connect(deviceId: string) {
-    await this.loadingSvc.create('Connect...');
+    await this.loadingSvc.create(await this.languageSvc.getI18nLang(CONNECTING));
     await this.loadingSvc.present();
     this.connectSubscription = this.ble
       .connect(deviceId)
@@ -252,16 +256,16 @@ export class ExerciseSettingPage implements OnInit {
 
   async presentConnectFailedAlert(deviceId) {
     const alertOptions = {
-      message: '연결 실패했습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(CONNECT_FAILED),
       buttons: [
         {
-          text: '확인',
+          text: await this.languageSvc.getI18nLang(CONFIRM),
           handler: async () => {
             await this.connect(deviceId);
           },
         },
         {
-          text: '취소',
+          text: await this.languageSvc.getI18nLang(CANCEL),
           handler: async () => {
           },
         },

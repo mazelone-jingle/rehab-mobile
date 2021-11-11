@@ -25,7 +25,7 @@ export class PushNotificationService {
     ) {
     this.platForm.ready().then(() => {
       this.localNotifications.on('click').subscribe(async res => {
-        console.log('click:', res);
+        // console.log('click:', res);
       //   let msg = res.data ? res.data.page : ''
       //   await this.alertSvc.presentCustomizeAlert({
       //     message: msg,
@@ -39,7 +39,7 @@ export class PushNotificationService {
       });
 
       this.localNotifications.on('trigger').subscribe(async res => {
-        console.log('trigger:', res);
+        // console.log('trigger:', res);
       //   let msg = res.data ? res.data.page : ''
       //   await this.alertSvc.presentCustomizeAlert({
       //     message: msg,
@@ -53,7 +53,7 @@ export class PushNotificationService {
       });
     });
   }
-
+/*
   prepareNotification(title: string, text: string) {
     this.localNotifications.schedule({
       title,
@@ -80,8 +80,8 @@ export class PushNotificationService {
       foreground: true
     });
   }
-
-  setNotification(notification: INotification) {
+*/
+  setWeeklyNotification(notification: INotification) {
     notification.repeatWeekday.forEach((weekday) => {
       const hour = +notification.time.substring(0, notification.time.indexOf(':'));
       const minute = +notification.time.substring(notification.time.indexOf(':') + 1);
@@ -94,7 +94,9 @@ export class PushNotificationService {
         silent: !notification.sound,
         sound: notification.music,
         count: 1,
-        every: { weekday: weekday.id, hour, minute, second: 0 } as ILocalNotificationEvery,
+        trigger: {
+          every: { weekday: weekday.id, hour, minute, second: 0 } as ILocalNotificationEvery,
+        },
         foreground: true,
       };
       this.scheduleNotification(alarm);
@@ -103,7 +105,6 @@ export class PushNotificationService {
 
   scheduleNotification(options: ILocalNotification) {
     this.localNotifications.schedule(options);
-    // cordova.plugins.notification.local.schedule(options);
   }
 
   async deleteNotificationById(id: number) {
@@ -112,7 +113,6 @@ export class PushNotificationService {
 
   async getScheduledNotifications() {
     const notis = await this.localNotifications.getAll();
-    console.warn(notis);
   }
 
   async clearAllNotification() {

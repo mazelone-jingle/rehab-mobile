@@ -1,6 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { LANG_KO } from 'src/constants/common';
+import { EXERCISE_RESERVATION, RESERVATION_DONE } from 'src/constants/language-key';
 import { ICalendarDate } from 'src/models/i-calendar-date';
 import { ICalendarEvent } from 'src/models/i-calendar-event';
 import { IConsultation } from 'src/models/i-consultation';
@@ -8,8 +8,12 @@ import { IReservation } from 'src/models/i-reservation';
 import { AuthService } from 'src/services/auth.service';
 import { CommonService } from 'src/services/common.service';
 import { ConsultationService } from 'src/services/consultation.service';
+import { LanguageService } from 'src/services/language.service';
 import { LoggerService } from 'src/services/logger.service';
 import { ReservationService } from 'src/services/reservation.service';
+
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-reservation',
   templateUrl: './reservation.page.html',
@@ -20,43 +24,71 @@ export class ReservationPage implements OnInit {
   isToday: boolean;
   eventSource: Array<ICalendarEvent<IConsultation>>;
   selectedDate: ICalendarDate;
-  showEventDetail = true;
-  noReservation = '예약가능한 일정이 없습니다.';
-  viewTitle: any;
-  eventDetail: any;
-  now: Date = new Date();
+  calendarTitle: string;
   calendar = {
-    locale: 'ko-KR',
+    // locale: 'ko-KR',
     currentDate: new Date(),
     step: 30,
     dateFormatter: {
       formatMonthViewDay: (date: Date) => date.getDate().toString(),
       formatMonthViewDayHeader: (date: Date) => {
-        switch (date.getDay()) {
-          case 0: {
-            return '일';
+        if (this.languageSvc.getCurrentLang() === LANG_KO) {
+          switch (date.getDay()) {
+            case 0: {
+              return '일';
+            }
+            case 1: {
+              return '월';
+            }
+            case 2: {
+              return '화';
+            }
+            case 3: {
+              return '수';
+            }
+            case 4: {
+              return '목';
+            }
+            case 5: {
+              return '금';
+            }
+            case 6: {
+              return '토';
+            }
           }
-          case 1: {
-            return '월';
-          }
-          case 2: {
-            return '화';
-          }
-          case 3: {
-            return '수';
-          }
-          case 4: {
-            return '목';
-          }
-          case 5: {
-            return '금';
-          }
-          case 6: {
-            return '토';
+        } else {
+          switch (date.getDay()) {
+            case 0: {
+              return 'Sun';
+            }
+            case 1: {
+              return 'Mon';
+            }
+            case 2: {
+              return 'Tue';
+            }
+            case 3: {
+              return 'Wed';
+            }
+            case 4: {
+              return 'Thu';
+            }
+            case 5: {
+              return 'Fri';
+            }
+            case 6: {
+              return 'Sat';
+            }
           }
         }
       },
-      formatMonthViewTitle: (date: Date) => `${date.getFullYear()}년 ${date.getMonth() + 1}월`,
+      formatMonthViewTitle: (date: Date) => {
+        if (this.languageSvc.getCurrentLang() === LANG_KO) {
+          return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+        } else {
+          return `${date.getFullYear()}/${date.getMonth() + 1}`;
+        }
+      },
       formatWeekViewDayHeader: (date: Date) => 'MonWH',
       formatWeekViewTitle: (date: Date) => 'testWT',
       formatWeekViewHourColumn: (date: Date) => 'testWH',
@@ -64,15 +96,15 @@ export class ReservationPage implements OnInit {
       formatDayViewTitle: (date: Date) => 'testDT',
     },
   };
-  selectedTime: Date;
   constructor(
     private logger: LoggerService,
     private consultationSvc: ConsultationService,
-    private reservSvc: ReservationService,
+    private reservationSvc: ReservationService,
     private authSvc: AuthService,
     private commonSvc: CommonService,
     private router: Router,
-    private zone: NgZone
+    private zone: NgZone,
+    private languageSvc: LanguageService,
   ) {}
 
   ngOnInit() {
@@ -125,7 +157,6 @@ export class ReservationPage implements OnInit {
     const reservationDateTo = new Date(dateTo).getTime();
     const min = 5;
     const availableDateFrom = reservationDateFrom - min * 60 * 1000;
-    // this.loggerSvc.log('reserve from - ', reservationDateFrom, 'now', now);
     return reservationDateTo >= now && availableDateFrom <= now;
   }
 
@@ -140,7 +171,7 @@ export class ReservationPage implements OnInit {
       this.getScheduleList(event),
     ]).subscribe((obs) => {
       const monthData = obs[1];
-      const dialyData = obs[0];
+      const dailyData = obs[0];
       const arrangedData = monthData
         .filter((date) => new Date(date).getTime() >= today.getTime())
         .map(
@@ -156,7 +187,7 @@ export class ReservationPage implements OnInit {
         .map((res) => {
           const from = new Date(res.startTime);
           if (from.getTime() === event.getTime()) {
-            res.data = dialyData;
+            res.data = dailyData;
           }
           return res;
         });
@@ -166,7 +197,6 @@ export class ReservationPage implements OnInit {
   }
 
   onEventSelected($event: any) {
-    this.logger.log('asdasd');
     this.logger.log('event data ? ', $event.data);
     const reservation: IReservation = {
       consultationId: $event.data.id,
@@ -176,52 +206,41 @@ export class ReservationPage implements OnInit {
       userEmail: $event.data.userEmail,
     };
 
-    this.reservSvc.create(reservation).subscribe((res: IReservation) => {
-      this.getScheduleList(new Date());
-      this.logger.log(res);
-      // $event = {
-      //   ...$event,
-      //   data: {
-      //     ...$event.data,
-      //     reservation: res,
-      //   },
-      // };
-
+    this.reservationSvc.create(reservation).subscribe(async (res: IReservation) => {
       this.onCurrentDateChanged(this.selectedDate.selectedTime);
 
       //예약완료
-      this.commonSvc
-        .presentToast('운동 예약', '예약이 완료되었습니다.')
-        .then(() => {
-          this.logger.log('toast presented');
-        });
+      await this.commonSvc
+        .presentToast(
+          await this.languageSvc.getI18nLang(EXERCISE_RESERVATION),
+          await this.languageSvc.getI18nLang(RESERVATION_DONE));
     });
   }
 
-  async joinChat(reserv: IReservation) {
-    this.logger.log('chat', reserv);
+  async joinChat(reservation: IReservation) {
     this.router.navigate(['/menu/real-time-exercise'], {
-      state: { reservId: reserv.id, channelId: reserv.channelId },
+      state: { reserveId: reservation.id, channelId: reservation.channelId },
     });
   }
 
   onViewTitleChanged(title: any) {
-    this.viewTitle = title;
+    this.calendarTitle = title;
   }
+
   getScheduleListByDate(selectedDate: Date) {
     this.logger.log(this.authSvc.username);
-
     return this.consultationSvc.getByDate(selectedDate);
   }
+
   getScheduleList(selectedDate: Date) {
     this.logger.log(this.authSvc.username);
     return this.consultationSvc.getByMonth(selectedDate);
   }
+
   onTimeSelected($event: ICalendarDate) {
     this.zone.run(() => {
       this.selectedDate = $event;
     });
-    this.selectedTime = $event.selectedTime;
     this.logger.log('Selected Date - ', $event);
   }
   // #endregion

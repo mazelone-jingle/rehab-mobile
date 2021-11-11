@@ -2,42 +2,42 @@
   <div class="content">
     <ion-card class="card">
       <ion-title>{{'register' | translate}}</ion-title>
-      <form [formGroup]="registerForm" novalidate *ngIf="registerForm">
+      <form [formGroup]="registerForm" *ngIf="registerForm">
         <ion-item class="form-group">
           <ion-label for="name" position="fixed">{{'name' | translate}}</ion-label>
           <ion-input type="text" formControlName="name" class="form-control" id="name"></ion-input>
         </ion-item>
         <div *ngIf="name.invalid && name.touched">
-          <small style="color: red;" *ngIf="name.errors.required">이름을 입력해주세요</small>
+          <p *ngIf="name.errors?.required">{{'please_enter_name' | translate}}</p>
         </div>
         <ion-item class="form-group">
           <ion-label for="id" position="fixed">{{'email' | translate}}</ion-label>
           <ion-input type="text" formControlName="email" class="form-control" id="id"></ion-input>
           <ion-button
-          [disabled]="!getEmail()"
+          [disabled]="!email.value"
           (click)="checkIdDuplicate()"
-          [color]="getCheckId()? 'success': 'primary'"
+          [color]="checkId.value? 'success': 'primary'"
           >V</ion-button>
         </ion-item>
         <div *ngIf="email.invalid && email.touched">
-          <small style="color: red;" *ngIf="email.errors.required">이메일을 입력해주세요</small>
-          <small style="color: red;" *ngIf="email.errors.email">올바른 이메일 형식이 아닙니다</small>
+          <p *ngIf="email.errors?.required">{{'please_enter_email' | translate}}</p>
+          <p *ngIf="email.errors?.email">{{'email_format_not_correct' | translate}}</p>
         </div>
         <ion-item class="form-group">
           <ion-label for="pwd" position="fixed">{{'password' | translate}}</ion-label>
           <ion-input type="password" formControlName="password" class="form-control" id="pwd"></ion-input>
         </ion-item>
         <div *ngIf="password.invalid && password.touched">
-          <small style="color: red;" *ngIf="password.errors.required">비밀번호를 입력해주세요</small>
-          <small style="color: red;" *ngIf="password.errors.minlength">비밀번호는 4자리 이상입니다</small>
+          <p *ngIf="password.errors?.required">{{'please_enter_password' | translate}}</p>
+          <p *ngIf="password.errors?.minlength">{{'password_format' | translate}}</p>
         </div>
         <ion-item class="form-group">
           <ion-label for="confirmPwd" position="fixed">{{'confirmPassword' | translate}}</ion-label>
           <ion-input type="password" formControlName="confirmPassword" class="form-control" id="confirmPwd"></ion-input>
         </ion-item>
-        <div *ngIf="confirmPassword.invalid && confirmPassword.touched">
-          <small style="color: red;" *ngIf="confirmPassword.errors.required">비밀번호를 입력해주세요</small>
-          <small style="color: red;" *ngIf="registerForm.errors?.misMatch">비밀번호가 일치하지 않습니다</small>
+        <div *ngIf="confirmPassword.touched && (confirmPassword.invalid || registerForm.errors?.passwordMismatch)">
+          <p *ngIf="confirmPassword.errors?.required">{{'please_enter_password' | translate}}</p>
+          <p *ngIf="registerForm.errors?.passwordMismatch">{{'password_mismatch' | translate}}</p>
         </div>
       </form>
 

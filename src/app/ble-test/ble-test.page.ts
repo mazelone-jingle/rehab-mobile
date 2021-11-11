@@ -1,3 +1,4 @@
+import { LoggerService } from './../../services/logger.service';
 import { Component, NgZone } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 import { finalize } from 'rxjs/operators';
@@ -18,9 +19,10 @@ export class BleTestPage {
   peripheral: any;
 
   constructor(
-    private zone: NgZone
-    , private loadingController: LoadingController
-    , private ble: BleService) {
+    private zone: NgZone,
+    private loadingController: LoadingController,
+    private ble: BleService,
+    private loggerSvc: LoggerService) {
   }
 
   async scan() {
@@ -33,7 +35,6 @@ export class BleTestPage {
           if (this.devices.indexOf(d => d.id == device.id) < 0) {
             this.devices.push(device);
           }
-          console.log('devices', device);
         });
       })
   }
@@ -45,7 +46,6 @@ export class BleTestPage {
         .subscribe((peripheral) => {
           this.connectedDeviceId = deviceId;
           this.peripheral = peripheral;
-          console.log('peripheral', peripheral);
         });
     }
   }
@@ -55,7 +55,6 @@ export class BleTestPage {
       this.ble.disconnect()
         .then(res => {
           alert('disconnected');
-          console.log('disconnected', res);
           this.connectedDeviceId = null;
         }).catch(err => {
           alert(`disconnect fail, ${err}`);
@@ -65,12 +64,12 @@ export class BleTestPage {
 
   writeCommand() {
     this.ble.writeCommand(this.selectedCommand)
-      .then(res => console.log(`write ${this.selectedCommand} ok`, res))
-      .catch(err => console.log(`write ${this.selectedCommand} err`, err));
+      .then(res => this.loggerSvc.log(`write ${this.selectedCommand} ok`, res))
+      .catch(err => this.loggerSvc.log(`write ${this.selectedCommand} err`, err));
   }
 
   test() {
-    console.log(this);
+    this.loggerSvc.log(this);
   }
 
   async presentScanning() {

@@ -1,9 +1,6 @@
 import { Router } from '@angular/router';
 import { LanguageService } from './../../services/language.service';
-import { StorageService } from './../../services/storage.service';
-import { TranslateService } from '@ngx-translate/core';
 import { Component, OnInit } from '@angular/core';
-import { LANG } from 'src/constants/storage-key';
 import { LANG_KO } from 'src/constants/common';
 
 @Component({
@@ -13,16 +10,19 @@ import { LANG_KO } from 'src/constants/common';
 })
 export class NotificationAndLanguageSettingPage implements OnInit {
   currLang: string;
-  constructor(private languageSvc: LanguageService, private router: Router) { }
+  constructor(
+    private languageSvc: LanguageService,
+    private router: Router
+    ) { }
 
   async ngOnInit() {
     await this.getCurrLang();
   }
 
   async getCurrLang() {
-    const settedLang = await this.languageSvc.getLangLastSetting();
-    if (settedLang) {
-      this.currLang = settedLang;
+    const setLang = await this.languageSvc.getLangLastSetting();
+    if (setLang) {
+      this.currLang = setLang;
     } else {
       this.currLang = LANG_KO;
     }

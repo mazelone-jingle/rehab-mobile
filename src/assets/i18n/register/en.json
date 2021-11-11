@@ -4,5 +4,11 @@
   "email": "Email",
   "password": "Password",
   "confirmPassword": "Confirm Password",
-  "backToLogin": "Go Back to Login"
+  "backToLogin": "Go Back to Login",
+  "please_enter_password": "Please enter password",
+  "password_format": "Password is at least 4 digits..",
+  "password_mismatch": "The passwords don't match.",
+  "please_enter_name": "Please enter your name.",
+  "please_enter_email": "Please enter your email.",
+  "email_format_not_correct": "Email format is not correct."
 }

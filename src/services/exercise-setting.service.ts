@@ -1,8 +1,11 @@
+import { HOUR, MINUTE } from './../constants/language-key';
+import { LanguageService } from './language.service';
 import { StorageService } from './storage.service';
 import { AlertService } from './alert.service';
 import { Injectable } from '@angular/core';
 import { IPrescription } from './prescription.service';
 import { PRESCRIPTION, WEEKDAYS } from 'src/constants/common';
+import { AFTERNOON, DATE, DOCTOR, MORNING, RECEIVE_NEW_PRESCRIPTION } from 'src/constants/language-key';
 
 
 @Injectable({
@@ -12,7 +15,8 @@ export class ExerciseSettingService {
   prescription: IPrescription;
   constructor(
     private alertSvc: AlertService,
-    private storageSvc: StorageService
+    private storageSvc: StorageService,
+    private languageSvc: LanguageService
     ) {}
 
   checkIsNewPrescription(lastPrescription: IPrescription, newPrescription: IPrescription) {
@@ -31,15 +35,17 @@ export class ExerciseSettingService {
   }
 
   async newPrescriptionAlert(prescriptionInfo: IPrescription) {
+    const textDoctor = await this.languageSvc.getI18nLang(DOCTOR);
+    const textReceivePrescription = await this.languageSvc.getI18nLang(RECEIVE_NEW_PRESCRIPTION);
     const msg =
     `<p>${this.handleDateInfo(prescriptionInfo.regDate)}</p>
-      <p>의사 : ${prescriptionInfo.regBy}</p>
-    <p>새로운 운동 처방이 있습니다.</p>
+      <p>${textDoctor} : ${prescriptionInfo.regBy}</p>
+    <p>${textReceivePrescription}</p>
     `;
     await this.alertSvc.presentAlert(msg, false);
   }
 
-  handleDateInfo(dateData) {
+  async handleDateInfo(dateData) {
     const date = new Date(dateData);
     const y = date.getFullYear();
     const M = date.getMonth() + 1;
@@ -48,6 +54,13 @@ export class ExerciseSettingService {
     const h = date.getHours();
     const m = date.getMinutes();
 
-    return `날짜: ${y}-${M}-${d} (${WEEKDAYS[w]}) ${h >= 12? '오후': '오전'} ${h >= 12? h-12 : h}시 ${m}분`;
+    const textDate = await this.languageSvc.getI18nLang(DATE);
+    const textMorning = await this.languageSvc.getI18nLang(MORNING);
+    const textAfternoon = await this.languageSvc.getI18nLang(AFTERNOON);
+    const textHour = await this.languageSvc.getI18nLang(HOUR);
+    const textMinute = await this.languageSvc.getI18nLang(MINUTE);
+
+    return `${textDate}: ${y}-${M}-${d} (${WEEKDAYS[w]}) ${h >= 12? textMorning: textAfternoon}`
+           + ` ${h >= 12? h-12 : h}${textHour} ${m}${textMinute}`;
   }
 }

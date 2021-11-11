@@ -1,3 +1,4 @@
+import { LanguageService } from './../../services/language.service';
 import { LoggerService } from './../../services/logger.service';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { AlertController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { IPatient, PatientService } from './../../services/patient.service';
 import { Component, OnInit } from '@angular/core';
+import { CANCEL, CONFIRM, ENTER_PASSWORD, WRONG_PASSWORD } from 'src/constants/language-key';
 
 @Component({
   selector: 'app-personal-info-setting',
@@ -25,11 +27,12 @@ export class PersonalInfoSettingPage implements OnInit {
   get contact() { return this.infoForm.get('contact'); }
   constructor(
     private patientSvc: PatientService,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private alertController: AlertController,
     private authSvc: AuthService,
     private router: Router,
-    private loggerSvc: LoggerService
+    private loggerSvc: LoggerService,
+    private languageSvc: LanguageService
   ) { }
 
   async ngOnInit() {
@@ -39,13 +42,13 @@ export class PersonalInfoSettingPage implements OnInit {
 
   async presentInputPasswordAlert() {
     const alert = await this.alertController.create({
-      message: '비밀번호를 입력하세요.',
+      message: await this.languageSvc.getI18nLang(ENTER_PASSWORD),
       inputs: [{
         name: 'password',
         type: 'password',
       }],
       buttons: [{
-        text: '확인',
+        text: await this.languageSvc.getI18nLang(CONFIRM),
         role: 'confirm',
         cssClass: 'primary',
         handler: (params) => {
@@ -60,7 +63,7 @@ export class PersonalInfoSettingPage implements OnInit {
           });
         }
       },{
-        text: '취소',
+        text: await this.languageSvc.getI18nLang(CANCEL),
         role: 'cancel',
         cssClass: 'medium',
         handler: () => {
@@ -73,16 +76,16 @@ export class PersonalInfoSettingPage implements OnInit {
 
   async presentHandleErrorAlert() {
     const handleErrorAlert = await this.alertController.create({
-      message: '비밀번호가 틀렸습니다. 디시 시도하시겠습니까?',
+      message: await this.languageSvc.getI18nLang(WRONG_PASSWORD),
       buttons: [{
-        text: '확인',
+        text: await this.languageSvc.getI18nLang(CONFIRM),
         role: 'confirm',
         cssClass: 'primary',
         handler: async () => {
           await this.presentInputPasswordAlert();
         }
       },{
-        text: '취소',
+        text: await this.languageSvc.getI18nLang(CANCEL),
         role: 'cancel',
         cssClass: 'medium',
         handler: () => {
@@ -115,7 +118,7 @@ export class PersonalInfoSettingPage implements OnInit {
   }
 
   buildForm() {
-    this.infoForm = this.fb.group({
+    this.infoForm = this.formBuilder.group({
       name: ['', Validators.required],
       gender: [true, Validators.required],
       birthday: ['', Validators.required],
@@ -126,7 +129,8 @@ export class PersonalInfoSettingPage implements OnInit {
 
   saveData() {
     const reqBody = Object.assign(this.userInfo, this.infoForm.value);
-    this.patientSvc.updatePatientPersonalInfo(this.authSvc.username, reqBody).subscribe(()=> {
+    this.patientSvc.updatePatientPersonalInfo(this.authSvc.username, reqBody)
+    .subscribe(()=> {
       history.back();
     });
   }

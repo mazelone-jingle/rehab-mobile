@@ -1,0 +1,9 @@
+{
+  "reservation": "Schedule Exercise",
+  "no_reservation": "No available reservation",
+  "join_chatting_room": "Join the chatting room",
+  "unable_to_reserve": "Reservation is not available",
+  "reservation_not_confirmed": "Not be confirmed yet",
+  "reserve": "Make a reservation",
+  "reservation_canceled": "Reservation Canceled"
+}

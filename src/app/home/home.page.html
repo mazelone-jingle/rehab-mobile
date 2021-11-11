@@ -1,5 +1,5 @@
 <ion-header>
-  <ng-container *ngIf="batteryPower; else elseTemplate">
+  <ng-container *ngIf="(isConnecting$ | async) && batteryPower; else elseTemplate">
     <div class="battery-bar">
       <ng-container *ngIf="batteryPower > 80">
         <i class="icon icon-battery-100"></i>
@@ -27,33 +27,29 @@
 
 <ion-content>
   <div class="wrap">
+
     <ul class="function-list">
       <li class="function">
-        <button class="function-btn" [routerLink]="['/menu/exercise-setting']">
-          <i class="icon icon-content"></i>
+        <a class="function-btn" [routerLink]="['/menu/exercise-setting']">
+          <i class="icon icon-setting"></i>
           <p class="function-name">{{ 'exercise_setting' | translate }}</p>
-        </button>
+        </a>
       </li>
       <li class="function">
-        <button class="function-btn" [routerLink]="['/menu/records']">
-          <i class="icon icon-search"></i>
+        <a class="function-btn" [routerLink]="['/menu/records']">
+          <i class="icon icon-records"></i>
           <p class="function-name">{{ 'exercise_records' | translate }}</p>
-        </button>
+        </a>
       </li>
+
       <li class="function">
-        <button class="function-btn" (click)="routeToRealtimeExercise()">
-          <i class="icon icon-jogging"></i>
-          <p class="function-name">{{ 'real_time_exercise' | translate }}</p>
-        </button>
-      </li>
-      <li class="function">
-        <button class="function-btn" [routerLink]="['/menu/reservation']">
-          <i class="icon icon-calendar"></i>
+        <a class="function-btn" [routerLink]="['/menu/reservation']">
+          <i class="icon icon-reserve"></i>
           <p class="function-name">{{ 'reservation' | translate }}</p>
-        </button>
+        </a>
       </li>
       <li class="function">
-        <button
+        <a
           class="function-btn function-btn_2icon"
           [routerLink]="['/menu/noti-lang']"
         >
@@ -62,23 +58,31 @@
             <i class="icon icon-translate"></i>
           </div>
           <p class="function-name">{{ 'noti_and_lang_setting' | translate }}</p>
-        </button>
+        </a>
       </li>
       <li
         class="function"
         [routerLink]="['/menu/personal-info-setting']"
       >
-        <button class="function-btn">
-          <i class="icon icon-contact_information"></i>
+        <a class="function-btn">
+          <i class="icon icon-personal"></i>
           <p class="function-name">{{ 'personal_info_setting' | translate }}</p>
-        </button>
+        </a>
       </li>
       <li class="function" [routerLink]="['/menu/manual']">
-        <button class="function-btn">
-          <i class="icon icon-book"></i>
+        <a class="function-btn">
+          <i class="icon icon-info"></i>
           <p class="function-name">{{ 'app_manual' | translate }}</p>
-        </button>
+        </a>
       </li>
     </ul>
+
+
+    <div class="bar-button">
+      <a class="function-btn" (click)="routeToRealtimeExercise()">
+        <!-- <i class="icon icon-running"></i> -->
+        <p class="function-name">{{ 'real_time_exercise' | translate }}</p>
+      </a>
+    </div>
   </div>
 </ion-content>

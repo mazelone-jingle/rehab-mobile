@@ -1,3 +1,4 @@
+import { LanguageService } from 'src/services/language.service';
 import { forkJoin } from 'rxjs';
 import { HrDetailComponent } from '../../../components/modals/hr-detail/hr-detail.component';
 import { ModalController } from '@ionic/angular';
@@ -8,6 +9,7 @@ import * as chartAnnotation from 'chartjs-plugin-annotation';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { IPrescription, PrescriptionService } from 'src/services/prescription.service';
 import { ActivatedRoute } from '@angular/router';
+import { FINISH, HEART_BEAT, PREPARE, STEP } from 'src/constants/language-key';
 
 @Component({
   selector: 'app-exercise-detail',
@@ -26,7 +28,8 @@ export class ExerciseDetailPage implements OnInit {
     private modalController: ModalController,
     private screenOrientation: ScreenOrientation,
     private route: ActivatedRoute,
-    private prescriptionSvc: PrescriptionService
+    private prescriptionSvc: PrescriptionService,
+    private languageSvc: LanguageService
     ) {
       route.params.subscribe(async params => {
         this.exerciseRecords = params;
@@ -42,9 +45,13 @@ export class ExerciseDetailPage implements OnInit {
     });
   }
 
-  createCanvas() {
+  async createCanvas() {
     this.canvas = document.createElement('canvas');
     const ctx = this.canvas.getContext('2d');
+    const textPrepare = await this.languageSvc.getI18nLang(PREPARE);
+    const textStep = await this.languageSvc.getI18nLang(STEP);
+    const textFinish = await this.languageSvc.getI18nLang(FINISH);
+    const textHeartBeat = await this.languageSvc.getI18nLang(HEART_BEAT);
 
     Chart.plugins.register({ chartAnnotation });
 
@@ -52,9 +59,9 @@ export class ExerciseDetailPage implements OnInit {
       this.chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: ['준비', ...this.prescription.steps.map(step => step.sequence+'단계'), '마무리'],
+          labels: [textPrepare, ...this.prescription.steps.map(step => step.sequence + textStep), textFinish],
           datasets: [{
-            label: '# of Heart beat',
+            label: textHeartBeat,
             data: this.getEveryStepsData(),
             backgroundColor: 'transparent',
             borderColor: [
@@ -126,6 +133,7 @@ export class ExerciseDetailPage implements OnInit {
       component: HrDetailComponent,
       componentProps: {
         hrData: this.exerciseRecords.hrs,
+        rpes: this.exerciseRecords.rpes,
         prescription: this.prescription
       },
 

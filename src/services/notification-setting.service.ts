@@ -22,14 +22,9 @@ export class NotificationSettingService {
   updateNotification = new Subject();
   constructor(private storageSvc: StorageService, private loggerSvc: LoggerService) { }
 
-  async getNotificationList(): Promise<INotification[]> {
-    const res = await this.storageSvc.get(NOTIFICATION_LIST);
-    return res? res : [];
-  }
-
-  async addNewNotification() {
+  async addNewNotification(): Promise<number> {
     const id = Date.now();
-    return await this.getNotificationList().then(async notificationList => {
+    let notificationList =  await this.getNotificationList();
       const notification: INotification = {
         id,
         status: true,
@@ -39,13 +34,12 @@ export class NotificationSettingService {
         music: '',
         repeatWeekday: []
       };
-      if (notificationList) {
+      if (notificationList.length > 0) {
         notificationList.push(notification);
       } else {
         notificationList = [notification];
       }
-      return await this.storageSvc.set(NOTIFICATION_LIST, notificationList).then(() => id);
-    });
+      return new Promise((resolve) => this.storageSvc.set(NOTIFICATION_LIST, notificationList).then(() => resolve(id)));
   }
 
   async getNotificationById(id: number): Promise<INotification> {
@@ -76,5 +70,10 @@ export class NotificationSettingService {
       });
       await this.storageSvc.set(NOTIFICATION_LIST, newList);
     });
+  }
+
+  async getNotificationList(): Promise<INotification[]> {
+    const res = await this.storageSvc.get(NOTIFICATION_LIST);
+    return res? res : [];
   }
 }

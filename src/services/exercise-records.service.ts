@@ -26,6 +26,7 @@ export class ExerciseRecordsService {
         allDay: false,
         totalSeconds: exercise.hrs.split(',').length,
         rpeStatus: exercise.rpe,
+        rpes: exercise.rpes,
         thrRetention: exercise.thrretention,
         hrs: exercise.hrs,
         prescriptionId: exercise.prescriptionId
@@ -48,9 +49,10 @@ export class ExerciseRecordsService {
   /**
    * data for pie chart
    */
-  async getExercisePeriodRecords(exerciseRecords: IExercise[], currExercisePeriod: string) {
+  async getExercisePeriodRecords(exerciseRecords: IExercise[], currExercisePeriodId: string) {
     const today = new Date().getTime();
-    const exerciseInPeriod = exerciseRecords.filter(exer => new Date(exer.date).getTime() >= this.getPeriodDate(today, currExercisePeriod));
+    const exerciseInPeriod =
+          exerciseRecords.filter(exercise => new Date(exercise.date).getTime() >= this.getPeriodDate(today, currExercisePeriodId));
     const exerciseTimes = exerciseInPeriod.length;
     let exerciseTotalTime = 0;
     let thrRetention = 0;
@@ -72,27 +74,27 @@ export class ExerciseRecordsService {
     return {exerciseTimes, exerciseTotalTime, thrRetention};
   }
 
-  getPeriodDate(today: number, currExercisePeriod: string) {
+  getPeriodDate(today: number, currExercisePeriodId: string) {
     let minusMilliSeconds = 0;
     let targetDate;
-    switch (currExercisePeriod) {
-      case '1주일':
+    switch (currExercisePeriodId) {
+      case 'oneWeek':
         minusMilliSeconds = 7 * 24 * 60 * 60 * 1000;
         targetDate = today - minusMilliSeconds;
         break;
-      case '1달':
+      case 'oneMonth':
         minusMilliSeconds = 30 * 24 * 60 * 60 * 1000;
         targetDate = today - minusMilliSeconds;
         break;
-      case '3달':
+      case 'threeMonths':
         minusMilliSeconds = 90 * 24 * 60 * 60 * 1000;
         targetDate = today - minusMilliSeconds;
         break;
-      case '6달':
+      case 'sixMonths':
         minusMilliSeconds = 180 * 24 * 60 * 60 * 1000;
         targetDate = today - minusMilliSeconds;
         break;
-      case '1년':
+      case 'oneYear':
         minusMilliSeconds = 365 * 24 * 60 * 60 * 1000;
         targetDate = today - minusMilliSeconds;
         break;

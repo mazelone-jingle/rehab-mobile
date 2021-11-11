@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID, OnInit } from '@angular/core';
@@ -5,6 +6,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { HttpService } from './http.service';
 import { LoggerService } from './logger.service';
+import { ActionTypes, ILoginState } from 'src/reducer/login-state.reducer';
+// import { Store } from '@ngrx/store';
 @Injectable({
   providedIn: 'root',
 })
@@ -53,7 +56,9 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private logger: LoggerService,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
+    private router: Router,
+    // private store: Store<ILoginState>
   ) {
     this.baseUrl = environment.apiDomain + 'api/Token';
     this.headers = new HttpHeaders();
@@ -86,9 +91,15 @@ export class AuthService {
     return this.callTokenApi(request);
   }
 
+  logOut(): void {
+    this._token = null;
+    localStorage.removeItem(this._userKey);
+    // this.store.dispatch({ type: ActionTypes.logout });
+    this.router.navigate(['./login']/*, { queryParams: { returnUrl: this.router.url }}*/);
+  }
+
   private callTokenApi(data: ITokenRequest /*, rememberMe: boolean*/) {
-    return this.http
-      .post(`${this.baseUrl}/Patient`, data, { headers: this.headers })
+    return this.http.post(`${this.baseUrl}/Patient`, data, { headers: this.headers })
       .pipe(
         tap((response) => {
           const token: Token | null = response as Token;
@@ -121,13 +132,9 @@ export class AuthService {
           }
           return !!token;
         }),
+        // tap(() => this.store.dispatch({ type: ActionTypes.login })),
         catchError((err) => throwError(err))
       );
-  }
-
-  logOut(): void {
-    this._token = null;
-    localStorage.removeItem(this._userKey);
   }
 }
 

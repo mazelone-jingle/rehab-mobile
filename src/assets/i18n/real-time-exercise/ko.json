@@ -15,7 +15,12 @@
     "contact": "연락처",
     "audio": "음성메시지",
     "location": "위치",
-    "document": "문서"
+    "document": "문서",
+    "difficulty1": "편해요",
+    "difficulty2": "보통이에요",
+    "difficulty3": "힘들어요",
+    "difficulty4": "매우 힘들어요",
+    "input_message": "메시지를 입력해주세요."
   },
   "minute": "분",
   "rpe": {

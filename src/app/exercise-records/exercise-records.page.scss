@@ -31,11 +31,11 @@
     position: absolute;
     text-align: center;
     .title {
-      color: #aaa;
+      color: #242424;
       font-size: 1.5rem;
     }
     .value {
-      color: #df7127;
+      color: #3957bb;
       font-size: 3rem;
       font-weight: bold;
     }
@@ -69,8 +69,7 @@
         display: inline-block;
         position: absolute;
         z-index: -1;
-        left: 50%;
-        transform: scale(3) translateX(-20%);
+        transform: scale(2) translateX(-13%);
       }
     }
   }

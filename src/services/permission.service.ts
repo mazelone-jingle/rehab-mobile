@@ -11,8 +11,8 @@ export class PermissionService {
 
   checkNotification() {
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_NOTIFICATION_POLICY)
-    .then(permmissionResponse => {
-      this.loggerSvc.log(permmissionResponse);
+    .then(permissionResponse => {
+      this.loggerSvc.log(permissionResponse);
     })
     .catch(onrejected => {
       this.loggerSvc.error(onrejected);
